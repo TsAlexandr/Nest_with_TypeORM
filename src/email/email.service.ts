@@ -1,7 +1,11 @@
 import { MailerService } from '@nestjs-modules/mailer';
+import { UsersRepository } from '../users/users.repository';
 
 export class EmailService {
-  constructor(private mailerService: MailerService) {}
+  constructor(
+    private mailerService: MailerService,
+    private usersRepository: UsersRepository,
+  ) {}
   async sendEmail(email: string, subject: string, message: string) {
     try {
       await this.mailerService.sendMail({
@@ -13,5 +17,46 @@ export class EmailService {
     } catch (e) {
       console.log(e);
     }
+  }
+
+  getConfirmMessage(confirmationCode: string) {
+    return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`;
+  }
+
+  async confirmEmail(code: string) {
+    const user = await this.usersRepository.findByConfirmCode(code);
+    if (!user) return false;
+    if (user.emailConfirm.isConfirmed) return false;
+    const dbConfirmCode = user.emailConfirm.confirmationCode;
+    if (dbConfirmCode === code) {
+      const result = await this.usersRepository.updateConfirm(
+        user.accountData.id,
+      );
+      return result;
+    }
+    return false;
+  }
+
+  async resendRegistrationCode(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
+    if (!user) return null;
+    if (user.emailConfirm.isConfirmed) return null;
+    const updUser = await this.usersRepository.updateConfirmationCode(
+      user.accountData.id,
+    );
+    console.log(updUser);
+    if (updUser) {
+      const message = this.getConfirmMessage(
+        updUser.emailConfirm.confirmationCode,
+      );
+      console.log(message);
+      await this.sendEmail(
+        updUser.accountData.email,
+        'Confirm your email',
+        message,
+      );
+      return true;
+    }
+    return null;
   }
 }

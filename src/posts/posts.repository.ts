@@ -10,9 +10,9 @@ import { NewPost } from '../classes/classes';
 
 export class PostsRepository {
   constructor(
-    @InjectModel('BloggersModel')
+    @InjectModel(Bloggers.name)
     private bloggersModel: Model<BloggersDocument>,
-    @InjectModel('PostsModel') private postsModel: Model<PostsDocument>,
+    @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
   ) {}
   async createPosts(createPost: Posts) {
     return await this.postsModel.create(createPost);

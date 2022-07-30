@@ -3,17 +3,14 @@ import { UsersRepository } from './users.repository';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../classes/classes';
 import { v4 } from 'uuid';
-import { TemplateService } from '../email/template.service';
 import { EmailService } from '../email/email.service';
 import { JwtService } from '@nestjs/jwt';
-import { Token } from 'nodemailer/lib/xoauth2';
 
 @Injectable()
 export class UsersService {
   constructor(
     private usersRepository: UsersRepository,
     private authService: AuthService,
-    private templateService: TemplateService,
     private emailService: EmailService,
     private jwtService: JwtService,
   ) {}
@@ -41,7 +38,7 @@ export class UsersService {
 
     const createdUser = await this.usersRepository.createUser(user);
     if (createdUser) {
-      const messageBody = this.templateService.getConfirmMessage(
+      const messageBody = this.emailService.getConfirmMessage(
         createdUser.emailConfirm.confirmationCode,
       );
       await this.emailService.sendEmail(
@@ -61,11 +58,15 @@ export class UsersService {
 
   async addToken(token: string) {
     try {
-      const decode: any = this.jwtService.verifyAsync<Token>(token);
+      const decode: any = this.jwtService.verify(token);
       const userToUpdate = this.usersRepository.addToken(decode.userId, token);
       return userToUpdate;
     } catch (e) {
       console.log(e);
     }
+  }
+
+  async findUserById(currentUserId) {
+    return await this.usersRepository.findById(currentUserId);
   }
 }

@@ -1,16 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
-import { TemplateService } from '../email/template.service';
-import { EmailService } from '../email/email.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private emailService: EmailService,
     private usersRepository: UsersRepository,
-    private templateService: TemplateService,
     private jwtService: JwtService,
   ) {}
 
@@ -56,43 +52,6 @@ export class AuthService {
   async _correctHash(password: string, hash: string) {
     const equal = await bcrypt.compare(password, hash);
     return equal;
-  }
-
-  async confirmEmail(code: string) {
-    const user = await this.usersRepository.findByConfirmCode(code);
-    if (!user) return false;
-    if (user.emailConfirm.isConfirmed) return false;
-    const dbConfirmCode = user.emailConfirm.confirmationCode;
-    if (dbConfirmCode === code) {
-      const result = await this.usersRepository.updateConfirm(
-        user.accountData.id,
-      );
-      return result;
-    }
-    return false;
-  }
-
-  async resendRegistrationCode(email: string) {
-    const user = await this.usersRepository.findByEmail(email);
-    if (!user) return null;
-    if (user.emailConfirm.isConfirmed) return null;
-    const updUser = await this.usersRepository.updateConfirmationCode(
-      user.accountData.id,
-    );
-    console.log(updUser);
-    if (updUser) {
-      const message = this.templateService.getConfirmMessage(
-        updUser.emailConfirm.confirmationCode,
-      );
-      console.log(message);
-      await this.emailService.sendEmail(
-        updUser.accountData.email,
-        'Confirm your email',
-        message,
-      );
-      return true;
-    }
-    return null;
   }
 
   decodeBaseAuth(token: string) {

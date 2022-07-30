@@ -12,8 +12,8 @@ import { Paginator } from '../classes/classes';
 @Injectable()
 export class BloggersRepository {
   constructor(
-    @InjectModel('Bloggers') private bloggersModel: Model<BloggersDocument>,
-    @InjectModel('Posts') private postsModel: Model<PostsDocument>,
+    @InjectModel(Bloggers.name) private bloggersModel: Model<BloggersDocument>,
+    @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
   ) {}
   async getBloggers(
     page: number,

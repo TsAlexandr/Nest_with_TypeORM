@@ -27,7 +27,7 @@ export class UsersController {
     return this.usersService.createUser(login, email, password);
   }
 
-  @Delete(':id')
+  @Delete('/:id')
   delete(@Param('id') id: string) {
     return this.usersService.deleteUser(id);
   }

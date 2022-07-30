@@ -1,4 +1,4 @@
-import { Prop, Schema } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
 import {
   EmailConfirmType,
@@ -20,6 +20,8 @@ export class Bloggers {
   @Prop()
   youtubeUrl: string;
 }
+
+export const BloggerSchema = SchemaFactory.createForClass(Bloggers);
 
 export type PostsDocument = Posts & Document;
 
@@ -44,6 +46,8 @@ export class Posts {
   bloggerName?: string;
 }
 
+export const PostsSchema = SchemaFactory.createForClass(Posts);
+
 export type CommentsDocument = Comment & Document;
 
 export class Comment {
@@ -61,6 +65,8 @@ export class Comment {
   addedAt: Date;
 }
 
+export const CommentsSchema = SchemaFactory.createForClass(Comment);
+
 export type AttemptsDocument = Attempts & Document;
 
 export class Attempts {
@@ -72,6 +78,8 @@ export class Attempts {
   time: Date;
 }
 
+export const AttemptsSchema = SchemaFactory.createForClass(Attempts);
+
 export type UsersDocument = User & Document;
 
 export class User {
@@ -82,3 +90,5 @@ export class User {
   @Prop()
   emailConfirm: EmailConfirmType;
 }
+
+export const UsersSchema = SchemaFactory.createForClass(User);

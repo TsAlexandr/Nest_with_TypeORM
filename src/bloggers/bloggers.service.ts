@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { BloggersDto } from './dto/bloggers.dto';
 import { BloggersRepository } from './bloggers.repository';
 import { v4 as uuidv4 } from 'uuid';
 

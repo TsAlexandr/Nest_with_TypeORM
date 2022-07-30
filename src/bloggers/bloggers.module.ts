@@ -1,17 +1,20 @@
-import { forwardRef, Module } from '@nestjs/common';
-import { BloggersService } from './bloggers.service';
-import { BloggersController } from './bloggers.controller';
-import { BloggersRepository } from './bloggers.repository';
-import { AppModule } from '../app.module';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Bloggers } from '../schemas/schemas.model';
-
-@Module({
-  controllers: [BloggersController],
-  providers: [BloggersService, BloggersRepository],
-  imports: [
-    forwardRef(() => AppModule),
-    MongooseModule.forFeature([{ name: Bloggers.name, schema: Bloggers }]),
-  ],
-})
-export class BloggersModule {}
+// import { Module } from '@nestjs/common';
+// import { BloggersService } from './bloggers.service';
+// import { BloggersController } from './bloggers.controller';
+// import { BloggersRepository } from './bloggers.repository';
+// import { MongooseModule } from '@nestjs/mongoose';
+// import {
+//   Bloggers,
+//   BloggerSchema,
+//   Posts,
+//   PostsSchema,
+// } from '../schemas/schemas.model';
+// @Module({
+//   controllers: [BloggersController],
+//   providers: [BloggersService, BloggersRepository],
+//   imports: [
+//     MongooseModule.forFeature([{ name: Bloggers.name, schema: BloggerSchema }]),
+//     MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
+//   ],
+// })
+// export class BloggersModule {}

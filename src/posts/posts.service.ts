@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
 import { NewPost } from '../classes/classes';
-import { BloggersRepository } from '../bloggers/bloggers.repository';
 import { v4 } from 'uuid';
+import { BloggersRepository } from '../bloggers/bloggers.repository';
 
 @Injectable()
 export class PostsService {
