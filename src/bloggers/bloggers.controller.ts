@@ -3,47 +3,97 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
   Param,
   Post,
   Put,
   Query,
+  Request,
+  UseGuards,
 } from '@nestjs/common';
 import { BloggersService } from './bloggers.service';
+import { BasicGuards } from '../auth/guards/basic.guards';
+import { PostsService } from '../posts/posts.service';
+import { NewPost } from '../classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
+import { JwtExtract } from '../auth/guards/jwt.extract';
 
 @Controller('bloggers')
 export class BloggersController {
-  constructor(private bloggersService: BloggersService) {}
-  @Get()
-  getAllBloggers(
+  constructor(
+    private bloggersService: BloggersService,
+    private postsService: PostsService,
+  ) {}
+
+  @Get('/')
+  async getAllBloggers(
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
     @Query('searchNameTerm') searchNameTerm: string,
   ) {
-    return this.bloggersService.getBloggers(page, pageSize, searchNameTerm);
-  }
-  @Get(':id')
-  getBlogger(@Param('id') id: string) {
-    return this.bloggersService.getBloggerById(id);
+    return await this.bloggersService.getBloggers(
+      page,
+      pageSize,
+      searchNameTerm,
+    );
   }
 
-  @Post()
-  createBlogger(@Body() name: string, @Body() youtubeUrl: string) {
-    return this.bloggersService.createBlogger(name, youtubeUrl);
+  @Get('/:id')
+  async getBlogger(@Param('id') id: string) {
+    return await this.bloggersService.getBloggerById(id);
   }
-  @HttpCode(204)
-  @Put(':id')
-  updateBlogger(
+
+  @UseGuards(BasicGuards)
+  @Post('/')
+  async createBlogger(@Body() bloggersDto: BloggersDto) {
+    return await this.bloggersService.createBlogger(bloggersDto);
+  }
+
+  @UseGuards(BasicGuards)
+  @Put('/:id')
+  async updateBlogger(
     @Param('id') id: string,
-    @Body() name: string,
-    @Body() youtubeUrl: string,
+    @Body() bloggersDto: BloggersDto,
   ) {
-    return this.bloggersService.updateBlogger(id, name, youtubeUrl);
+    const update = { ...bloggersDto };
+    return await this.bloggersService.updateBlogger(id, update);
   }
-  @HttpCode(204)
-  @Delete(':id')
-  deleteBlogger(@Param('id') id: string) {
-    return this.bloggersService.deleteBlogger(id);
+
+  @UseGuards(BasicGuards)
+  @Delete('/:id')
+  async deleteBlogger(@Param('id') id: string) {
+    return await this.bloggersService.deleteBlogger(id);
+  }
+
+  @UseGuards(JwtExtract)
+  @Get('/:bloggerId/posts')
+  async getPostForBlogger(
+    @Param('bloggerId') bloggerId: string,
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+    @Query('searchNameTerm') searchNameTerm: string,
+    @Request() req,
+  ) {
+    const userId = req.user.userId || null;
+    const pages = await this.postsService.findAll(
+      page,
+      pageSize,
+      userId,
+      bloggerId,
+      searchNameTerm,
+    );
+    return pages;
+  }
+
+  @UseGuards(BasicGuards)
+  @Post('/:bloggerId/posts')
+  async createNewPostForBlogger(
+    @Param('bloggerId') bloggerId: string,
+    @Body() newPost: NewPost,
+  ) {
+    const newPostForBlogger = await this.postsService.create(
+      bloggerId,
+      newPost,
+    );
+    return newPostForBlogger;
   }
 }

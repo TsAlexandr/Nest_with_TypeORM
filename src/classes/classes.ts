@@ -1,39 +1,86 @@
+import {
+  IsNotEmpty,
+  IsString,
+  Length,
+  Matches,
+  MaxLength,
+} from 'class-validator';
+
 export class Bloggers {
-  constructor(
-    public id: string,
-    public name: string,
-    public youtubeUrl: string,
-  ) {}
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(15)
+  name: string;
+  @Matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/)
+  @IsNotEmpty()
+  @MaxLength(100)
+  youtubeUrl: string;
 }
 
 export class PostsCon {
-  constructor(
-    public id: string,
-    public bloggerId: Bloggers['id'],
-    public title: string,
-    public shortDescription: string,
-    public content: string,
-    public bloggerName?: Bloggers['name'],
-  ) {}
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  bloggerId: Bloggers['id'];
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(30)
+  title: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(100)
+  shortDescription: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(1000)
+  content: string;
+
+  bloggerName?: Bloggers['name'];
 }
 
 export class NewPost {
-  constructor(
-    public title: string,
-    public shortDescription: string,
-    public content: string,
-  ) {}
+  @IsString()
+  @Length(1, 30)
+  @IsNotEmpty()
+  title: string;
+  @IsString()
+  @Length(1, 100)
+  @IsNotEmpty()
+  shortDescription: string;
+  @IsString()
+  @Length(1, 1000)
+  @IsNotEmpty()
+  content: string;
+  @IsString()
+  bloggerId: string;
 }
 
 export class Comment {
-  constructor(
-    public id: string,
-    public postId: PostsCon['id'],
-    public content: string,
-    public userId: string,
-    public userLogin: string,
-    public addedAt: Date,
-  ) {}
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+  @IsString()
+  @IsNotEmpty()
+  postId: PostsCon['id'];
+  @IsString()
+  @IsNotEmpty()
+  content: string;
+  @IsString()
+  @IsNotEmpty()
+  userId: string;
+  @IsString()
+  @IsNotEmpty()
+  userLogin: string;
+  addedAt: Date;
 }
 
 export class User {
@@ -45,44 +92,51 @@ export class User {
 }
 
 export class UserAccount {
-  constructor(
-    public id: string,
-    public email: string,
-    public login: string,
-    public passwordHash: string,
-    public createdAt: Date,
-    public unused?: string,
-  ) {}
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+  @IsNotEmpty()
+  email: string;
+  @IsString()
+  @IsNotEmpty()
+  login: string;
+  passwordHash: string;
+  createdAt: Date;
+  unused?: string;
 }
 
 export class LoginAttempts {
-  constructor(public attemptDate: Date, public ip: string) {}
+  attemptDate: Date;
+  ip: string;
 }
 
 export class EmailConfirmType {
-  constructor(
-    public isConfirmed: boolean,
-    public confirmationCode: string,
-    public sentEmails: SentConfirmEmailType[],
-  ) {}
+  isConfirmed: boolean;
+  confirmationCode: string;
+  sentEmails: SentConfirmEmailType[];
 }
 
 export class SentConfirmEmailType {
-  constructor(public sentDate: Date) {}
+  sentDate: Date;
 }
 
 export class emailClass {
-  constructor(
-    public email: string,
-    public message: string,
-    public subject: string,
-    public isSent: boolean,
-    public createdAt: Date,
-  ) {}
+  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+  @IsNotEmpty()
+  email: string;
+  @IsString()
+  @IsNotEmpty()
+  message: string;
+  subject: string;
+  isSent: boolean;
+  createdAt: Date;
 }
 
 export class attemptsClass {
-  constructor(public userIp: string, public url: string, public time: Date) {}
+  userIp: string;
+  url: string;
+  time: Date;
 }
 
 export type Paginator<T> = {

@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { BloggersRepository } from './bloggers.repository';
 import { v4 as uuidv4 } from 'uuid';
+import { BloggersDto } from './dto/bloggers.dto';
 
 @Injectable()
 export class BloggersService {
@@ -17,21 +18,16 @@ export class BloggersService {
     return await this.bloggersRepository.getBloggersById(id);
   }
 
-  async createBlogger(name: string, youtubeUrl: string) {
+  async createBlogger(bloggersDto: BloggersDto) {
     const newBlogger = {
       id: uuidv4(),
-      name: name,
-      youtubeUrl: youtubeUrl,
+      ...bloggersDto,
     };
     return await this.bloggersRepository.createBlogger(newBlogger);
   }
 
-  async updateBlogger(id: string, name: string, youtubeUrl: string) {
-    return await this.bloggersRepository.updateBloggerById(
-      id,
-      name,
-      youtubeUrl,
-    );
+  async updateBlogger(id: string, update: BloggersDto) {
+    return await this.bloggersRepository.updateBloggerById(id, update);
   }
 
   async deleteBlogger(id: string) {

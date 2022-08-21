@@ -8,6 +8,7 @@ import {
   PostsDocument,
 } from '../schemas/schemas.model';
 import { Paginator } from '../classes/classes';
+import { BloggersDto } from './dto/bloggers.dto';
 
 @Injectable()
 export class BloggersRepository {
@@ -51,21 +52,21 @@ export class BloggersRepository {
     return delBlog.deletedCount === 1;
   }
 
-  async updateBloggerById(id: string, name: string, youtubeUrl: string) {
-    const updBlog = await this.bloggersModel.findOneAndUpdate(
+  async updateBloggerById(id: string, update: BloggersDto) {
+    const updBlog = await this.bloggersModel.updateOne(
       { id },
       {
         $set: {
-          name: name,
-          youtubeUrl: youtubeUrl,
+          name: update.name,
+          youtubeUrl: update.youtubeUrl,
         },
       },
     );
     await this.postsModel.updateMany(
       { bloggerId: id },
-      { $set: { bloggerName: name } },
+      { $set: { bloggerName: update.name } },
     );
-    return updBlog;
+    return updBlog.modifiedCount === 1;
   }
 
   async createBlogger(newBlogger: Bloggers) {

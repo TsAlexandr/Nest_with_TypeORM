@@ -7,6 +7,13 @@ import {
   UserAccount,
 } from '../classes/classes';
 
+export class Action {
+  dislikesCount: number;
+  likesCount: number;
+  myStatus: string;
+  newestLikes: any[];
+}
+
 export type BloggersDocument = Bloggers & Document;
 
 @Schema()
@@ -28,6 +35,9 @@ export type PostsDocument = Posts & Document;
 @Schema()
 export class Posts {
   @Prop()
+  addedAt: Date;
+
+  @Prop()
   id: string;
 
   @Prop()
@@ -43,7 +53,18 @@ export class Posts {
   bloggerId: string;
 
   @Prop()
-  bloggerName?: string;
+  bloggerName: string;
+
+  @Prop({ type: Action })
+  extendedLikesInfo: {
+    dislikesCount: number;
+    likesCount: number;
+    myStatus: string;
+    newestLikes: any[];
+  };
+
+  @Prop()
+  totalActions: any[];
 }
 
 export const PostsSchema = SchemaFactory.createForClass(Posts);

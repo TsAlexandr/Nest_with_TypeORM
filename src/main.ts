@@ -22,6 +22,11 @@ async function bootstrap() {
   );
   app.useGlobalFilters(new ValidationException());
   app.use(cookieParser());
-  await app.listen(PORT, () => console.log('server started' + PORT));
+  await app.listen(PORT, () => console.log('Server started on port ' + PORT));
 }
-bootstrap();
+
+try {
+  bootstrap();
+} catch (e) {
+  console.log(e);
+}

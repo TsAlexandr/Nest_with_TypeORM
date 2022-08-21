@@ -39,7 +39,12 @@ export class CommentsRepository {
     return Promise.resolve(undefined);
   }
 
-  async getCommentWithPage(postId: string, page: number, pageSize: number) {
+  async getCommentWithPage(
+    postId: string,
+    page: number,
+    pageSize: number,
+    userId: string,
+  ) {
     const filter = { postId };
     const commentsForPosts = await this.commentsModel
       .find(filter, { projection: { _id: 0, postId: 0 } })

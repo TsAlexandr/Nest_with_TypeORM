@@ -35,11 +35,17 @@ export class CommentsService {
     return await this.commentsRepository.createComment(newComment);
   }
 
-  async getCommentWithPage(postId: string, page: number, pageSize: number) {
+  async getCommentWithPage(
+    postId: string,
+    page: number,
+    pageSize: number,
+    userId: string,
+  ) {
     return await this.commentsRepository.getCommentWithPage(
       postId,
       page,
       pageSize,
+      userId,
     );
   }
 }

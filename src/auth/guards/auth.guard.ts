@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { UsersRepository } from '../../users/users.repository';
 import { JwtService } from '@nestjs/jwt';
+import { jwtConstants } from '../../../constants';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -26,7 +27,7 @@ export class AuthGuard implements CanActivate {
       throw new BadRequestException({ message: 'Invalid pass or login' });
     }
     try {
-      const decode: any = this.jwtService.verify(token);
+      const decode: any = this.jwtService.verify(token, jwtConstants);
       const user = await this.usersRepository.findById(decode.userId);
       if (!user) {
         throw new NotFoundException({
