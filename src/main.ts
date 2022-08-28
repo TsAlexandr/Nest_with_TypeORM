@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as cookieParser from 'cookie-parser';
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
-import { ValidationException } from './exceptions/validation.exception';
+import { ValidationException } from './common/exceptions/validation.exception';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
