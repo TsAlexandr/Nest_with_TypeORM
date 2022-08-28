@@ -13,7 +13,7 @@ import {
 import { BloggersService } from './bloggers.service';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { PostsService } from '../posts/posts.service';
-import { NewPost } from '../classes/classes';
+import { NewPost } from '../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 
