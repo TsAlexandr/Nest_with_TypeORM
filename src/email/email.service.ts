@@ -1,14 +1,18 @@
-import { MailerService } from '@nestjs-modules/mailer';
 import { UsersRepository } from '../users/users.repository';
+import * as nodemailer from 'nodemailer';
 
 export class EmailService {
-  constructor(
-    private mailerService: MailerService,
-    private usersRepository: UsersRepository,
-  ) {}
+  constructor(private usersRepository: UsersRepository) {}
   async sendEmail(email: string, subject: string, message: string) {
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_LOGIN,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
     try {
-      await this.mailerService.sendMail({
+      await transporter.sendMail({
         from: 'Alex Gerber <process.env.EMAIL_LOGIN>', // sender address
         to: email, // list of receivers
         subject: subject, // Subject line
