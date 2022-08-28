@@ -1,6 +1,6 @@
 .idea
-.env
 dist
 yarn-error.log
 src/auth/constants.ts
 node_modules
+.env
