@@ -6,8 +6,8 @@ import {
   BloggersDocument,
   Posts,
   PostsDocument,
-} from '../schemas/schemas.model';
-import { Paginator } from '../classes/classes';
+} from '../common/types/schemas/schemas.model';
+import { Paginator } from '../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
 
 @Injectable()
@@ -23,7 +23,7 @@ export class BloggersRepository {
   ): Promise<Paginator<Bloggers[]>> {
     const filter = { name: { $regex: searchNameTerm ? searchNameTerm : '' } };
     const bloggers = await this.bloggersModel
-      .find(filter, { projection: { _id: 0 } })
+      .find(filter, { _id: 0, __v: 0 })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .lean();
@@ -42,7 +42,7 @@ export class BloggersRepository {
 
   async getBloggersById(id: string) {
     const blogger = await this.bloggersModel
-      .findOne({ id }, { projection: { _id: 0 } })
+      .findOne({ id }, { _id: 0, __v: 0 })
       .lean();
     return blogger;
   }
