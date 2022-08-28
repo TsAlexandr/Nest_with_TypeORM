@@ -1,14 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private usersRepository: UsersRepository,
-    private jwtService: JwtService,
-  ) {}
+  constructor(private usersRepository: UsersRepository) {}
 
   async checkCredentials(login: string, password: string) {
     const user: any = await this.usersRepository.findByLogin(login);
@@ -67,9 +64,14 @@ export class AuthService {
   }
 
   async createTokens(userId: string) {
-    const payload = { userId, date: new Date() };
-    const accessToken = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload);
+    const payload = { sub: userId, date: new Date() };
+    const secret = process.env.JWT_SECRET_KEY || 'secret';
+    const accessToken = jwt.sign(payload, secret, {
+      expiresIn: '24h',
+    });
+    const refreshToken = jwt.sign(payload, secret, {
+      expiresIn: '24h',
+    });
     return {
       accessToken,
       refreshToken,
