@@ -34,7 +34,7 @@ import { BasicGuards } from './auth/guards/basic.guards';
 import { LocalAuthGuards } from './auth/guards/local-auth.guards';
 import { AuthController } from './auth/auth.controller';
 import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
-//import { TypeOrmModule } from '@nestjs/typeorm';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
