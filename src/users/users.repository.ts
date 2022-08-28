@@ -1,16 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
-import { User } from '../classes/classes';
-import { UsersDocument } from '../schemas/schemas.model';
+import { User } from '../common/types/classes/classes';
+import * as mongoose from 'mongoose';
 
 @Injectable()
 export class UsersRepository {
-  constructor(@InjectModel('Users') private usersModel: Model<UsersDocument>) {}
+  constructor(@InjectModel('Users') private usersModel: mongoose.Model<User>) {}
   async getUsers(page: number, pageSize: number) {
     const user = await this.usersModel
-      .find({}, { projection: { _id: 0, passwordHash: false } })
+      .find({}, { _id: 0, passwordHash: false, __v: 0 })
       .limit(pageSize)
       .skip((page - 1) * pageSize)
       .lean();
@@ -27,14 +26,19 @@ export class UsersRepository {
   }
 
   async createUser(newUser: User): Promise<User> {
-    const result = await this.usersModel.create(newUser);
-    return newUser;
+    await this.usersModel.create(newUser);
+    const isCreated = await this.usersModel.findOne({
+      'accountData.id': newUser.accountData.id,
+    });
+    return isCreated;
   }
 
   async findByLogin(login: string) {
-    const user = await this.usersModel.findOne({
-      'accountData.login': login,
-    });
+    const user = await this.usersModel
+      .findOne({
+        'accountData.login': login,
+      })
+      .lean();
     return user;
   }
 

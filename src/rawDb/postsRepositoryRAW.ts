@@ -4,9 +4,9 @@ import {
   BloggersDocument,
   Posts,
   PostsDocument,
-} from '../schemas/schemas.model';
+} from '../common/types/schemas/schemas.model';
 import { Model } from 'mongoose';
-import { NewPost } from '../classes/classes';
+import { NewPost } from '../common/types/classes/classes';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 

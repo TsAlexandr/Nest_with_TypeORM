@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Bloggers, Posts } from '../schemas/schemas.model';
-import { NewPost, UserAccount } from '../classes/classes';
+import { Bloggers, Posts } from '../common/types/schemas/schemas.model';
+import { NewPost, UserAccount } from '../common/types/classes/classes';
 
 export class PostsRepository {
   constructor(

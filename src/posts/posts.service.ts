@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
-import { NewPost, User, UserAccount } from '../classes/classes';
+import { NewPost, User, UserAccount } from '../common/types/classes/classes';
 import { v4 } from 'uuid';
 
 @Injectable()

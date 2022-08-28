@@ -11,9 +11,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { NewPost } from '../classes/classes';
+import { NewPost } from '../common/types/classes/classes';
 import { JwtExtract } from '../auth/guards/jwt.extract';
-import { LocalAuthGuards } from '../auth/guards/local-auth.guards';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentsService } from '../comments/comments.service';
