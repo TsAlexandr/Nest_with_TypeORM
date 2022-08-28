@@ -1,13 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { CommentsRepository } from './comments.repository';
 import { v4 } from 'uuid';
+import { UserAccount } from '../common/types/classes/classes';
 
 @Injectable()
 export class CommentsService {
   constructor(private commentsRepository: CommentsRepository) {}
 
-  async findOne(id: string) {
-    return await this.commentsRepository.findOne(id);
+  async findOne(id: string, userId: null) {
+    return await this.commentsRepository.findOne(id, userId);
   }
 
   async update(id: string, content: string) {
@@ -31,6 +32,11 @@ export class CommentsService {
       userId,
       userLogin,
       addedAt: new Date(),
+      likesInfo: {
+        dislikesCount: 0,
+        likesCount: 0,
+        myStatus: 'None',
+      },
     };
     return await this.commentsRepository.createComment(newComment);
   }
@@ -39,7 +45,7 @@ export class CommentsService {
     postId: string,
     page: number,
     pageSize: number,
-    userId: string,
+    userId: string | null,
   ) {
     return await this.commentsRepository.getCommentWithPage(
       postId,
@@ -47,5 +53,16 @@ export class CommentsService {
       pageSize,
       userId,
     );
+  }
+
+  async updateActions(id: string, status: string, user: UserAccount) {
+    const date = new Date();
+    const update = await this.commentsRepository.updateActions(
+      id,
+      status,
+      user,
+      date,
+    );
+    return update;
   }
 }
