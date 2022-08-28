@@ -16,14 +16,14 @@ import { AuthService } from './auth/auth.service';
 import { EmailService } from './email/email.service';
 import { AttemptsRepository } from './attempts/attempts.repository';
 import { AppController } from './app.controller';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+
 import {
   AttemptsSchema,
   BloggerSchema,
   CommentsSchema,
   PostsSchema,
   UsersSchema,
-} from './schemas/schemas.model';
+} from './common/types/schemas/schemas.model';
 import { AppService } from './app.service';
 import { JwtExtractStrategy } from './auth/strategies/jwt.extract.strategy';
 import { JwtStrategy } from './auth/strategies/jwt.strategy';
@@ -32,15 +32,12 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtAuthGuards } from './auth/guards/jwt-auth.guards';
 import { BasicGuards } from './auth/guards/basic.guards';
 import { LocalAuthGuards } from './auth/guards/local-auth.guards';
-import { jwtConstants } from '../constants';
+import { AuthController } from './auth/auth.controller';
+import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
 
 @Module({
   imports: [
-    JwtModule.register({
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
-    }),
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     MongooseModule.forRoot(
       'mongodb+srv://hello:rerere@cluster0.rxylv.mongodb.net/Cluster0?retryWrites=true&w=majority',
     ),
@@ -56,6 +53,8 @@ import { jwtConstants } from '../constants';
     PostsController,
     CommentsController,
     UsersController,
+    AuthController,
+    DropBase,
   ],
   providers: [
     BloggersService,
@@ -69,7 +68,6 @@ import { jwtConstants } from '../constants';
     AuthService,
     EmailService,
     AttemptsRepository,
-    JwtService,
     AppService,
     JwtExtractStrategy,
     JwtStrategy,
@@ -77,6 +75,7 @@ import { jwtConstants } from '../constants';
     JwtAuthGuards,
     BasicGuards,
     LocalAuthGuards,
+    TestRepo,
   ],
 })
 export class AppModule {}
