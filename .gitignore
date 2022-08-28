@@ -1,11 +1,6 @@
 .idea
 .env
-.eslintrc.js
-nest-cli.json
 dist
 yarn-error.log
-yarn.lock
-tsconfig.json
 src/auth/constants.ts
-.prettierrc
 node_modules
