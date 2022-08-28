@@ -8,6 +8,5 @@ yarn-error.log
 yarn.lock
 tsconfig.json
 src/auth/constants.ts
-package.json
 .prettierrc
 node_modules
