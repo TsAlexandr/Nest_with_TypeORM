@@ -1,10 +1,20 @@
-import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  NotFoundException,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
-import { Request, Response } from 'express';
-import { CurrentUserId } from '../custom-decorator/current.user.decorator';
+import { CurrentUserId } from '../common/custom-decorator/current.user.decorator';
 import { JwtAuthGuards } from './guards/jwt-auth.guards';
 import { EmailService } from '../email/email.service';
+import { LocalAuthGuards } from './guards/local-auth.guards';
 
 @Controller('auth')
 export class AuthController {
@@ -16,43 +26,59 @@ export class AuthController {
 
   @Post('/registration')
   async registration(
-    @Body() login: string,
-    @Body() email: string,
-    @Body() password: string,
+    @Body('login') login: string,
+    @Body('email') email: string,
+    @Body('password') password: string,
   ) {
     return await this.userService.createUser(login, email, password);
   }
 
   @Post('/registration-confirmation')
   async confirmClient(@Body() code: string) {
-    return await this.emailService.confirmEmail(code);
+    const confirm = await this.emailService.confirmEmail(code);
+    if (!confirm) throw new NotFoundException();
+    return null;
   }
 
   @Post('/registration-email-resending')
   async resendEmail(@Body() email: string) {
-    return await this.emailService.resendRegistrationCode(email);
+    const send = await this.emailService.resendRegistrationCode(email);
+    if (!send) throw new BadRequestException();
+    return null;
   }
-
+  @UseGuards(LocalAuthGuards)
   @Post('/login')
   async login(
-    @Body() login: string,
-    @Body() password: string,
-    @Res({ passthrough: true }) response: Response,
+    @Body('login') login: string,
+    @Body('password') password: string,
+    @Req() req,
+    @Res({ passthrough: true }) res,
   ) {
     const result = await this.authService.checkCredentials(login, password);
-    response.cookie('refreshToken', result.data.refreshToken, {
+    res.cookie('refreshToken', result.data.refreshToken, {
       httpOnly: true,
       secure: true,
     });
-    // return {accessToken: path}
+    return { accessToken: result.data.accessToken };
+  }
+  @UseGuards(JwtAuthGuards)
+  @Post('/refresh-token')
+  async refresh(@Req() req, @Res() res) {
+    if (!req.cookie.refreshToken) throw new UnauthorizedException();
+    const userId = req.user.id;
+    const tokens = await this.authService.createTokens(userId);
+    res.cookie('refreshToken', tokens.refreshToken, {
+      httpOnly: true,
+      secure: true,
+    });
+    return { accessToken: tokens.accessToken };
   }
 
-  @Post('/refresh-token')
-  async refresh(@Req() request: Request) {}
-
   @Post('/logout')
-  async logout(@Req() request: Request) {
-    return await this.userService.addToken(request.cookies.refreshToken);
+  async logout(@Req() req) {
+    if (!req.cookie.refreshToken) throw new UnauthorizedException();
+    await this.userService.addToken(req.cookies.refreshToken);
+    return null;
   }
 
   @UseGuards(JwtAuthGuards)
