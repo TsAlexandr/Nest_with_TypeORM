@@ -86,7 +86,6 @@ export class Comment {
 export class User {
   constructor(
     public accountData: UserAccount,
-    public loginAttempts: LoginAttempts[],
     public emailConfirm: EmailConfirmType,
   ) {}
 }
@@ -147,36 +146,22 @@ export type Paginator<T> = {
   items: T;
 };
 
-export type Login = {
-  login: string;
-  password: string;
-};
-
-export type LoginSuccess = {
-  token: string;
-};
-
-export type UserInput = {
-  id: string;
-  login: string;
-};
-
-export interface BaseAuthData {
-  login: string;
-  password: string;
+export class Action {
+  dislikesCount: number;
+  likesCount: number;
+  myStatus: string;
+  newestLikes: any[];
 }
 
-export type withoutId = {
-  id: string;
-  content: string;
-  userId: string;
-  userLogin: string;
-  addedAt: Date;
-};
+export class LikesInfo {
+  dislikesCount: number;
+  likesCount: number;
+  myStatus: string;
+}
 
-export type inputComment = {
-  postId: PostsCon['id'];
-  content: string;
+export class TotalActions {
+  addedAt: Date;
+  action?: string;
   userId: string;
-  userLogin: string;
-};
+  login: string;
+}
