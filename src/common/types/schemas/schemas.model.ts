@@ -1,18 +1,14 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document } from 'mongoose';
+import * as mongoose from 'mongoose';
 import {
+  Action,
   EmailConfirmType,
-  LoginAttempts,
-  PostsCon,
+  LikesInfo,
+  TotalActions,
+  User,
   UserAccount,
 } from '../classes/classes';
-
-export class Action {
-  dislikesCount: number;
-  likesCount: number;
-  myStatus: string;
-  newestLikes: any[];
-}
 
 export type BloggersDocument = Bloggers & Document;
 
@@ -84,6 +80,19 @@ export class Comment {
   userLogin: string;
   @Prop()
   addedAt: Date;
+  @Prop({ type: LikesInfo })
+  likesInfo: {
+    dislikesCount: number;
+    likesCount: number;
+    myStatus: string;
+  };
+  @Prop({ type: TotalActions })
+  totalActions?: {
+    addedAt: Date;
+    action?: string;
+    userId: string;
+    login: string;
+  }[];
 }
 
 export const CommentsSchema = SchemaFactory.createForClass(Comment);
@@ -101,15 +110,22 @@ export class Attempts {
 
 export const AttemptsSchema = SchemaFactory.createForClass(Attempts);
 
-export type UsersDocument = User & Document;
+export const InfoAboutUser = new mongoose.Schema<UserAccount>({
+  id: String,
+  email: String,
+  login: String,
+  passwordHash: String,
+  createdAt: Date,
+  unused: String,
+});
 
-export class User {
-  @Prop()
-  accountData: UserAccount;
-  @Prop()
-  loginAttempts: LoginAttempts[];
-  @Prop()
-  emailConfirm: EmailConfirmType;
-}
+export const EmailInfo = new mongoose.Schema<EmailConfirmType>({
+  isConfirmed: Boolean,
+  confirmationCode: String,
+  sentEmails: { type: [Date], required: false },
+});
 
-export const UsersSchema = SchemaFactory.createForClass(User);
+export const UsersSchema = new mongoose.Schema<User>({
+  accountData: InfoAboutUser,
+  emailConfirm: EmailInfo,
+});
