@@ -7,6 +7,6 @@ tsconfig.build.json
 yarn-error.log
 yarn.lock
 tsconfig.json
-constants.ts
+src/auth/constants.ts
 package.json
 .prettierrc
