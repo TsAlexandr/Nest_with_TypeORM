@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { Bloggers } from '../schemas/schemas.model';
-import { Paginator } from '../classes/classes';
+import { Bloggers } from '../common/types/schemas/schemas.model';
+import { Paginator } from '../common/types/classes/classes';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { InjectModel } from '@nestjs/mongoose';
-import { count } from 'rxjs';
 
 @Injectable()
 export class BloggersRepository {
