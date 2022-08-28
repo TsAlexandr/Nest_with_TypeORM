@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { AuthService } from '../auth/auth.service';
-import { User } from '../classes/classes';
+import { User } from '../common/types/classes/classes';
 import { v4 } from 'uuid';
 import { EmailService } from '../email/email.service';
-import { JwtService } from '@nestjs/jwt';
+import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UsersService {
@@ -12,7 +12,6 @@ export class UsersService {
     private usersRepository: UsersRepository,
     private authService: AuthService,
     private emailService: EmailService,
-    private jwtService: JwtService,
   ) {}
   async getAllUsers(page: number, pageSize: number) {
     return await this.usersRepository.getUsers(page, pageSize);
@@ -28,7 +27,6 @@ export class UsersService {
         passwordHash: passwordHash,
         createdAt: new Date(),
       },
-      [],
       {
         sentEmails: [],
         confirmationCode: v4(),
@@ -58,7 +56,7 @@ export class UsersService {
 
   async addToken(token: string) {
     try {
-      const decode: any = this.jwtService.verify(token);
+      const decode: any = jwt.verify(token, process.env.JWT_SECRET_KEY!);
       const userToUpdate = this.usersRepository.addToken(decode.userId, token);
       return userToUpdate;
     } catch (e) {
