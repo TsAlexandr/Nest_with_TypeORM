@@ -34,6 +34,7 @@ import { BasicGuards } from './auth/guards/basic.guards';
 import { LocalAuthGuards } from './auth/guards/local-auth.guards';
 import { AuthController } from './auth/auth.controller';
 import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
+//import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -46,6 +47,16 @@ import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
     MongooseModule.forFeature([{ name: 'Comment', schema: CommentsSchema }]),
     MongooseModule.forFeature([{ name: 'Users', schema: UsersSchema }]),
     MongooseModule.forFeature([{ name: 'Attempts', schema: AttemptsSchema }]),
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: 'localhost',
+    //   port: 3306,
+    //   username: 'root',
+    //   password: 'root',
+    //   database: 'test',
+    //   entities: [],
+    //   synchronize: true,
+    // }),
   ],
   controllers: [
     AppController,
