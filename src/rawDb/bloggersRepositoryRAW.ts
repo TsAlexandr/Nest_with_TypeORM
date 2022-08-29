@@ -18,14 +18,14 @@ export class BloggersRepository {
   ): Promise<Paginator<Bloggers[]>> {
     const bloggers = await this.dataSource.query(
       `SELECT * FROM "bloggers" 
-            WHERE "name" LIKE '%${searchNameTerm}%'
+            WHERE "name" LIKE $3
             ORDER BY "name" DESC 
-            OFFSET ((${page} - 1) * ${pageSize} ROWS
-            FETCH NEXT ${pageSize} ROWS ONLY)`,
+            OFFSET (($1 - 1) * $2 ROWS
+            FETCH NEXT $2 ROWS ONLY)`,
     );
     const total = await this.dataSource.query(
       `SELECT COUNT(name) FROM "bloggers"
-            WHERE "name" LIKE '%${searchNameTerm}'`,
+            WHERE "name" LIKE $3`,
     );
     const pages = Math.ceil(total.count / pageSize);
     return {
@@ -40,29 +40,29 @@ export class BloggersRepository {
   async getBloggersById(id: string) {
     return this.dataSource.query(
       `SELECT * FROM "bloggers" 
-             WHERE "id" = ${id}`,
+             WHERE "id" = $1`,
     );
   }
 
   async deleteBloggerById(id: string) {
     return this.dataSource.query(
       `DELETE * FROM "bloggers" 
-            WHERE "id" = ${id}`,
+            WHERE "id" = $1`,
     );
   }
 
   async updateBloggerById(id: string, name: string, youtubeUrl: string) {
     return this.dataSource.query(
       `UPDATE "bloggers" 
-            SET 'name' = ${name}, 'youtubeUrl' = ${youtubeUrl} 
-            WHERE 'id' = ${id}`,
+            SET 'name' = $2, 'youtubeUrl' = $3 
+            WHERE 'id' = $1`,
     );
   }
 
   async createBlogger(newBlogger: Bloggers) {
     return this.dataSource.query(
       `INSERT INTO "bloggers" 
-            VALUES ${newBlogger}`,
+            VALUES $1`,
     );
   }
 }

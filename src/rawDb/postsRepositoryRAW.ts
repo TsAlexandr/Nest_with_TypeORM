@@ -18,22 +18,20 @@ export class PostsRepository {
     @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
   ) {}
   async createPosts(createPost: Posts) {
-    return await this.dataSource.query(
-      `INSERT INTO "posts" VALUES ${createPost}`,
-    );
+    return await this.dataSource.query(`INSERT INTO "posts" VALUES $1`);
   }
 
   async getPosts(page: number, pageSize: number, searchNameTerm: string) {
     const post = await this.dataSource.query(
       `SELECT * FROM "posts"
-            WHERE "title" LIKE '%${searchNameTerm}%'
+            WHERE "title" LIKE $3
             ORDER BY "title" DESC 
-            OFFSET ((${page} - 1) * ${pageSize} ROWS
-            FETCH NEXT ${pageSize} ROWS ONLY)`,
+            OFFSET (($1 - 1) * $2 ROWS
+            FETCH NEXT $2 ROWS ONLY)`,
     );
     const total = await this.dataSource.query(
       `SELECT COUNT(name) FROM "posts"
-            WHERE "title" LIKE '%${searchNameTerm}'`,
+            WHERE "title" LIKE $3`,
     );
     const pages = Math.ceil(total.count / pageSize);
     return {
@@ -48,7 +46,7 @@ export class PostsRepository {
   async getPostById(id: string) {
     return await this.dataSource.query(
       `SELECT * FROM "posts"
-            WHERE "id" LIKE ${id}`,
+            WHERE "id" LIKE $1`,
     );
   }
 
@@ -75,7 +73,7 @@ export class PostsRepository {
   async deletePost(id: string) {
     return await this.dataSource.query(
       `DELETE * FROM "posts"
-              WHERE "id" = ${id}`,
+              WHERE "id" = $1`,
     );
   }
 }
