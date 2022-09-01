@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  HttpCode,
   NotFoundException,
   Post,
   Req,
@@ -47,6 +48,7 @@ export class AuthController {
     return null;
   }
   @UseGuards(LocalAuthGuards)
+  @HttpCode(201)
   @Post('/login')
   async login(
     @Body('login') login: string,
