@@ -14,21 +14,28 @@ export class UsersController {
   constructor(private usersService: UsersService) {}
 
   @Get()
-  getAll(@Query('page') page: number, @Query('pageSize') pageSize: number) {
-    return this.usersService.getAllUsers(page, pageSize);
+  async getAll(
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number,
+  ) {
+    return await this.usersService.getAllUsers(page, pageSize);
   }
 
   @Post()
-  create(
+  async create(
     @Body('login') login: string,
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    return this.usersService.createUser(login, email, password);
+    const user = await this.usersService.createUser(login, email, password);
+    return {
+      id: user.accountData.id,
+      login: user.accountData.login,
+    };
   }
 
   @Delete('/:id')
-  delete(@Param('id') id: string) {
-    return this.usersService.deleteUser(id);
+  async delete(@Param('id') id: string) {
+    return await this.usersService.deleteUser(id);
   }
 }
