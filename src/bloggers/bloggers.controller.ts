@@ -24,7 +24,7 @@ export class BloggersController {
     private postsService: PostsService,
   ) {}
 
-  @Get('/')
+  @Get()
   async getAllBloggers(
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
@@ -37,19 +37,19 @@ export class BloggersController {
     );
   }
 
-  @Get('/:id')
+  @Get(':id')
   async getBlogger(@Param('id') id: string) {
     return await this.bloggersService.getBloggerById(id);
   }
 
   @UseGuards(BasicGuards)
-  @Post('/')
+  @Post()
   async createBlogger(@Body() bloggersDto: BloggersDto) {
     return await this.bloggersService.createBlogger(bloggersDto);
   }
 
   @UseGuards(BasicGuards)
-  @Put('/:id')
+  @Put(':id')
   async updateBlogger(
     @Param('id') id: string,
     @Body() bloggersDto: BloggersDto,
@@ -59,13 +59,13 @@ export class BloggersController {
   }
 
   @UseGuards(BasicGuards)
-  @Delete('/:id')
+  @Delete(':id')
   async deleteBlogger(@Param('id') id: string) {
     return await this.bloggersService.deleteBlogger(id);
   }
 
   @UseGuards(JwtExtract)
-  @Get('/:bloggerId/posts')
+  @Get(':bloggerId/posts')
   async getPostForBlogger(
     @Param('bloggerId') bloggerId: string,
     @Query('page') page: number,
@@ -85,7 +85,7 @@ export class BloggersController {
   }
 
   @UseGuards(BasicGuards)
-  @Post('/:bloggerId/posts')
+  @Post(':bloggerId/posts')
   async createNewPostForBlogger(
     @Param('bloggerId') bloggerId: string,
     @Body() newPost: NewPost,
