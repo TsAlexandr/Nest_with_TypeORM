@@ -34,8 +34,6 @@ import { BasicGuards } from './auth/guards/basic.guards';
 import { LocalAuthGuards } from './auth/guards/local-auth.guards';
 import { AuthController } from './auth/auth.controller';
 import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
-import { TypeOrmModule } from '@nestjs/typeorm';
-
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -47,17 +45,17 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     MongooseModule.forFeature([{ name: 'Comment', schema: CommentsSchema }]),
     MongooseModule.forFeature([{ name: 'Users', schema: UsersSchema }]),
     MongooseModule.forFeature([{ name: 'Attempts', schema: AttemptsSchema }]),
-    TypeOrmModule.forRoot({
-      type: 'postgres',
-      host: 'ec2-3-208-79-113.compute-1.amazonaws.com',
-      port: 5432,
-      username: process.env.USERNAME,
-      password: process.env.PASS,
-      database: 'd2116gcujm4m2k',
-      autoLoadEntities: true,
-      synchronize: false,
-      ssl: { rejectUnauthorized: false },
-    }),
+    // TypeOrmModule.forRoot({
+    //   type: 'postgres',
+    //   host: 'ec2-3-208-79-113.compute-1.amazonaws.com',
+    //   port: 5432,
+    //   username: process.env.USERNAME,
+    //   password: process.env.PASS,
+    //   database: 'd2116gcujm4m2k',
+    //   autoLoadEntities: true,
+    //   synchronize: false,
+    //   ssl: { rejectUnauthorized: false },
+    // }),
   ],
   controllers: [
     AppController,
