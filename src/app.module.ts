@@ -36,6 +36,7 @@ import { AuthController } from './auth/auth.controller';
 import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
 import { ExistingPostGuard } from './auth/guards/existingPostGuard';
 import { UserExistGuard } from './auth/guards/userExistGuard';
+import { JwtExtract } from './auth/guards/jwt.extract';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -90,6 +91,7 @@ import { UserExistGuard } from './auth/guards/userExistGuard';
     TestRepo,
     ExistingPostGuard,
     UserExistGuard,
+    JwtExtract,
   ],
 })
 export class AppModule {}
