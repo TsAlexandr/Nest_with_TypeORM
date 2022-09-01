@@ -125,7 +125,7 @@ export class PostsRepository {
 
   async createPosts(createPost: Posts) {
     const newPost = await this.postsModel.create(createPost, {
-      project: {
+      projection: {
         _id: 0,
         __v: 0,
         totalActions: 0,

@@ -48,7 +48,7 @@ export class AuthController {
     return null;
   }
   @UseGuards(LocalAuthGuards)
-  @HttpCode(201)
+  @HttpCode(200)
   @Post('/login')
   async login(
     @Body('login') login: string,
