@@ -7,7 +7,7 @@ import {
   Delete,
   Put,
   Query,
-  Request,
+  Req,
   UseGuards,
   HttpCode,
 } from '@nestjs/common';
@@ -35,7 +35,7 @@ export class PostsController {
     @Query() page: number,
     @Query() pageSize: number,
     @Query() searchNameTerm: string,
-    @Request() req,
+    @Req() req,
   ) {
     const userId = req.user.userId || null;
     return await this.postsService.findAll(
@@ -48,9 +48,9 @@ export class PostsController {
   }
   @UseGuards(JwtExtract)
   @Get(':id')
-  async findOne(@Param('id') id: string, @Request() req) {
-    const userId = req.user.userId || null;
-    return await this.postsService.findOne(id, userId);
+  async findOne(@Param('id') id: string, @Req() req) {
+    const userId: string = req.user.userId || null;
+    return await this.postsService.findOne(id, userId || null);
   }
 
   @UseGuards(BasicGuards)
@@ -82,7 +82,7 @@ export class PostsController {
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
     @Param('postId') postId: string,
-    @Request() req,
+    @Req() req,
   ) {
     const userId = req.user.userId || null;
     return await this.commentsService.getCommentWithPage(
@@ -98,7 +98,7 @@ export class PostsController {
   async createCommentForPost(
     @Param('postId') postId: string,
     @Body('content') content: string,
-    @Request() req,
+    @Req() req,
   ) {
     const login = req.user.login;
     const userId = req.user.userId;
@@ -117,7 +117,7 @@ export class PostsController {
   async updateActions(
     @Param('postId') postId: string,
     @Body('likeStatus') likeStatus: string,
-    @Request() req,
+    @Req() req,
   ) {
     return await this.postsService.updateActions(likeStatus, req.user, postId);
   }
