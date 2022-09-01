@@ -22,8 +22,7 @@ export class Bloggers {
 
 export class PostsCon {
   @IsString()
-  @IsNotEmpty()
-  id: string;
+  id?: string;
 
   @IsString()
   @IsNotEmpty()

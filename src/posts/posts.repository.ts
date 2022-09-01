@@ -132,7 +132,6 @@ export class PostsRepository {
       shortDescription: post.shortDescription,
       content: post.content,
       bloggerId: post.bloggerId,
-      bloggerName: post.bloggerName,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,

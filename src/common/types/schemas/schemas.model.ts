@@ -49,7 +49,7 @@ export class Posts {
   bloggerId: string;
 
   @Prop()
-  bloggerName: string;
+  bloggerName?: string;
 
   @Prop({ type: Action })
   extendedLikesInfo: {

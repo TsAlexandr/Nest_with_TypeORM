@@ -9,6 +9,7 @@ import {
   Query,
   Request,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { NewPost } from '../common/types/classes/classes';
@@ -18,7 +19,7 @@ import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentsService } from '../comments/comments.service';
 import { BloggersService } from '../bloggers/bloggers.service';
 import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
-import { Posts } from '../common/types/schemas/schemas.model';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -54,12 +55,8 @@ export class PostsController {
 
   @UseGuards(BasicGuards)
   @Post()
-  async create(@Body() newPost: Posts) {
-    const blogger = await this.bloggersService.getBloggerById(
-      newPost.bloggerId,
-    );
-    const bloggerName = blogger.name;
-    return await this.postsService.create(newPost, blogger.id, bloggerName);
+  async create(@Body() newPost: CreatePostDto) {
+    return await this.postsService.create(newPost);
   }
 
   @UseGuards(BasicGuards)
@@ -115,6 +112,7 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuards)
   @UseGuards(ExistingPostGuard)
+  @HttpCode(204)
   @Put(':postId/like-status')
   async updateActions(
     @Param('postId') postId: string,

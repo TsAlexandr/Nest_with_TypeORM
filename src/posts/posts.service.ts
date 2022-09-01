@@ -1,6 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
-import { NewPost, User, UserAccount } from '../common/types/classes/classes';
+import {
+  NewPost,
+  PostsCon,
+  UserAccount,
+} from '../common/types/classes/classes';
 import { v4 } from 'uuid';
 
 @Injectable()
@@ -27,15 +31,14 @@ export class PostsService {
     return await this.postsRepository.getPostById(id, userId);
   }
 
-  async create(newPost: NewPost, bloggerId: string, bloggerName: string) {
+  async create(newPost: PostsCon) {
     const createPost = {
       addedAt: new Date(),
       id: v4(),
       title: newPost.title,
       shortDescription: newPost.shortDescription,
       content: newPost.content,
-      bloggerId: bloggerId,
-      bloggerName: bloggerName,
+      bloggerId: newPost.bloggerId,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,
