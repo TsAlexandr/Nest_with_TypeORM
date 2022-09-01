@@ -124,7 +124,12 @@ export class PostsRepository {
   }
 
   async createPosts(createPost: Posts) {
-    return await this.postsModel.create(createPost);
+    const newPost = await this.postsModel.create(createPost, {
+      _id: 0,
+      __v: 0,
+      totalActions: 0,
+    });
+    return newPost;
   }
 
   async updatePost(
