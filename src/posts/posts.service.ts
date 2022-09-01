@@ -27,14 +27,14 @@ export class PostsService {
     return await this.postsRepository.getPostById(id, userId);
   }
 
-  async create(bloggerName: string, newPost: NewPost) {
+  async create(newPost: NewPost, bloggerId: string, bloggerName: string) {
     const createPost = {
       addedAt: new Date(),
       id: v4(),
       title: newPost.title,
       shortDescription: newPost.shortDescription,
       content: newPost.content,
-      bloggerId: newPost.bloggerId,
+      bloggerId: bloggerId,
       bloggerName: bloggerName,
       extendedLikesInfo: {
         dislikesCount: 0,

@@ -59,7 +59,7 @@ export class PostsController {
       newPost.bloggerId,
     );
     const bloggerName = blogger.name;
-    return await this.postsService.create(bloggerName, newPost);
+    return await this.postsService.create(newPost, blogger.id, bloggerName);
   }
 
   @UseGuards(BasicGuards)
