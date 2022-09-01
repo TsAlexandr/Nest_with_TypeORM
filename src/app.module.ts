@@ -34,6 +34,8 @@ import { BasicGuards } from './auth/guards/basic.guards';
 import { LocalAuthGuards } from './auth/guards/local-auth.guards';
 import { AuthController } from './auth/auth.controller';
 import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
+import { ExistingPostGuard } from './auth/guards/existingPostGuard';
+import { UserExistGuard } from './auth/guards/userExistGuard';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -86,6 +88,8 @@ import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
     BasicGuards,
     LocalAuthGuards,
     TestRepo,
+    ExistingPostGuard,
+    UserExistGuard,
   ],
 })
 export class AppModule {}
