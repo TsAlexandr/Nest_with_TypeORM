@@ -13,8 +13,8 @@ export class ExistingPostGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> | null {
     const request: Request = context.switchToHttp().getRequest();
     const id = request.params.postId;
-    const comment = await this.postsService.findOne(id, null);
-    if (!comment)
+    const post = await this.postsService.findOne(id, null);
+    if (!post)
       throw new NotFoundException({
         message: 'post not found',
         field: 'postId',
