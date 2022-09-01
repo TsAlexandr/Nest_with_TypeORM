@@ -124,14 +124,22 @@ export class PostsRepository {
   }
 
   async createPosts(createPost: Posts) {
-    const newPost = await this.postsModel.create(createPost, {
-      projection: {
-        _id: 0,
-        __v: 0,
-        totalActions: 0,
+    const post = await this.postsModel.create(createPost);
+    return {
+      addedAt: post.addedAt,
+      id: post.id,
+      title: post.title,
+      shortDescription: post.shortDescription,
+      content: post.content,
+      bloggerId: post.bloggerId,
+      bloggerName: post.bloggerName,
+      extendedLikesInfo: {
+        dislikesCount: 0,
+        likesCount: 0,
+        myStatus: 'None',
+        newestLikes: [],
       },
-    });
-    return newPost;
+    };
   }
 
   async updatePost(
