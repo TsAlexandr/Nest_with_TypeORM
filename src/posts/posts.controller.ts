@@ -17,6 +17,8 @@ import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentsService } from '../comments/comments.service';
 import { BloggersService } from '../bloggers/bloggers.service';
+import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
+import { Posts } from '../common/types/schemas/schemas.model';
 
 @Controller('posts')
 export class PostsController {
@@ -27,7 +29,7 @@ export class PostsController {
   ) {}
 
   @UseGuards(JwtExtract)
-  @Get('/')
+  @Get()
   async getAll(
     @Query() page: number,
     @Query() pageSize: number,
@@ -44,15 +46,15 @@ export class PostsController {
     );
   }
   @UseGuards(JwtExtract)
-  @Get('/:id')
+  @Get(':id')
   async findOne(@Param('id') id: string, @Request() req) {
     const userId = req.user.userId || null;
     return await this.postsService.findOne(id, userId);
   }
 
   @UseGuards(BasicGuards)
-  @Post('/')
-  async create(@Body() newPost: NewPost) {
+  @Post()
+  async create(@Body() newPost: Posts) {
     const blogger = await this.bloggersService.getBloggerById(
       newPost.bloggerId,
     );
@@ -61,7 +63,7 @@ export class PostsController {
   }
 
   @UseGuards(BasicGuards)
-  @Put('/:id')
+  @Put(':id')
   async update(
     @Param('id') id: string,
     @Body() updPost: NewPost,
@@ -72,13 +74,13 @@ export class PostsController {
     return await this.postsService.update(id, bloggerId, bloggerName, updPost);
   }
   @UseGuards(BasicGuards)
-  @Delete('/:id')
+  @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.postsService.remove(id);
   }
 
   @UseGuards(JwtExtract)
-  @Get('/:postId/comments')
+  @Get(':postId/comments')
   async getCommentsInPages(
     @Query('page') page: number,
     @Query('pageSize') pageSize: number,
@@ -95,7 +97,7 @@ export class PostsController {
   }
 
   @UseGuards(JwtExtract)
-  @Post('/:postId/comments')
+  @Post(':postId/comments')
   async createCommentForPost(
     @Param('postId') postId: string,
     @Body('content') content: string,
@@ -112,7 +114,8 @@ export class PostsController {
   }
 
   @UseGuards(JwtAuthGuards)
-  @Put('/:postId/like-status')
+  @UseGuards(ExistingPostGuard)
+  @Put(':postId/like-status')
   async updateActions(
     @Param('postId') postId: string,
     @Body('likeStatus') likeStatus: string,
