@@ -60,8 +60,6 @@ export class NewPost {
   @Length(1, 1000)
   @IsNotEmpty()
   content: string;
-  @IsString()
-  bloggerId: string;
 }
 
 export class Comment {
