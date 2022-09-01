@@ -39,6 +39,7 @@ export class PostsService {
       shortDescription: newPost.shortDescription,
       content: newPost.content,
       bloggerId: newPost.bloggerId,
+      bloggerName: newPost.bloggerName,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,
