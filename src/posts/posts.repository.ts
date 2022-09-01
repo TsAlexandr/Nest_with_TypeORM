@@ -69,8 +69,8 @@ export class PostsRepository {
     };
   }
 
-  async getPostById(id: string, userId: string) {
-    const post = await this.postsModel.find({ id }, { projection: { _id: 0 } });
+  async getPostById(id: string, userId: string | null) {
+    const post = await this.postsModel.find({ id });
     if (!post) return null;
     if (!userId) {
       return {
