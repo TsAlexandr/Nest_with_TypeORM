@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  forwardRef,
   HttpCode,
+  Inject,
   NotFoundException,
   Post,
   Req,
@@ -20,6 +22,7 @@ import { LocalAuthGuards } from './guards/local-auth.guards';
 @Controller('auth')
 export class AuthController {
   constructor(
+    @Inject(forwardRef(() => UsersService))
     private userService: UsersService,
     private authService: AuthService,
     private emailService: EmailService,
@@ -31,7 +34,8 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    return await this.userService.createUser(login, email, password);
+    await this.userService.createUser(login, email, password);
+    return null;
   }
 
   @Post('/registration-confirmation')
