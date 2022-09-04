@@ -4,7 +4,6 @@ import {
   Bloggers,
   BloggersDocument,
   Comment,
-  CommentsDocument,
   Posts,
   PostsDocument,
 } from '../common/types/schemas/schemas.model';
@@ -17,7 +16,7 @@ export class TestRepo {
     @InjectModel(Bloggers.name) private bloggersModel: Model<BloggersDocument>,
     @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
     @InjectModel('Users') private usersModel: mongoose.Model<User>,
-    @InjectModel(Comment.name) private commentsModel: Model<CommentsDocument>,
+    @InjectModel('Comments') private commentsModel: mongoose.Model<Comment>,
   ) {}
   async removeAllData() {
     await this.bloggersModel.deleteMany();

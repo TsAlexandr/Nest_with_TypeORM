@@ -51,18 +51,6 @@ export class AuthService {
     return equal;
   }
 
-  decodeBaseAuth(token: string) {
-    const buff = Buffer.from(token, 'base64');
-
-    const decodedString = buff.toString('ascii');
-
-    const loginAndPassword = decodedString.split(':');
-    return {
-      login: loginAndPassword[0],
-      password: loginAndPassword[1],
-    };
-  }
-
   async createTokens(userId: string) {
     const payload = { sub: userId, date: new Date() };
     const secret = process.env.JWT_SECRET_KEY || 'secret';
