@@ -71,6 +71,7 @@ export class BloggersRepository {
 
   async createBlogger(newBlogger: Bloggers) {
     await this.bloggersModel.create(newBlogger);
-    return newBlogger;
+    const blogger = await this.getBloggersById(newBlogger.id);
+    return blogger;
   }
 }

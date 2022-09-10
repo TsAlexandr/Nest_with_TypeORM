@@ -1,10 +1,16 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Comment } from '../common/types/schemas/schemas.model';
+import {
+  Comments,
+  CommentsDocument,
+} from '../common/types/schemas/schemas.model';
 import { UserAccount } from '../common/types/classes/classes';
+import { Model } from 'mongoose';
 
 export class CommentsRepository {
-  constructor(@InjectModel('Comments') private commentsModel) {}
-  async findOne(id: string, userId: null) {
+  constructor(
+    @InjectModel(Comments.name) private commentsModel: Model<CommentsDocument>,
+  ) {}
+  async findOne(id: string, userId: string) {
     const comment = await this.commentsModel.findOne(
       { id },
       {
@@ -86,20 +92,10 @@ export class CommentsRepository {
     };
   }
 
-  async createComment(newComment: Comment): Promise<Comment | null> {
+  async createComment(newComment: Comments) {
     await this.commentsModel.create(newComment);
-    const newComma = await this.commentsModel.findOne(
-      { id: newComment.id },
-      {
-        postId: false,
-        _id: false,
-        __v: 0,
-      },
-    );
-    if (!newComma) {
-      return null;
-    }
-    return newComma;
+    const comment = await this.commentsModel.findOne({ id: newComment.id });
+    return comment;
   }
 
   async updateOne(id: string, content: string) {

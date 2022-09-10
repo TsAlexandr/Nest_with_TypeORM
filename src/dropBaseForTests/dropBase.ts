@@ -3,7 +3,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Bloggers,
   BloggersDocument,
-  Comment,
+  Comments,
   Posts,
   PostsDocument,
 } from '../common/types/schemas/schemas.model';
@@ -16,7 +16,7 @@ export class TestRepo {
     @InjectModel(Bloggers.name) private bloggersModel: Model<BloggersDocument>,
     @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
     @InjectModel('Users') private usersModel: mongoose.Model<User>,
-    @InjectModel('Comments') private commentsModel: mongoose.Model<Comment>,
+    @InjectModel(Comments.name) private commentsModel: mongoose.Model<Comment>,
   ) {}
   async removeAllData() {
     await this.bloggersModel.deleteMany();

@@ -64,9 +64,6 @@ export class NewPost {
 export class Comment {
   @IsString()
   @IsNotEmpty()
-  id: string;
-  @IsString()
-  @IsNotEmpty()
   postId: PostsCon['id'];
   @IsString()
   @IsNotEmpty()
@@ -74,10 +71,7 @@ export class Comment {
   @IsString()
   @IsNotEmpty()
   userId: string;
-  @IsString()
-  @IsNotEmpty()
   userLogin: string;
-  addedAt: Date;
 }
 
 export class User {

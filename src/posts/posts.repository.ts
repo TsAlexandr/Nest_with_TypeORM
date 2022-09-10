@@ -1,5 +1,5 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Bloggers, Posts } from '../common/types/schemas/schemas.model';
+import { Posts } from '../common/types/schemas/schemas.model';
 import { NewPost } from '../common/types/classes/classes';
 
 export class PostsRepository {
@@ -69,7 +69,7 @@ export class PostsRepository {
     };
   }
 
-  async getPostById(id: string, userId: string | null) {
+  async getPostById(id: string, userId: string) {
     const post = await this.postsModel.findOne({ id }).lean();
     if (!post) return null;
     if (!userId) {
@@ -133,6 +133,7 @@ export class PostsRepository {
       shortDescription: post.shortDescription,
       content: post.content,
       bloggerId: post.bloggerId,
+      bloggerName: post.bloggerName,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,

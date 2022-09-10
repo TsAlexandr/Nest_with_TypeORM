@@ -10,6 +10,7 @@ import {
   AttemptsSchema,
   Bloggers,
   BloggerSchema,
+  Comments,
   CommentsSchema,
   Posts,
   PostsSchema,
@@ -50,7 +51,9 @@ import { UserExistGuard } from './auth/guards/userExistGuard';
     ]),
     MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
     MongooseModule.forFeature([{ name: Bloggers.name, schema: BloggerSchema }]),
-    MongooseModule.forFeature([{ name: 'Comments', schema: CommentsSchema }]),
+    MongooseModule.forFeature([
+      { name: Comments.name, schema: CommentsSchema },
+    ]),
     MongooseModule.forFeature([{ name: 'Users', schema: UsersSchema }]),
     // TypeOrmModule.forRoot({
     //   type: 'postgres',

@@ -7,7 +7,7 @@ import { UserAccount } from '../common/types/classes/classes';
 export class CommentsService {
   constructor(private commentsRepository: CommentsRepository) {}
 
-  async findOne(id: string, userId: null) {
+  async findOne(id: string, userId: string) {
     return await this.commentsRepository.findOne(id, userId);
   }
 
@@ -25,7 +25,7 @@ export class CommentsService {
     userId: string,
     userLogin: string,
   ) {
-    const newComment = {
+    const newComments = {
       id: v4(),
       postId,
       content,
@@ -38,7 +38,8 @@ export class CommentsService {
         myStatus: 'None',
       },
     };
-    return await this.commentsRepository.createComment(newComment);
+    const comment = await this.commentsRepository.createComment(newComments);
+    return comment;
   }
 
   async getCommentWithPage(

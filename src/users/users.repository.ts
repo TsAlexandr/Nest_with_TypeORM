@@ -42,7 +42,7 @@ export class UsersRepository {
   }
 
   async findById(id: string) {
-    const user = await this.usersModel.findOne({ 'accountData.id': id });
+    const user = await this.usersModel.findOne({ 'accountData.id': id }).lean();
     return user;
   }
 

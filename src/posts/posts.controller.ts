@@ -50,14 +50,18 @@ export class PostsController {
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
     const userId: string = req.userId || null;
-    const post = await this.postsService.findOne(id, userId || null);
+    const post = await this.postsService.findOne(id, userId);
     return post;
   }
 
   @UseGuards(BasicGuards)
   @Post()
   async create(@Body() newPost: CreatePostDto) {
-    return await this.postsService.create(newPost);
+    const blogger = await this.bloggersService.getBloggerById(
+      newPost.bloggerId,
+    );
+    const bloggerName = blogger.name;
+    return await this.postsService.create({ ...newPost, bloggerName });
   }
 
   @UseGuards(BasicGuards)
@@ -101,14 +105,15 @@ export class PostsController {
     @Body('content') content: string,
     @Req() req,
   ) {
-    const login = req.login;
-    const userId = req.userId;
-    return await this.commentsService.createComment(
-      content,
+    const userLogin = req.user.login;
+    const userId = req.user.userId;
+    const post = await this.commentsService.createComment(
       postId,
-      login,
+      content,
       userId,
+      userLogin,
     );
+    return post;
   }
 
   @UseGuards(JwtAuthGuards)
@@ -122,7 +127,6 @@ export class PostsController {
   ) {
     const userId = req.userId;
     const login = req.login;
-    console.log(req.user);
     return await this.postsService.updateActions(
       likeStatus,
       userId,

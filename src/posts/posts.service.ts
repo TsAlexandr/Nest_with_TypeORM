@@ -27,7 +27,7 @@ export class PostsService {
     );
   }
 
-  async findOne(id: string, userId: string | null) {
+  async findOne(id: string, userId: string) {
     const post = await this.postsRepository.getPostById(id, userId);
     return post;
   }

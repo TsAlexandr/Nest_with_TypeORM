@@ -65,9 +65,9 @@ export class Posts {
 
 export const PostsSchema = SchemaFactory.createForClass(Posts);
 
-export type CommentsDocument = Comment & Document;
+export type CommentsDocument = Comments & Document;
 
-export class Comment {
+export class Comments {
   @Prop()
   id: string;
   @Prop()
@@ -86,6 +86,7 @@ export class Comment {
     likesCount: number;
     myStatus: string;
   };
+
   @Prop({ type: TotalActions })
   totalActions?: {
     addedAt: Date;
@@ -95,7 +96,7 @@ export class Comment {
   }[];
 }
 
-export const CommentsSchema = SchemaFactory.createForClass(Comment);
+export const CommentsSchema = SchemaFactory.createForClass(Comments);
 
 export type AttemptsDocument = Attempts & Document;
 
