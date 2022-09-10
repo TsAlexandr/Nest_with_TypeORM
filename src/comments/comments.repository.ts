@@ -1,12 +1,9 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Comment } from '../common/types/schemas/schemas.model';
-import mongoose from 'mongoose';
 import { UserAccount } from '../common/types/classes/classes';
 
 export class CommentsRepository {
-  constructor(
-    @InjectModel('Comments') private commentsModel: mongoose.Model<Comment>,
-  ) {}
+  constructor(@InjectModel('Comments') private commentsModel) {}
   async findOne(id: string, userId: null) {
     const comment = await this.commentsModel.findOne(
       { id },
@@ -91,7 +88,7 @@ export class CommentsRepository {
 
   async createComment(newComment: Comment): Promise<Comment | null> {
     await this.commentsModel.create(newComment);
-    const newComma = await this.commentsModel.findOne<Comment>(
+    const newComma = await this.commentsModel.findOne(
       { id: newComment.id },
       {
         postId: false,
