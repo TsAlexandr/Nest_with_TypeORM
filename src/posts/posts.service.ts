@@ -28,7 +28,8 @@ export class PostsService {
   }
 
   async findOne(id: string, userId: string | null) {
-    return await this.postsRepository.getPostById(id, userId);
+    const post = await this.postsRepository.getPostById(id, userId);
+    return post;
   }
 
   async create(newPost: PostsCon) {

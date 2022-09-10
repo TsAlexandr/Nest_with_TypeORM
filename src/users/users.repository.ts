@@ -2,11 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../common/types/classes/classes';
-import * as mongoose from 'mongoose';
 
 @Injectable()
 export class UsersRepository {
-  constructor(@InjectModel('Users') private usersModel: mongoose.Model<User>) {}
+  constructor(@InjectModel('Users') private usersModel) {}
   async getUsers(page: number, pageSize: number) {
     const user = await this.usersModel
       .find({}, { _id: 0, passwordHash: false, __v: 0 })
@@ -93,9 +92,7 @@ export class UsersRepository {
     const updatedUser = await this.usersModel.findOneAndUpdate(
       { 'accountData.id': id },
       {
-        $push: {
-          'accountData.unused': token.toString(),
-        },
+        $push: { 'accountData.unused': token.toString() },
       },
       { returnDocument: 'after' },
     );

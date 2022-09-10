@@ -64,7 +64,7 @@ export class UsersService {
     }
   }
 
-  async findUserById(currentUserId) {
+  async findUserById(currentUserId: string) {
     return await this.usersRepository.findById(currentUserId);
   }
 }

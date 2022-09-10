@@ -50,7 +50,8 @@ export class PostsController {
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
     const userId: string = req.userId || null;
-    return await this.postsService.findOne(id, userId || null);
+    const post = await this.postsService.findOne(id, userId || null);
+    return post;
   }
 
   @UseGuards(BasicGuards)
@@ -121,6 +122,7 @@ export class PostsController {
   ) {
     const userId = req.userId;
     const login = req.login;
+    console.log(req.user);
     return await this.postsService.updateActions(
       likeStatus,
       userId,

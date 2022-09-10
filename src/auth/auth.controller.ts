@@ -22,7 +22,6 @@ import { LocalAuthGuards } from './guards/local-auth.guards';
 @Controller('auth')
 export class AuthController {
   constructor(
-    @Inject(forwardRef(() => UsersService))
     private userService: UsersService,
     private authService: AuthService,
     private emailService: EmailService,
@@ -34,7 +33,7 @@ export class AuthController {
     @Body('email') email: string,
     @Body('password') password: string,
   ) {
-    await this.userService.createUser(login, email, password);
+    const created = await this.userService.createUser(login, email, password);
     return null;
   }
 

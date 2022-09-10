@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Bloggers, Posts } from '../common/types/schemas/schemas.model';
-import { NewPost, UserAccount } from '../common/types/classes/classes';
+import { NewPost } from '../common/types/classes/classes';
 
 export class PostsRepository {
   constructor(
@@ -70,7 +70,7 @@ export class PostsRepository {
   }
 
   async getPostById(id: string, userId: string | null) {
-    const post = await this.postsModel.find({ id });
+    const post = await this.postsModel.findOne({ id }).lean();
     if (!post) return null;
     if (!userId) {
       return {
@@ -88,39 +88,40 @@ export class PostsRepository {
           newestLikes: [],
         },
       };
+    } else {
+      const currentUserStatus = post.totalActions?.find(
+        (el: { userId: string }) => el.userId === userId,
+      );
+      const likesCount = post.totalActions?.filter(
+        (el) => el.action === 'Like',
+      ).length;
+      const dislikesCount = post.totalActions?.filter(
+        (el) => el.action === 'Dislike',
+      ).length;
+      const actions = post.totalActions;
+      return {
+        addedAt: post.addedAt,
+        id: post.id,
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+        bloggerId: post.bloggerId,
+        bloggerName: post.bloggerName,
+        extendedLikesInfo: {
+          likesCount: likesCount,
+          dislikesCount: dislikesCount,
+          myStatus: currentUserStatus ? currentUserStatus.action : 'None',
+          newestLikes: actions
+            ?.filter((el) => el.action === 'Like')
+            .reverse()
+            .slice(0, 3)
+            .map((el) => {
+              delete el.action;
+              return el;
+            }),
+        },
+      };
     }
-    const currentUserStatus = post.totalActions?.find(
-      (el: { userId: string }) => el.userId === userId,
-    );
-    const likesCount = post.totalActions?.filter(
-      (el) => el.action === 'Like',
-    ).length;
-    const dislikesCount = post.totalActions?.filter(
-      (el) => el.action === 'Dislike',
-    ).length;
-    const actions = post.totalActions;
-    return {
-      addedAt: post.addedAt,
-      id: post.id,
-      title: post.title,
-      shortDescription: post.shortDescription,
-      content: post.content,
-      bloggerId: post.bloggerId,
-      bloggerName: post.bloggerName,
-      extendedLikesInfo: {
-        likesCount: likesCount,
-        dislikesCount: dislikesCount,
-        myStatus: currentUserStatus ? currentUserStatus.action : 'None',
-        newestLikes: actions
-          ?.filter((el) => el.action === 'Like')
-          .reverse()
-          .slice(0, 3)
-          .map((el) => {
-            delete el.action;
-            return el;
-          }),
-      },
-    };
   }
 
   async createPosts(createPost: Posts) {
@@ -172,7 +173,7 @@ export class PostsRepository {
     login: string,
     postId: string,
   ) {
-    if (likeStatus === 'Like' || 'Dislike' || 'None') {
+    if (likeStatus === 'Like' || 'Dislike') {
       await this.postsModel.updateOne(
         { postId },
         { $pull: { totalActions: { userId } } },
