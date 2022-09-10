@@ -43,7 +43,7 @@ export class PostsCon {
   @MaxLength(1000)
   content: string;
 
-  bloggerName?: Bloggers['name'];
+  bloggerName: Bloggers['name'];
 }
 
 export class NewPost {

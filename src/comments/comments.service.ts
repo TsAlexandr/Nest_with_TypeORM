@@ -37,6 +37,7 @@ export class CommentsService {
         likesCount: 0,
         myStatus: 'None',
       },
+      totalActions: []
     };
     const comment = await this.commentsRepository.createComment(newComments);
     return comment;

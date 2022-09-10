@@ -90,9 +90,12 @@ export class BloggersController {
     @Param('bloggerId') bloggerId: string,
     @Body() newPost: NewPost,
   ) {
+    const blogger = await this.bloggersService.getBloggerById(bloggerId);
+    const bloggerName = blogger.name;
     const newPostForBlogger = await this.postsService.create({
       ...newPost,
       bloggerId,
+      bloggerName,
     });
     return newPostForBlogger;
   }

@@ -71,6 +71,7 @@ export class PostsRepository {
 
   async getPostById(id: string, userId: string) {
     const post = await this.postsModel.findOne({ id }).lean();
+    console.log(post);
     if (!post) return null;
     if (!userId) {
       return {
@@ -177,7 +178,7 @@ export class PostsRepository {
     if (likeStatus === 'Like' || 'Dislike') {
       await this.postsModel.updateOne(
         { postId },
-        { $pull: { totalActions: { userId } } },
+        { $pull: { 'totalActions': { userId } } },
       );
     }
     if (likeStatus === 'Like' || 'Dislike') {
