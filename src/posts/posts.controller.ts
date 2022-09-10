@@ -49,7 +49,7 @@ export class PostsController {
   @UseGuards(JwtExtract)
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
-    const userId: string = req.user.userId || null;
+    const userId: string = req.userId || null;
     return await this.postsService.findOne(id, userId || null);
   }
 
@@ -84,7 +84,7 @@ export class PostsController {
     @Param('postId') postId: string,
     @Req() req,
   ) {
-    const userId = req.user.userId || null;
+    const userId = req.userId || null;
     return await this.commentsService.getCommentWithPage(
       postId,
       page,
@@ -100,8 +100,8 @@ export class PostsController {
     @Body('content') content: string,
     @Req() req,
   ) {
-    const login = req.user.login;
-    const userId = req.user.userId;
+    const login = req.login;
+    const userId = req.userId;
     return await this.commentsService.createComment(
       content,
       postId,
@@ -119,6 +119,13 @@ export class PostsController {
     @Body('likeStatus') likeStatus: string,
     @Req() req,
   ) {
-    return await this.postsService.updateActions(likeStatus, req.user, postId);
+    const userId = req.userId;
+    const login = req.login;
+    return await this.postsService.updateActions(
+      likeStatus,
+      userId,
+      login,
+      postId,
+    );
   }
 }

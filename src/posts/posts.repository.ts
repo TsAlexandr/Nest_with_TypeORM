@@ -4,8 +4,8 @@ import { NewPost, UserAccount } from '../common/types/classes/classes';
 
 export class PostsRepository {
   constructor(
-    @InjectModel(Bloggers.name) private bloggersModel,
-    @InjectModel(Posts.name) private postsModel,
+    @InjectModel('Bloggers') private bloggersModel,
+    @InjectModel('Posts') private postsModel,
   ) {}
 
   async getPosts(
@@ -166,11 +166,16 @@ export class PostsRepository {
     return isDeleted.deletedCount === 1;
   }
 
-  async updateActions(likeStatus: string, user: UserAccount, postId: string) {
+  async updateActions(
+    likeStatus: string,
+    userId: string,
+    login: string,
+    postId: string,
+  ) {
     if (likeStatus === 'Like' || 'Dislike' || 'None') {
       await this.postsModel.updateOne(
         { postId },
-        { $pull: { totalActions: { userId: user.id } } },
+        { $pull: { totalActions: { userId } } },
       );
     }
     if (likeStatus === 'Like' || 'Dislike') {
@@ -181,8 +186,8 @@ export class PostsRepository {
             totalActions: {
               addedAt: new Date(),
               action: likeStatus,
-              userId: user.id,
-              login: user.login,
+              userId: userId,
+              login: login,
             },
           },
         },
