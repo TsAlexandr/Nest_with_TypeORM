@@ -71,7 +71,6 @@ export class PostsRepository {
 
   async getPostById(id: string, userId: string) {
     const post = await this.postsModel.findOne({ id }).lean();
-    console.log(post);
     if (!post) return null;
     if (!userId) {
       return {
