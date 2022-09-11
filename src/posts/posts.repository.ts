@@ -3,10 +3,7 @@ import { Posts } from '../common/types/schemas/schemas.model';
 import { NewPost } from '../common/types/classes/classes';
 
 export class PostsRepository {
-  constructor(
-    @InjectModel('Bloggers') private bloggersModel,
-    @InjectModel('Posts') private postsModel,
-  ) {}
+  constructor(@InjectModel('Posts') private postsModel) {}
 
   async getPosts(
     page: number,
@@ -27,16 +24,16 @@ export class PostsRepository {
     const total = await this.postsModel.countDocuments(filter);
     const pages = Math.ceil(total / pageSize);
     const postAfterDeleteField = post.map((obj) => {
-      const currentUserStatus = obj.totalActions?.find(
+      const currentUserStatus = obj.totalActions.find(
         (el) => el.userId === userId,
       );
-      const likesCount = obj.totalActions?.filter(
+      const likesCount = obj.totalActions.filter(
         (el) => el.action === 'Like',
       ).length;
-      const dislikesCount = obj.totalActions?.filter(
+      const dislikesCount = obj.totalActions.filter(
         (el) => el.action === 'Dislike',
       ).length;
-      const actions = obj.totalActions;
+      const actions = obj;
       return {
         id: obj.id,
         title: obj.title,
@@ -50,7 +47,7 @@ export class PostsRepository {
           dislikesCount: dislikesCount,
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
           newestLikes: actions
-            ?.filter((el) => el.action === 'Like')
+            .filter((el) => el.action === 'Like')
             .reverse()
             .slice(0, 3)
             .map((el) => {
@@ -71,6 +68,7 @@ export class PostsRepository {
 
   async getPostById(id: string, userId: string) {
     const post = await this.postsModel.findOne({ id }).lean();
+    console.log(post);
     if (!post) return null;
     if (!userId) {
       return {
@@ -89,13 +87,13 @@ export class PostsRepository {
         },
       };
     } else {
-      const currentUserStatus = post.totalActions?.find(
+      const currentUserStatus = post.totalActions.find(
         (el: { userId: string }) => el.userId === userId,
       );
-      const likesCount = post.totalActions?.filter(
+      const likesCount = post.totalActions.filter(
         (el) => el.action === 'Like',
       ).length;
-      const dislikesCount = post.totalActions?.filter(
+      const dislikesCount = post.totalActions.filter(
         (el) => el.action === 'Dislike',
       ).length;
       const actions = post.totalActions;
@@ -169,15 +167,15 @@ export class PostsRepository {
   }
 
   async updateActions(
+    postId: string,
     likeStatus: string,
     userId: string,
     login: string,
-    postId: string,
   ) {
-    if (likeStatus === 'Like' || 'Dislike') {
+    if (likeStatus === 'Like' || 'Dislike' || 'None') {
       await this.postsModel.updateOne(
         { postId },
-        { $pull: { 'totalActions': { userId } } },
+        { $pull: { totalActions: { userId } } },
       );
     }
     if (likeStatus === 'Like' || 'Dislike') {

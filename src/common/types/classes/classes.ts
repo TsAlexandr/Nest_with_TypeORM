@@ -152,7 +152,7 @@ export class LikesInfo {
 
 export class TotalActions {
   addedAt: Date;
-  action?: string;
+  action: string;
   userId: string;
   login: string;
 }

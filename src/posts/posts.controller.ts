@@ -127,11 +127,12 @@ export class PostsController {
   ) {
     const userId = req.userId;
     const login = req.login;
+
     return await this.postsService.updateActions(
+      postId,
       likeStatus,
       userId,
       login,
-      postId,
     );
   }
 }

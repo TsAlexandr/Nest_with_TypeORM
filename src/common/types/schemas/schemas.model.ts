@@ -58,11 +58,10 @@ export class Posts {
     myStatus: string;
     newestLikes: any[];
   };
-
   @Prop({ type: TotalActions })
   totalActions: {
     addedAt: Date;
-    action?: string;
+    action: string;
     userId: string;
     login: string;
   }[];
@@ -91,11 +90,10 @@ export class Comments {
     likesCount: number;
     myStatus: string;
   };
-
   @Prop({ type: TotalActions })
   totalActions: {
     addedAt: Date;
-    action?: string;
+    action: string;
     userId: string;
     login: string;
   }[];
@@ -135,3 +133,11 @@ export const UsersSchema = new mongoose.Schema<User>({
   accountData: InfoAboutUser,
   emailConfirm: EmailInfo,
 });
+
+// export const LikesSchema = new mongoose.Schema<TotalActions>({
+//   action: String,
+//   userId: String,
+//   addedAt: Date,
+//   login: String,
+//   postId: String,
+// });
