@@ -54,7 +54,7 @@ export class CommentsController {
     @Body('likeStatus') status: string,
     @Req() req,
   ) {
-    if (status !== Actions.Like || Actions.Dislike || Actions.None) {
+    if (status !== Actions.Like && Actions.Dislike && Actions.None) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'likeStatus' }] },
         HttpStatus.BAD_REQUEST,

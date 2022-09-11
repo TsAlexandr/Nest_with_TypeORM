@@ -126,10 +126,10 @@ export class PostsController {
   @Put(':postId/like-status')
   async updateActions(
     @Param('postId') postId: string,
-    @Body('likeStatus') likeStatus: string,
+    @Body('likeStatus') likeStatus: Actions,
     @Req() req,
   ) {
-    if (likeStatus !== Actions.Like || Actions.Dislike || Actions.None) {
+    if (likeStatus !== Actions.Like && Actions.Dislike && Actions.None) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'likeStatus' }] },
         HttpStatus.BAD_REQUEST,
