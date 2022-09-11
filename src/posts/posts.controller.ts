@@ -21,6 +21,7 @@ import { BloggersService } from '../bloggers/bloggers.service';
 import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UsersService } from '../users/users.service';
+import { Pagination } from '../common/types/classes/pagination';
 
 @Controller('posts')
 export class PostsController {
@@ -33,12 +34,9 @@ export class PostsController {
 
   @UseGuards(JwtExtract)
   @Get()
-  async getAll(
-    @Query('page') page: number | 1,
-    @Query('pageSize') pageSize: number | 10,
-    @Query('searchNameTerm') searchNameTerm: string | ' ',
-    @Req() req,
-  ) {
+  async getAll(@Query() query, @Req() req) {
+    const { page, pageSize, searchNameTerm } =
+      Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
     return await this.postsService.findAll(
       page,
@@ -86,11 +84,11 @@ export class PostsController {
   @UseGuards(JwtExtract)
   @Get(':postId/comments')
   async getCommentsInPages(
-    @Query('page') page: number | 1,
-    @Query('pageSize') pageSize: number | 10,
+    @Query() query,
     @Param('postId') postId: string,
     @Req() req,
   ) {
+    const { page, pageSize } = Pagination.getData(query);
     const userId = req.userId || null;
     return await this.commentsService.getCommentWithPage(
       postId,

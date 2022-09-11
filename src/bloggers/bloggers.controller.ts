@@ -16,6 +16,7 @@ import { PostsService } from '../posts/posts.service';
 import { NewPost } from '../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
 import { JwtExtract } from '../auth/guards/jwt.extract';
+import { Pagination } from '../common/types/classes/pagination';
 
 @Controller('bloggers')
 export class BloggersController {
@@ -25,11 +26,9 @@ export class BloggersController {
   ) {}
 
   @Get()
-  async getAllBloggers(
-    @Query('page') page: number | 1,
-    @Query('pageSize') pageSize: number | 10,
-    @Query('searchNameTerm') searchNameTerm: string | ' ',
-  ) {
+  async getAllBloggers(@Query() query) {
+    const { page, pageSize, searchNameTerm } =
+      Pagination.getPaginationData(query);
     return await this.bloggersService.getBloggers(
       page,
       pageSize,
@@ -68,11 +67,11 @@ export class BloggersController {
   @Get(':bloggerId/posts')
   async getPostForBlogger(
     @Param('bloggerId') bloggerId: string,
-    @Query('page') page: number | 1,
-    @Query('pageSize') pageSize: number | 10,
-    @Query('searchNameTerm') searchNameTerm: string | ' ',
+    @Query() query,
     @Request() req,
   ) {
+    const { page, pageSize, searchNameTerm } =
+      Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
     const pages = await this.postsService.findAll(
       page,
