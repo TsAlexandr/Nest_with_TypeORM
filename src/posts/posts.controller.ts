@@ -51,7 +51,7 @@ export class PostsController {
   @UseGuards(JwtExtract)
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
-    const userId: string = req.userId || null;
+    const userId: string = req.user.userId || null;
     const post = await this.postsService.findOne(id, userId);
     return post;
   }
