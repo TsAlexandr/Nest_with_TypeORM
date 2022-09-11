@@ -14,7 +14,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { NewPost } from '../common/types/classes/classes';
+import { Actions, NewPost } from '../common/types/classes/classes';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
@@ -126,10 +126,10 @@ export class PostsController {
   @Put(':postId/like-status')
   async updateActions(
     @Param('postId') postId: string,
-    @Body('likeStatus') likeStatus: string,
+    @Body('likeStatus') likeStatus: Actions,
     @Req() req,
   ) {
-    if (likeStatus === '') {
+    if (likeStatus !== Actions.Like || Actions.Dislike || Actions.None) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'likeStatus' }] },
         HttpStatus.BAD_REQUEST,

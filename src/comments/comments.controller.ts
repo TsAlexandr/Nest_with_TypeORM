@@ -1,15 +1,15 @@
 import {
-  Controller,
-  Get,
   Body,
-  Param,
+  Controller,
   Delete,
-  Put,
-  UseGuards,
-  Req,
+  Get,
   HttpCode,
   HttpException,
   HttpStatus,
+  Param,
+  Put,
+  Req,
+  UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { JwtExtract } from '../auth/guards/jwt.extract';
@@ -17,6 +17,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentBelongsGuard } from '../auth/guards/commentBelongsGuard';
 import { UsersService } from '../users/users.service';
+import { Actions } from '../common/types/classes/classes';
 
 @Controller('comments')
 export class CommentsController {
@@ -50,10 +51,10 @@ export class CommentsController {
   @Put(':commentId/like-status')
   async updateActions(
     @Param('commentId') commentId: string,
-    @Body('likeStatus') status: string,
+    @Body('likeStatus') status: Actions,
     @Req() req,
   ) {
-    if (status === '') {
+    if (status !== Actions.Like || Actions.Dislike || Actions.None) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'likeStatus' }] },
         HttpStatus.BAD_REQUEST,
