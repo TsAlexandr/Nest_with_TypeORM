@@ -129,20 +129,21 @@ export class PostsController {
     @Body('likeStatus') likeStatus: Actions,
     @Req() req,
   ) {
-    if (likeStatus !== Actions.Like && Actions.Dislike && Actions.None) {
-      throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'likeStatus' }] },
-        HttpStatus.BAD_REQUEST,
+    if (Object.values(Actions).includes(likeStatus)) {
+      const userId = req.user.payload.sub;
+      const user = await this.usersService.findUserById(userId);
+
+      return await this.postsService.updateActions(
+        postId,
+        likeStatus,
+        userId,
+        user.accountData.login,
       );
     }
-    const userId = req.user.payload.sub;
-    const user = await this.usersService.findUserById(userId);
 
-    return await this.postsService.updateActions(
-      postId,
-      likeStatus,
-      userId,
-      user.accountData.login,
+    throw new HttpException(
+      { message: [{ message: 'invalid value', field: 'likeStatus' }] },
+      HttpStatus.BAD_REQUEST,
     );
   }
 }

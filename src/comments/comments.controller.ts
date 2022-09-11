@@ -51,10 +51,10 @@ export class CommentsController {
   @Put(':commentId/like-status')
   async updateActions(
     @Param('commentId') commentId: string,
-    @Body('likeStatus') status: string,
+    @Body('likeStatus') status: Actions,
     @Req() req,
   ) {
-    if (status !== Actions.Like && Actions.Dislike && Actions.None) {
+    if (Object.values(Actions).includes(status)) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'likeStatus' }] },
         HttpStatus.BAD_REQUEST,
