@@ -8,7 +8,8 @@ import {
   UseGuards,
   Req,
   HttpCode,
-  Res,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { JwtExtract } from '../auth/guards/jwt.extract';
@@ -23,39 +24,48 @@ export class CommentsController {
     private readonly commentsService: CommentsService,
     private usersService: UsersService,
   ) {}
+
   @UseGuards(JwtExtract)
-  @Get(':commentId')
-  async findOne(@Param('commentId') commentId: string, @Req() req) {
+  @Get(':id')
+  async findComment(@Param('id') id: string, @Req() req) {
     const userId = req.user.userId || null;
-    return await this.commentsService.findOne(commentId, userId);
+    return await this.commentsService.findComment(id, userId);
   }
+
   @UseGuards(AuthGuard)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() content: string) {
-    return await this.commentsService.update(id, content);
+  async updateComment(@Param('id') id: string, @Body() content: string) {
+    return await this.commentsService.updateComment(id, content);
   }
+
   @UseGuards(AuthGuard)
   @Delete(':id')
-  async remove(@Param('id') id: string) {
-    return await this.commentsService.remove(id);
+  async deleteComment(@Param('id') id: string) {
+    return await this.commentsService.deleteComment(id);
   }
+
   @HttpCode(204)
   @UseGuards(JwtAuthGuards)
   @UseGuards(CommentBelongsGuard)
   @Put(':commentId/like-status')
   async updateActions(
     @Param('commentId') commentId: string,
-    @Req() req,
     @Body('likeStatus') status: string,
+    @Req() req,
   ) {
+    if (status === '') {
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'likeStatus' }] },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const userId = req.user.payload.sub;
     const user = await this.usersService.findUserById(userId);
-    const update = await this.commentsService.updateActions(
+    return await this.commentsService.updateLikes(
       commentId,
       status,
       userId,
       user.accountData.login,
     );
-    return null;
   }
 }

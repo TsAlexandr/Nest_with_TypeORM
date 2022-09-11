@@ -13,7 +13,7 @@ export class CommentBelongsGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> | null {
     const request: Request = context.switchToHttp().getRequest();
     const commentId = request.params.commentId;
-    const comment = await this.commentsService.findOne(commentId, null);
+    const comment = await this.commentsService.findComment(commentId, null);
     if (!comment)
       throw new NotFoundException({
         message: 'comment not found',

@@ -7,9 +7,9 @@ import { Model } from 'mongoose';
 
 export class CommentsRepository {
   constructor(
-    @InjectModel('Comments') private commentsModel: Model<CommentsDocument>,
+    @InjectModel(Comments.name) private commentsModel: Model<CommentsDocument>,
   ) {}
-  async findOne(commentId: string, userId: string) {
+  async findComment(commentId: string, userId: string) {
     const comment = await this.commentsModel.findOne(
       { id: commentId },
       {
@@ -18,7 +18,6 @@ export class CommentsRepository {
         __v: 0,
       },
     );
-    console.log(comment);
     if (!comment) return null;
     const currentUserStatus = comment.totalActions.find(
       (el) => el.userId === userId,
@@ -94,11 +93,11 @@ export class CommentsRepository {
 
   async createComment(newComment: Comments) {
     await this.commentsModel.create(newComment);
-    const comment = await this.findOne(newComment.id, newComment.userId);
+    const comment = await this.findComment(newComment.id, newComment.userId);
     return comment;
   }
 
-  async updateOne(id: string, content: string) {
+  async updateComment(id: string, content: string) {
     const updComment = await this.commentsModel.findOneAndUpdate(
       { id },
       { $set: { content: content } },
@@ -106,12 +105,12 @@ export class CommentsRepository {
     return updComment;
   }
 
-  async remove(id: string) {
+  async deleteComment(id: string) {
     const deleteComment = await this.commentsModel.deleteOne({ id });
     return deleteComment.deletedCount === 1;
   }
 
-  async updateActions(
+  async updateLikes(
     commentId: string,
     status: string,
     userId: string,
@@ -119,13 +118,13 @@ export class CommentsRepository {
     addedAt: Date,
   ) {
     if (status === 'Like' || status === 'Dislike' || status === 'None') {
-      await this.commentsModel.findOneAndUpdate(
+      await this.commentsModel.updateOne(
         { id: commentId },
         { $pull: { totalActions: { userId: userId } } },
       );
     }
     if (status === 'Like' || status === 'Dislike') {
-      const updateLike = await this.commentsModel.findOneAndUpdate(
+      const updateLike = await this.commentsModel.updateOne(
         { id: commentId },
         {
           $push: {

@@ -6,16 +6,16 @@ import { v4 } from 'uuid';
 export class CommentsService {
   constructor(private commentsRepository: CommentsRepository) {}
 
-  async findOne(commentId: string, userId: string) {
-    return await this.commentsRepository.findOne(commentId, userId);
+  async findComment(commentId: string, userId: string) {
+    return await this.commentsRepository.findComment(commentId, userId);
   }
 
-  async update(id: string, content: string) {
-    return await this.commentsRepository.updateOne(id, content);
+  async updateComment(id: string, content: string) {
+    return await this.commentsRepository.updateComment(id, content);
   }
 
-  async remove(id: string) {
-    return await this.commentsRepository.remove(id);
+  async deleteComment(id: string) {
+    return await this.commentsRepository.deleteComment(id);
   }
 
   async createComment(
@@ -56,14 +56,14 @@ export class CommentsService {
     );
   }
 
-  async updateActions(
+  async updateLikes(
     commentId: string,
     status: string,
     userId: string,
     login: string,
   ) {
     const date = new Date();
-    const update = await this.commentsRepository.updateActions(
+    const update = await this.commentsRepository.updateLikes(
       commentId,
       status,
       userId,

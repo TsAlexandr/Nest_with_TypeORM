@@ -10,7 +10,8 @@ import {
   Req,
   UseGuards,
   HttpCode,
-  Res,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { NewPost } from '../common/types/classes/classes';
@@ -47,6 +48,7 @@ export class PostsController {
       searchNameTerm,
     );
   }
+
   @UseGuards(JwtExtract)
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
@@ -76,6 +78,7 @@ export class PostsController {
     const bloggerName = blogger.name;
     return await this.postsService.update(id, bloggerId, bloggerName, updPost);
   }
+
   @UseGuards(BasicGuards)
   @Delete(':id')
   async remove(@Param('id') id: string) {
@@ -126,6 +129,12 @@ export class PostsController {
     @Body('likeStatus') likeStatus: string,
     @Req() req,
   ) {
+    if (likeStatus === '') {
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'likeStatus' }] },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
     const userId = req.user.payload.sub;
     const user = await this.usersService.findUserById(userId);
 
