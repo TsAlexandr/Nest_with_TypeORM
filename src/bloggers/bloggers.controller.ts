@@ -26,9 +26,9 @@ export class BloggersController {
 
   @Get()
   async getAllBloggers(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-    @Query('searchNameTerm') searchNameTerm: string,
+    @Query('page') page: number | 1,
+    @Query('pageSize') pageSize: number | 10,
+    @Query('searchNameTerm') searchNameTerm: string | ' ',
   ) {
     return await this.bloggersService.getBloggers(
       page,
@@ -68,9 +68,9 @@ export class BloggersController {
   @Get(':bloggerId/posts')
   async getPostForBlogger(
     @Param('bloggerId') bloggerId: string,
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-    @Query('searchNameTerm') searchNameTerm: string,
+    @Query('page') page: number | 1,
+    @Query('pageSize') pageSize: number | 10,
+    @Query('searchNameTerm') searchNameTerm: string | ' ',
     @Request() req,
   ) {
     const userId = req.user.userId || null;

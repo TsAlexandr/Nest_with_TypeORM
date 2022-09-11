@@ -34,9 +34,9 @@ export class PostsController {
   @UseGuards(JwtExtract)
   @Get()
   async getAll(
-    @Query() page: number,
-    @Query() pageSize: number,
-    @Query() searchNameTerm: string,
+    @Query('page') page: number | 1,
+    @Query('pageSize') pageSize: number | 10,
+    @Query('searchNameTerm') searchNameTerm: string | ' ',
     @Req() req,
   ) {
     const userId = req.user.userId || null;
@@ -86,8 +86,8 @@ export class PostsController {
   @UseGuards(JwtExtract)
   @Get(':postId/comments')
   async getCommentsInPages(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
+    @Query('page') page: number | 1,
+    @Query('pageSize') pageSize: number | 10,
     @Param('postId') postId: string,
     @Req() req,
   ) {
