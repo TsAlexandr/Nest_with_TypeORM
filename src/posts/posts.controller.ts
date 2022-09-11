@@ -128,7 +128,6 @@ export class PostsController {
     @Req() req,
   ) {
     const userId = req.user.payload.sub;
-
     const user = await this.usersService.findUserById(userId);
 
     return await this.postsService.updateActions(

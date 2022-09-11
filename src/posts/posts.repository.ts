@@ -172,7 +172,6 @@ export class PostsRepository {
     userId: string,
     login: string,
   ) {
-    console.log(postId, likeStatus, userId, login);
     if (likeStatus === 'Like' || 'Dislike' || 'None') {
       await this.postsModel.findOneAndUpdate(
         { postId },
