@@ -55,18 +55,18 @@ export class CommentsController {
     @Req() req,
   ) {
     if (Object.values(Actions).includes(status)) {
-      throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'likeStatus' }] },
-        HttpStatus.BAD_REQUEST,
+      const userId = req.user.payload.sub;
+      const user = await this.usersService.findUserById(userId);
+      return await this.commentsService.updateLikes(
+        commentId,
+        status,
+        userId,
+        user.accountData.login,
       );
     }
-    const userId = req.user.payload.sub;
-    const user = await this.usersService.findUserById(userId);
-    return await this.commentsService.updateLikes(
-      commentId,
-      status,
-      userId,
-      user.accountData.login,
+    throw new HttpException(
+      { message: [{ message: 'invalid value', field: 'likeStatus' }] },
+      HttpStatus.BAD_REQUEST,
     );
   }
 }
