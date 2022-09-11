@@ -20,6 +20,7 @@ import { CommentsService } from '../comments/comments.service';
 import { BloggersService } from '../bloggers/bloggers.service';
 import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UsersService } from '../users/users.service';
 
 @Controller('posts')
 export class PostsController {
@@ -27,6 +28,7 @@ export class PostsController {
     private postsService: PostsService,
     private commentsService: CommentsService,
     private bloggersService: BloggersService,
+    private usersService: UsersService,
   ) {}
 
   @UseGuards(JwtExtract)
@@ -125,14 +127,15 @@ export class PostsController {
     @Body('likeStatus') likeStatus: string,
     @Req() req,
   ) {
-    const userId = req.userId;
-    const login = req.login;
+    const userId = req.user.payload.sub;
+
+    const user = await this.usersService.findUserById(userId);
 
     return await this.postsService.updateActions(
       postId,
       likeStatus,
       userId,
-      login,
+      user.accountData.login,
     );
   }
 }

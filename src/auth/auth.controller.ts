@@ -34,7 +34,7 @@ export class AuthController {
     @Body('password') password: string,
   ) {
     const created = await this.userService.createUser(login, email, password);
-    return null;
+    return created;
   }
 
   @Post('/registration-confirmation')
