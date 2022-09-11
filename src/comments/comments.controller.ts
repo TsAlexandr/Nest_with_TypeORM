@@ -47,13 +47,7 @@ export class CommentsController {
     @Param('commentId') commentId: string,
     @Req() req,
     @Body('likeStatus') status: string,
-    @Res() res,
   ) {
-    if (status !== 'Like' && status !== 'Dislike' && status !== 'None') {
-      res.status(400).send({
-        errorsMessages: [{ message: 'its bad ', field: 'likeStatus' }],
-      });
-    }
     const userId = req.user.payload.sub;
     const user = await this.usersService.findUserById(userId);
     const update = await this.commentsService.updateActions(

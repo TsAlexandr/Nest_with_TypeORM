@@ -125,17 +125,7 @@ export class PostsController {
     @Param('postId') postId: string,
     @Body('likeStatus') likeStatus: string,
     @Req() req,
-    @Res() res,
   ) {
-    if (
-      likeStatus !== 'Like' &&
-      likeStatus !== 'Dislike' &&
-      likeStatus !== 'None'
-    ) {
-      res.status(400).send({
-        errorsMessages: [{ message: 'its bad ', field: 'likeStatus' }],
-      });
-    }
     const userId = req.user.payload.sub;
     const user = await this.usersService.findUserById(userId);
 
