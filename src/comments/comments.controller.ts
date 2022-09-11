@@ -8,6 +8,7 @@ import {
   UseGuards,
   Req,
   HttpCode,
+  Res,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { JwtExtract } from '../auth/guards/jwt.extract';
@@ -15,7 +16,6 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentBelongsGuard } from '../auth/guards/commentBelongsGuard';
 import { UsersService } from '../users/users.service';
-import { Actions } from '../common/types/classes/classes';
 
 @Controller('comments')
 export class CommentsController {
@@ -46,8 +46,14 @@ export class CommentsController {
   async updateActions(
     @Param('commentId') commentId: string,
     @Req() req,
-    @Body('likeStatus') status: Actions,
+    @Body('likeStatus') status: string,
+    @Res() res,
   ) {
+    if (status !== 'Like' && status !== 'Dislike' && status !== 'None') {
+      res.status(400).send({
+        errorsMessages: [{ message: 'its bad ', field: 'likeStatus' }],
+      });
+    }
     const userId = req.user.payload.sub;
     const user = await this.usersService.findUserById(userId);
     const update = await this.commentsService.updateActions(

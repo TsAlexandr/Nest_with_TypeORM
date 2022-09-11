@@ -10,9 +10,10 @@ import {
   Req,
   UseGuards,
   HttpCode,
+  Res,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { Actions, NewPost } from '../common/types/classes/classes';
+import { NewPost } from '../common/types/classes/classes';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
@@ -122,9 +123,19 @@ export class PostsController {
   @Put(':postId/like-status')
   async updateActions(
     @Param('postId') postId: string,
-    @Body('likeStatus') likeStatus: Actions,
+    @Body('likeStatus') likeStatus: string,
     @Req() req,
+    @Res() res,
   ) {
+    if (
+      likeStatus !== 'Like' &&
+      likeStatus !== 'Dislike' &&
+      likeStatus !== 'None'
+    ) {
+      res.status(400).send({
+        errorsMessages: [{ message: 'its bad ', field: 'likeStatus' }],
+      });
+    }
     const userId = req.user.payload.sub;
     const user = await this.usersService.findUserById(userId);
 

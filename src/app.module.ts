@@ -10,7 +10,6 @@ import {
   AttemptsSchema,
   Bloggers,
   BloggerSchema,
-  Comments,
   CommentsSchema,
   Posts,
   PostsSchema,
@@ -40,8 +39,6 @@ import { PostsRepository } from './posts/posts.repository';
 import { AuthService } from './auth/auth.service';
 import { EmailService } from './email/email.service';
 import { UserExistGuard } from './auth/guards/userExistGuard';
-import { LikesService } from './actions/likes.service';
-import { LikesRepository } from './actions/likes.repository';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),

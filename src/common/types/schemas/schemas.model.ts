@@ -52,19 +52,9 @@ export class Posts {
   bloggerName: string;
 
   @Prop({ type: Action })
-  extendedLikesInfo: {
-    dislikesCount: number;
-    likesCount: number;
-    myStatus: string;
-    newestLikes: any[];
-  };
+  extendedLikesInfo: Action;
   @Prop({ type: TotalActions })
-  totalActions: {
-    addedAt: Date;
-    action: string;
-    userId: string;
-    login: string;
-  }[];
+  totalActions: TotalActions[];
 }
 
 export const PostsSchema = SchemaFactory.createForClass(Posts);
@@ -86,18 +76,9 @@ export class Comments {
   @Prop()
   addedAt: Date;
   @Prop({ type: LikesInfo })
-  likesInfo: {
-    dislikesCount: number;
-    likesCount: number;
-    myStatus: string;
-  };
+  likesInfo: LikesInfo;
   @Prop({ type: TotalActions })
-  totalActions: {
-    addedAt: Date;
-    action: string;
-    userId: string;
-    login: string;
-  }[];
+  totalActions: TotalActions[];
 }
 
 export const CommentsSchema = SchemaFactory.createForClass(Comments);

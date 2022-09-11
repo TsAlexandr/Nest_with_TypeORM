@@ -62,7 +62,7 @@ export class CommentsRepository {
 
     const commentAfterDeleteField = commentsForPosts.map((obj) => {
       const currentUserStatus = obj.totalActions.find(
-        (el) => el.userId === userId,
+        (el: { userId: string }) => el.userId === userId,
       );
       const likesCount = obj.totalActions.filter(
         (el) => el.action === 'Like',

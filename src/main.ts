@@ -11,6 +11,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: false,
+      transform: true,
       exceptionFactory: (errors) => {
         const customErrors = errors.map((e) => {
           const firstError = JSON.stringify(e.constraints);

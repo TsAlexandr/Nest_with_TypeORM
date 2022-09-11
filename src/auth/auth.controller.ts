@@ -2,9 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
-  forwardRef,
   HttpCode,
-  Inject,
   NotFoundException,
   Post,
   Req,
@@ -34,7 +32,7 @@ export class AuthController {
     @Body('password') password: string,
   ) {
     const created = await this.userService.createUser(login, email, password);
-    return created;
+    return null;
   }
 
   @Post('/registration-confirmation')
