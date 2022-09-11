@@ -71,6 +71,7 @@ export const PostsSchema = SchemaFactory.createForClass(Posts);
 
 export type CommentsDocument = Comments & Document;
 
+@Schema()
 export class Comments {
   @Prop()
   id: string;

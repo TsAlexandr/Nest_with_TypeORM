@@ -4,10 +4,11 @@ import {
   CommentsDocument,
 } from '../common/types/schemas/schemas.model';
 import { Model } from 'mongoose';
+import { Comment } from '../common/types/classes/classes';
 
 export class CommentsRepository {
   constructor(
-    @InjectModel(Comments.name) private commentsModel: Model<CommentsDocument>,
+    @InjectModel('Comments') private commentsModel: Model<CommentsDocument>,
   ) {}
   async findOne(commentId: string, userId: string) {
     const comment = await this.commentsModel.findOne(
@@ -94,7 +95,7 @@ export class CommentsRepository {
 
   async createComment(newComment: Comments) {
     await this.commentsModel.create(newComment);
-    const comment = await this.commentsModel.findOne({ id: newComment.id });
+    const comment = await this.findOne(newComment.id, newComment.userId);
     return comment;
   }
 
