@@ -93,7 +93,7 @@ export class PostsController {
     @Req() req,
   ) {
     const { page, pageSize } = Pagination.getData(query);
-    const userId = req.userId || null;
+    const userId = req.user.userId || null;
     return await this.commentsService.getCommentWithPage(
       postId,
       page,
