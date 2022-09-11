@@ -1,14 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { CommentsRepository } from './comments.repository';
 import { v4 } from 'uuid';
-import { UserAccount } from '../common/types/classes/classes';
 
 @Injectable()
 export class CommentsService {
   constructor(private commentsRepository: CommentsRepository) {}
 
-  async findOne(id: string, userId: string) {
-    return await this.commentsRepository.findOne(id, userId);
+  async findOne(commentId: string, userId: string) {
+    return await this.commentsRepository.findOne(commentId, userId);
   }
 
   async update(id: string, content: string) {

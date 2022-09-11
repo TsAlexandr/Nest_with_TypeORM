@@ -9,9 +9,9 @@ export class CommentsRepository {
   constructor(
     @InjectModel(Comments.name) private commentsModel: Model<CommentsDocument>,
   ) {}
-  async findOne(id: string, userId: string) {
+  async findOne(commentId: string, userId: string) {
     const comment = await this.commentsModel.findOne(
-      { id },
+      { id: commentId },
       {
         _id: 0,
         postId: 0,

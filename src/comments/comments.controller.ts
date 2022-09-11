@@ -22,10 +22,10 @@ export class CommentsController {
     private usersService: UsersService,
   ) {}
   @UseGuards(JwtExtract)
-  @Get(':id')
-  async findOne(@Param('id') id: string, @Req() req) {
+  @Get(':commentId')
+  async findOne(@Param('commentId') commentId: string, @Req() req) {
     const userId = req.user.userId || null;
-    return await this.commentsService.findOne(id, userId);
+    return await this.commentsService.findOne(commentId, userId);
   }
   @UseGuards(AuthGuard)
   @Put(':id')
