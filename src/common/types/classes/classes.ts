@@ -156,3 +156,9 @@ export class TotalActions {
   userId: string;
   login: string;
 }
+
+export enum Actions {
+  Like = 'Like',
+  Dislike = 'Dislike',
+  None = 'None',
+}

@@ -4,7 +4,6 @@ import {
   CommentsDocument,
 } from '../common/types/schemas/schemas.model';
 import { Model } from 'mongoose';
-import { Comment } from '../common/types/classes/classes';
 
 export class CommentsRepository {
   constructor(
@@ -120,13 +119,13 @@ export class CommentsRepository {
     addedAt: Date,
   ) {
     if (status === 'Like' || status === 'Dislike' || status === 'None') {
-      await this.commentsModel.updateOne(
+      await this.commentsModel.findOneAndUpdate(
         { id: commentId },
         { $pull: { totalActions: { userId: userId } } },
       );
     }
     if (status === 'Like' || status === 'Dislike') {
-      const updateLike = await this.commentsModel.updateOne(
+      const updateLike = await this.commentsModel.findOneAndUpdate(
         { id: commentId },
         {
           $push: {
