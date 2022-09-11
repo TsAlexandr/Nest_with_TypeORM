@@ -1,9 +1,10 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Posts } from '../common/types/schemas/schemas.model';
+import { Posts, PostsDocument } from '../common/types/schemas/schemas.model';
 import { NewPost } from '../common/types/classes/classes';
+import { Model } from 'mongoose';
 
 export class PostsRepository {
-  constructor(@InjectModel('Posts') private postsModel) {}
+  constructor(@InjectModel('Posts') private postsModel: Model<PostsDocument>) {}
 
   async getPosts(
     page: number,
@@ -33,7 +34,7 @@ export class PostsRepository {
       const dislikesCount = obj.totalActions.filter(
         (el) => el.action === 'Dislike',
       ).length;
-      const actions = obj;
+      const actions = obj.totalActions;
       return {
         id: obj.id,
         title: obj.title,
@@ -110,7 +111,7 @@ export class PostsRepository {
           dislikesCount: dislikesCount,
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
           newestLikes: actions
-            ?.filter((el) => el.action === 'Like')
+            .filter((el) => el.action === 'Like')
             .reverse()
             .slice(0, 3)
             .map((el) => {
@@ -192,7 +193,7 @@ export class PostsRepository {
           },
         },
       );
-      return updateLike.modifiedCount === 1;
+      return null;
     }
   }
 }

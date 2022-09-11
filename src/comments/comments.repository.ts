@@ -3,7 +3,6 @@ import {
   Comments,
   CommentsDocument,
 } from '../common/types/schemas/schemas.model';
-import { UserAccount } from '../common/types/classes/classes';
 import { Model } from 'mongoose';
 
 export class CommentsRepository {
@@ -19,14 +18,15 @@ export class CommentsRepository {
         __v: 0,
       },
     );
+    console.log(comment);
     if (!comment) return null;
-    const currentUserStatus = comment.totalActions?.find(
-      (el: { userId: string }) => el.userId === userId,
+    const currentUserStatus = comment.totalActions.find(
+      (el) => el.userId === userId,
     );
-    const likesCount = comment.totalActions?.filter(
+    const likesCount = comment.totalActions.filter(
       (el) => el.action === 'Like',
     ).length;
-    const dislikesCount = comment.totalActions?.filter(
+    const dislikesCount = comment.totalActions.filter(
       (el) => el.action === 'Dislike',
     ).length;
     return {
@@ -61,13 +61,13 @@ export class CommentsRepository {
     const pages = Math.ceil(total / pageSize);
 
     const commentAfterDeleteField = commentsForPosts.map((obj) => {
-      const currentUserStatus = obj.totalActions?.find(
-        (el: { userId: string }) => el.userId === userId,
+      const currentUserStatus = obj.totalActions.find(
+        (el) => el.userId === userId,
       );
-      const likesCount = obj.totalActions?.filter(
+      const likesCount = obj.totalActions.filter(
         (el) => el.action === 'Like',
       ).length;
-      const dislikesCount = obj.totalActions?.filter(
+      const dislikesCount = obj.totalActions.filter(
         (el) => el.action === 'Dislike',
       ).length;
       return {
