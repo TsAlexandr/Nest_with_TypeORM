@@ -174,13 +174,13 @@ export class PostsRepository {
   ) {
     if (likeStatus === 'Like' || 'Dislike' || 'None') {
       await this.postsModel.findOneAndUpdate(
-        { postId },
-        { $pull: { totalActions: { userId } } },
+        { id: postId },
+        { $pull: { totalActions: { userId: userId } } },
       );
     }
     if (likeStatus === 'Like' || 'Dislike') {
       const updateLike = await this.postsModel.findOneAndUpdate(
-        { postId },
+        { id: postId },
         {
           $push: {
             totalActions: {

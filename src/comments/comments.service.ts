@@ -37,7 +37,7 @@ export class CommentsService {
         likesCount: 0,
         myStatus: 'None',
       },
-      totalActions: []
+      totalActions: [],
     };
     const comment = await this.commentsRepository.createComment(newComments);
     return comment;
@@ -57,12 +57,18 @@ export class CommentsService {
     );
   }
 
-  async updateActions(id: string, status: string, user: UserAccount) {
+  async updateActions(
+    commentId: string,
+    status: string,
+    userId: string,
+    login: string,
+  ) {
     const date = new Date();
     const update = await this.commentsRepository.updateActions(
-      id,
+      commentId,
       status,
-      user,
+      userId,
+      login,
       date,
     );
     return update;

@@ -112,27 +112,28 @@ export class CommentsRepository {
   }
 
   async updateActions(
-    id: string,
+    commentId: string,
     status: string,
-    user: UserAccount,
+    userId: string,
+    login: string,
     addedAt: Date,
   ) {
     if (status === 'Like' || status === 'Dislike' || status === 'None') {
       await this.commentsModel.updateOne(
-        { id },
-        { $pull: { totalActions: { userId: user.id } } },
+        { id: commentId },
+        { $pull: { totalActions: { userId: userId } } },
       );
     }
     if (status === 'Like' || status === 'Dislike') {
       const updateLike = await this.commentsModel.updateOne(
-        { id },
+        { id: commentId },
         {
           $push: {
             totalActions: {
               addedAt,
               action: status,
-              userId: user.id,
-              login: user.login,
+              userId: userId,
+              login: login,
             },
           },
         },
