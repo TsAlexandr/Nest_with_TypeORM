@@ -126,7 +126,7 @@ export class PostsController {
   @Put(':postId/like-status')
   async updateActions(
     @Param('postId') postId: string,
-    @Body('likeStatus') likeStatus: Actions,
+    @Body('likeStatus') likeStatus: string,
     @Req() req,
   ) {
     if (likeStatus !== Actions.Like || Actions.Dislike || Actions.None) {

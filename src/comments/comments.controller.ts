@@ -51,7 +51,7 @@ export class CommentsController {
   @Put(':commentId/like-status')
   async updateActions(
     @Param('commentId') commentId: string,
-    @Body('likeStatus') status: Actions,
+    @Body('likeStatus') status: string,
     @Req() req,
   ) {
     if (status !== Actions.Like || Actions.Dislike || Actions.None) {
