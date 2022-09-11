@@ -48,7 +48,7 @@ export class CommentsRepository {
     postId: string,
     page: number,
     pageSize: number,
-    userId: string | null,
+    userId: string,
   ) {
     const filter = { postId };
     const commentsForPosts = await this.commentsModel

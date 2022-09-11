@@ -46,7 +46,7 @@ export class CommentsService {
     postId: string,
     page: number,
     pageSize: number,
-    userId: string | null,
+    userId: string,
   ) {
     return await this.commentsRepository.getCommentWithPage(
       postId,
