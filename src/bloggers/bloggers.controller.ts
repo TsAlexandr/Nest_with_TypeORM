@@ -1,22 +1,24 @@
+import { BloggersService } from './bloggers.service';
+import { PostsService } from '../posts/posts.service';
+import { NewPost } from '../common/types/classes/classes';
+import { BloggersDto } from './dto/bloggers.dto';
+import { Pagination } from '../common/types/classes/pagination';
 import {
   Body,
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Put,
   Query,
-  Request,
+  Req,
   UseGuards,
 } from '@nestjs/common';
-import { BloggersService } from './bloggers.service';
 import { BasicGuards } from '../auth/guards/basic.guards';
-import { PostsService } from '../posts/posts.service';
-import { NewPost } from '../common/types/classes/classes';
-import { BloggersDto } from './dto/bloggers.dto';
 import { JwtExtract } from '../auth/guards/jwt.extract';
-import { Pagination } from '../common/types/classes/pagination';
 
 @Controller('bloggers')
 export class BloggersController {
@@ -48,6 +50,7 @@ export class BloggersController {
   }
 
   @UseGuards(BasicGuards)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async updateBlogger(
     @Param('id') id: string,
@@ -58,6 +61,7 @@ export class BloggersController {
   }
 
   @UseGuards(BasicGuards)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteBlogger(@Param('id') id: string) {
     return await this.bloggersService.deleteBlogger(id);
@@ -68,7 +72,7 @@ export class BloggersController {
   async getPostForBlogger(
     @Param('bloggerId') bloggerId: string,
     @Query() query,
-    @Request() req,
+    @Req() req,
   ) {
     const { page, pageSize, searchNameTerm } =
       Pagination.getPaginationData(query);
