@@ -1,8 +1,8 @@
 import { Controller, Delete, HttpCode } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
-  Bloggers,
   BloggersDocument,
+  BloggersMongo,
   Comments,
   Posts,
   PostsDocument,
@@ -13,7 +13,8 @@ import { User } from '../common/types/classes/classes';
 
 export class TestRepo {
   constructor(
-    @InjectModel(Bloggers.name) private bloggersModel: Model<BloggersDocument>,
+    @InjectModel(BloggersMongo.name)
+    private bloggersModel: Model<BloggersDocument>,
     @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
     @InjectModel('Users') private usersModel: mongoose.Model<User>,
     @InjectModel(Comments.name) private commentsModel: mongoose.Model<Comment>,

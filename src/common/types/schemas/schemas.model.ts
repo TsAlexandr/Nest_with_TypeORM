@@ -10,10 +10,10 @@ import {
   UserAccount,
 } from '../classes/classes';
 
-export type BloggersDocument = Bloggers & Document;
+export type BloggersDocument = BloggersMongo & Document;
 
 @Schema()
-export class Bloggers {
+export class BloggersMongo {
   @Prop()
   id: string;
 
@@ -24,7 +24,7 @@ export class Bloggers {
   youtubeUrl: string;
 }
 
-export const BloggerSchema = SchemaFactory.createForClass(Bloggers);
+export const BloggerSchema = SchemaFactory.createForClass(BloggersMongo);
 
 export type PostsDocument = Posts & Document;
 

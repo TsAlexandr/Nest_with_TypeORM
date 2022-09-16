@@ -8,8 +8,8 @@ import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
 import {
   Attempts,
   AttemptsSchema,
-  Bloggers,
   BloggerSchema,
+  BloggersMongo,
   Comments,
   CommentsSchema,
   Posts,
@@ -40,6 +40,9 @@ import { PostsRepository } from './posts/posts.repository';
 import { AuthService } from './auth/auth.service';
 import { EmailService } from './email/email.service';
 import { UserExistGuard } from './auth/guards/userExistGuard';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { BloggersRepositoryRAW } from './library/rawDb/bloggersRepositoryRAW';
+import { Bloggers } from './bloggers/entities/bloggers.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -50,21 +53,31 @@ import { UserExistGuard } from './auth/guards/userExistGuard';
       { name: Attempts.name, schema: AttemptsSchema },
     ]),
     MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
-    MongooseModule.forFeature([{ name: Bloggers.name, schema: BloggerSchema }]),
+    MongooseModule.forFeature([
+      { name: BloggersMongo.name, schema: BloggerSchema },
+    ]),
     MongooseModule.forFeature([
       { name: Comments.name, schema: CommentsSchema },
     ]),
     MongooseModule.forFeature([{ name: 'Users', schema: UsersSchema }]),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      host: 'ec2-3-208-79-113.compute-1.amazonaws.com',
+      port: 5432,
+      url: process.env.DATABASE_URL,
+      entities: [Bloggers],
+      synchronize: true,
+      ssl: { rejectUnauthorized: false },
+    }),
     // TypeOrmModule.forRoot({
     //   type: 'postgres',
-    //   host: 'ec2-3-208-79-113.compute-1.amazonaws.com',
+    //   host: 'localhost',
     //   port: 5432,
-    //   username: process.env.USERNAME,
-    //   password: process.env.PASS,
-    //   database: 'd2116gcujm4m2k',
+    //   username: 'postgres',
+    //   password: '123',
+    //   database: 'postgres',
     //   autoLoadEntities: true,
     //   synchronize: false,
-    //   ssl: { rejectUnauthorized: false },
     // }),
   ],
   controllers: [
@@ -99,6 +112,7 @@ import { UserExistGuard } from './auth/guards/userExistGuard';
     ExistingPostGuard,
     UserExistGuard,
     JwtExtract,
+    BloggersRepositoryRAW,
   ],
 })
 export class AppModule {}
