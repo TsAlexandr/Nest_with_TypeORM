@@ -6,7 +6,7 @@ import {
   MaxLength,
 } from 'class-validator';
 
-export class Bloggers {
+export class Blogger {
   @IsString()
   @IsNotEmpty()
   id: string;
@@ -26,7 +26,7 @@ export class PostsCon {
 
   @IsString()
   @IsNotEmpty()
-  bloggerId: Bloggers['id'];
+  bloggerId: Blogger['id'];
 
   @IsString()
   @IsNotEmpty()
@@ -43,7 +43,7 @@ export class PostsCon {
   @MaxLength(1000)
   content: string;
 
-  bloggerName: Bloggers['name'];
+  bloggerName: Blogger['name'];
 }
 
 export class NewPost {
