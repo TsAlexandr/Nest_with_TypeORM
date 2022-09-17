@@ -12,9 +12,10 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  BadRequestException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { Actions, NewPost } from '../common/types/classes/classes';
+import { Actions } from '../common/types/classes/classes';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
@@ -63,23 +64,30 @@ export class PostsController {
     const blogger = await this.bloggersService.getBloggerById(
       newPost.bloggerId,
     );
+    if (!blogger) {
+      return new BadRequestException();
+    }
     const bloggerName = blogger.name;
     return await this.postsService.create({ ...newPost, bloggerName });
   }
 
   @UseGuards(BasicGuards)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() updPost: NewPost,
-    @Body() bloggerId: string,
-  ) {
-    const blogger = await this.bloggersService.getBloggerById(bloggerId);
+  async update(@Param('id') id: string, @Body() updPost: CreatePostDto) {
+    const blogger = await this.bloggersService.getBloggerById(
+      updPost.bloggerId,
+    );
     const bloggerName = blogger.name;
-    return await this.postsService.update(id, bloggerId, bloggerName, updPost);
+    return await this.postsService.update({
+      id,
+      bloggerName,
+      ...updPost,
+    });
   }
 
   @UseGuards(BasicGuards)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.postsService.remove(id);
@@ -122,7 +130,7 @@ export class PostsController {
 
   @UseGuards(JwtAuthGuards)
   @UseGuards(ExistingPostGuard)
-  @HttpCode(204)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':postId/like-status')
   async updateActions(
     @Param('postId') postId: string,

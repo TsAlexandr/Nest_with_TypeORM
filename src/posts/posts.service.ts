@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
-import { NewPost, PostsCon } from '../common/types/classes/classes';
+import { PostsCon } from '../common/types/classes/classes';
 import { v4 } from 'uuid';
 
 @Injectable()
@@ -48,18 +48,8 @@ export class PostsService {
     return await this.postsRepository.createPosts(createPost);
   }
 
-  async update(
-    id: string,
-    bloggerId: string,
-    bloggerName: string,
-    updPost: NewPost,
-  ) {
-    return await this.postsRepository.updatePost(
-      id,
-      bloggerId,
-      bloggerName,
-      updPost,
-    );
+  async update(updPost: PostsCon) {
+    return await this.postsRepository.updatePost(updPost);
   }
 
   async remove(id: string) {

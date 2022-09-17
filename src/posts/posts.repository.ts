@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { Posts, PostsDocument } from '../common/types/schemas/schemas.model';
-import { NewPost } from '../common/types/classes/classes';
+import { PostsCon } from '../common/types/classes/classes';
 import { Model } from 'mongoose';
 
 export class PostsRepository {
@@ -69,7 +69,6 @@ export class PostsRepository {
 
   async getPostById(id: string, userId: string) {
     const post = await this.postsModel.findOne({ id }).lean();
-    console.log(post);
     if (!post) return null;
     if (!userId) {
       return {
@@ -142,21 +141,10 @@ export class PostsRepository {
     };
   }
 
-  async updatePost(
-    id: string,
-    bloggerId: string,
-    bloggerName: string,
-    updPost: NewPost,
-  ) {
-    const update = {
-      id,
-      bloggerId,
-      bloggerName,
-      ...updPost,
-    };
+  async updatePost(updPost: PostsCon) {
     const post = await this.postsModel.updateOne(
-      { id },
-      { $set: { ...update } },
+      { id: updPost.id },
+      { $set: { ...updPost } },
       { upsert: true },
     );
     return post.modifiedCount === 1;
