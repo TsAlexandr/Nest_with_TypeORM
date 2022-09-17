@@ -5,6 +5,7 @@ import { User } from '../common/types/classes/classes';
 import { v4 } from 'uuid';
 import { EmailService } from '../email/email.service';
 import * as jwt from 'jsonwebtoken';
+import { RegistrationDto } from '../auth/dto/registration.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,13 +18,13 @@ export class UsersService {
     return await this.usersRepository.getUsers(page, pageSize);
   }
 
-  async createUser(login: string, email: string, password: string) {
-    const passwordHash = await this.authService._generateHash(password);
+  async createUser(registr: RegistrationDto) {
+    const passwordHash = await this.authService._generateHash(registr.password);
     const user: User = new User(
       {
         id: v4(),
-        login: login,
-        email: email,
+        login: registr.login,
+        email: registr.email,
         passwordHash: passwordHash,
         createdAt: new Date(),
       },

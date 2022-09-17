@@ -3,11 +3,14 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Post,
   Query,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
@@ -22,18 +25,14 @@ export class UsersController {
   }
 
   @Post()
-  async create(
-    @Body('login') login: string,
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ) {
-    const user = await this.usersService.createUser(login, email, password);
+  async create(@Body() createUser: CreateUserDto) {
+    const user = await this.usersService.createUser(createUser);
     return {
       id: user.accountData.id,
       login: user.accountData.login,
     };
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id') id: string) {
     return await this.usersService.deleteUser(id);
