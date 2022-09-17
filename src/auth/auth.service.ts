@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { LoginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
   constructor(private usersRepository: UsersRepository) {}
 
-  async checkCredentials(login: string, password: string) {
-    const user: any = await this.usersRepository.findByLogin(login);
+  async checkCredentials(loginBody: LoginDto) {
+    const user: any = await this.usersRepository.findByLogin(loginBody.login);
     if (!user)
       return {
         resultCode: 1,
@@ -18,7 +19,7 @@ export class AuthService {
         },
       };
     const isItHash = await this._correctHash(
-      password,
+      loginBody.password,
       user.accountData.passwordHash,
     );
     if (!isItHash) {

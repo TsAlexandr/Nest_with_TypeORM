@@ -16,6 +16,8 @@ import { CurrentUserId } from '../common/custom-decorator/current.user.decorator
 import { JwtAuthGuards } from './guards/jwt-auth.guards';
 import { EmailService } from '../email/email.service';
 import { LocalAuthGuards } from './guards/local-auth.guards';
+import { RegistrationDto } from './dto/registration.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -26,12 +28,8 @@ export class AuthController {
   ) {}
 
   @Post('/registration')
-  async registration(
-    @Body('login') login: string,
-    @Body('email') email: string,
-    @Body('password') password: string,
-  ) {
-    const created = await this.userService.createUser(login, email, password);
+  async registration(@Body() registr: RegistrationDto) {
+    const created = await this.userService.createUser(registr);
     return null;
   }
 
@@ -52,12 +50,11 @@ export class AuthController {
   @HttpCode(200)
   @Post('/login')
   async login(
-    @Body('login') login: string,
-    @Body('password') password: string,
+    @Body() loginBody: LoginDto,
     @Req() req,
     @Res({ passthrough: true }) res,
   ) {
-    const result = await this.authService.checkCredentials(login, password);
+    const result = await this.authService.checkCredentials(loginBody);
     res.cookie('refreshToken', result.data.refreshToken, {
       httpOnly: true,
       secure: true,
@@ -68,7 +65,8 @@ export class AuthController {
   @Post('/refresh-token')
   async refresh(@Req() req, @Res() res) {
     if (!req.cookie.refreshToken) throw new UnauthorizedException();
-    const userId = req.user.id;
+    const userId = req.user.payload.sub;
+    console.log(userId);
     const tokens = await this.authService.createTokens(userId);
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
