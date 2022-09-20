@@ -12,6 +12,9 @@ import {
   createInvalidUser,
   createPostWithBloggerId,
   expectBlogger,
+  expectCommentDataAfterAllLikeStatus,
+  expectCommentDataWithUserDislikeStatus,
+  expectCommentDataWithUserLikeStatus,
   expectPostDataAfterAllLikeStatus,
   expectPostDataWithDislikeStatus,
   expectPostDataWithUserLikeStatus,
@@ -388,6 +391,115 @@ describe('App (e2e)', () => {
         .expect(HttpStatus.CREATED);
 
       const commentId = createCommentForPost.body.id;
+
+      //////////////////////////USERS FOR LIKE STATUS///////////////////////////
+
+      const firstUserForLike = await request(app.getHttpServer())
+        .post('/auth/registration')
+        .send(authUserRegistration)
+        .expect(HttpStatus.CREATED);
+
+      const secondUserForLike = await request(app.getHttpServer())
+        .post('/auth/registration')
+        .send(authUserRegistration2)
+        .expect(HttpStatus.CREATED);
+
+      const thirdUserForLike = await request(app.getHttpServer())
+        .post('/auth/registration')
+        .send(authUserRegistration3)
+        .expect(HttpStatus.CREATED);
+
+      const firstUserForCreateComment = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(authUserLogin)
+        .expect(HttpStatus.OK);
+
+      const secondUserForCreateComment = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(authUserLogin2)
+        .expect(HttpStatus.OK);
+
+      const thirdUserForCreateComment = await request(app.getHttpServer())
+        .post('/auth/login')
+        .send(authUserLogin3)
+        .expect(HttpStatus.OK);
+
+      const token1 = firstUserForCreateComment.body.accessToken;
+      const token2 = secondUserForCreateComment.body.accessToken;
+      const token3 = thirdUserForCreateComment.body.accessToken;
+
+      const firstLikeWithFirstUser = await request(app.getHttpServer())
+        .put('/comments/' + commentId + '/like-status')
+        .set('Authorization', `Bearer ${token1}`)
+        .send({ likeStatus: Actions.Like })
+        .expect(HttpStatus.NO_CONTENT);
+
+      const firstDislikeWithSecondUser = await request(app.getHttpServer())
+        .put('/comments/' + commentId + '/like-status')
+        .set('Authorization', `Bearer ${token2}`)
+        .send({ likeStatus: Actions.Dislike })
+        .expect(HttpStatus.NO_CONTENT);
+
+      const secondDislikeWithThirdUser = await request(app.getHttpServer())
+        .put('/comments/' + commentId + '/like-status')
+        .set('Authorization', `Bearer ${token3}`)
+        .send({ likeStatus: Actions.Dislike })
+        .expect(HttpStatus.NO_CONTENT);
+
+      const thirdDislikeWithSecondUser = await request(app.getHttpServer())
+        .put('/comments/' + commentId + '/like-status')
+        .set('Authorization', `Bearer ${token2}`)
+        .send({ likeStatus: Actions.Dislike })
+        .expect(HttpStatus.NO_CONTENT);
+
+      const firstNoneStatusWithFirstUser = await request(app.getHttpServer())
+        .put('/comments/' + commentId + '/like-status')
+        .set('Authorization', `Bearer ${token1}`)
+        .send({ likeStatus: Actions.None })
+        .expect(HttpStatus.NO_CONTENT);
+
+      const secondLikeWithSecondUser = await request(app.getHttpServer())
+        .put('/comments/' + commentId + '/like-status')
+        .set('Authorization', `Bearer ${token2}`)
+        .send({ likeStatus: Actions.Like })
+        .expect(HttpStatus.NO_CONTENT);
+
+      const getCommentAfterAllManipulationWithUserWithoutCredential =
+        await request(app.getHttpServer())
+          .get('/comments/' + commentId)
+          .expect(HttpStatus.OK);
+      expect(
+        getCommentAfterAllManipulationWithUserWithoutCredential.body,
+      ).toStrictEqual(expectCommentDataAfterAllLikeStatus);
+
+      const getCommentAfterAllWithUserLikeStatus = await request(
+        app.getHttpServer(),
+      )
+        .get('/comments/' + commentId)
+        .set('Authorization', `Bearer ${token2}`)
+        .expect(HttpStatus.OK);
+      expect(getCommentAfterAllWithUserLikeStatus.body).toStrictEqual(
+        expectCommentDataWithUserLikeStatus,
+      );
+
+      const getPostAfterAllWithDislikeStatus = await request(
+        app.getHttpServer(),
+      )
+        .get('/comments/' + commentId)
+        .set('Authorization', `Bearer ${token3}`)
+        .expect(HttpStatus.OK);
+      expect(getPostAfterAllWithDislikeStatus.body).toStrictEqual(
+        expectCommentDataWithUserDislikeStatus,
+      );
+
+      await request(app.getHttpServer())
+        .get('/comments/' + commentId)
+        .expect(HttpStatus.OK);
+
+      // await request(app.getHttpServer())
+      //   .del('/comments/' + commentId)
+      //   .set('Authorization', `Bearer ${userForCreateComment.body.accessToken}`)
+      //   .expect(HttpStatus.NO_CONTENT);
     });
   });
 });

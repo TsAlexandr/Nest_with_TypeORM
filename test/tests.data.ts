@@ -1,6 +1,6 @@
 import { BloggersDto } from '../src/bloggers/dto/bloggers.dto';
 import { NewPost } from '../src/common/types/classes/classes';
-import { Posts } from '../src/common/types/schemas/schemas.model';
+import { Comments, Posts } from '../src/common/types/schemas/schemas.model';
 
 export const bloggerCreate: BloggersDto = {
   name: 'hello blogger',
@@ -117,4 +117,43 @@ export const createInvalidUser = {
   login: 'Hello pal',
   email: 'oytuyrftygyhjokikvjgcfgvjk',
   password: '1234567sadf',
+};
+
+export const expectCommentDataAfterAllLikeStatus = {
+  addedAt: expect.any(String),
+  id: expect.any(String),
+  content: expect.any(String),
+  userId: expect.any(String),
+  userLogin: expect.any(String),
+  likesInfo: {
+    dislikesCount: 1,
+    likesCount: 1,
+    myStatus: 'None',
+  },
+};
+
+export const expectCommentDataWithUserLikeStatus = {
+  addedAt: expect.any(String),
+  id: expect.any(String),
+  content: expect.any(String),
+  userId: expect.any(String),
+  userLogin: expect.any(String),
+  likesInfo: {
+    dislikesCount: 1,
+    likesCount: 1,
+    myStatus: 'Like',
+  },
+};
+
+export const expectCommentDataWithUserDislikeStatus = {
+  addedAt: expect.any(String),
+  id: expect.any(String),
+  content: expect.any(String),
+  userId: expect.any(String),
+  userLogin: expect.any(String),
+  likesInfo: {
+    dislikesCount: 1,
+    likesCount: 1,
+    myStatus: 'Dislike',
+  },
 };
