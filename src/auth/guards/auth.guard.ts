@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
       throw new BadRequestException({ message: 'Invalid pass or login' });
     }
     try {
-      const decode: any = jwt.verify(token, process.env.JWT_SECRET_KEY!);
+      const decode: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const user = await this.usersRepository.findById(decode.userId);
       if (!user) {
         throw new NotFoundException({
