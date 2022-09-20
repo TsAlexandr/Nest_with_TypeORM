@@ -34,20 +34,22 @@ export class CommentsController {
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async updateComment(@Param('id') id: string, @Body() content: string) {
     return await this.commentsService.updateComment(id, content);
   }
 
   @UseGuards(AuthGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteComment(@Param('id') id: string) {
     return await this.commentsService.deleteComment(id);
   }
 
-  @HttpCode(204)
   @UseGuards(JwtAuthGuards)
   @UseGuards(CommentBelongsGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId/like-status')
   async updateActions(
     @Param('commentId') commentId: string,
