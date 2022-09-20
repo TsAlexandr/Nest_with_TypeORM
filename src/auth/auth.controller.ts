@@ -12,7 +12,10 @@ import {
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
-import { CurrentUserId } from '../common/custom-decorator/current.user.decorator';
+import {
+  Cookies,
+  CurrentUserId,
+} from '../common/custom-decorator/current.user.decorator';
 import { JwtAuthGuards } from './guards/jwt-auth.guards';
 import { EmailService } from '../email/email.service';
 import { LocalAuthGuards } from './guards/local-auth.guards';
@@ -63,10 +66,10 @@ export class AuthController {
   }
   @UseGuards(JwtAuthGuards)
   @Post('/refresh-token')
-  async refresh(@Req() req, @Res() res) {
-    if (!req.cookie.refreshToken) throw new UnauthorizedException();
+  async refresh(@Req() req, @Res() res, @Cookies() cookie) {
+    console.log(cookie);
+    if (!cookie.refreshToken) throw new UnauthorizedException();
     const userId = req.user.payload.sub;
-    console.log(userId);
     const tokens = await this.authService.createTokens(userId);
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
