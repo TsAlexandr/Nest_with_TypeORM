@@ -6,7 +6,9 @@ import { ValidationException } from './common/exceptions/validation.exception';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    cors: { credentials: true },
+  });
   app.enableCors();
   app.useGlobalPipes(
     new ValidationPipe({
