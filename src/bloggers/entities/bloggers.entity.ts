@@ -1,11 +1,14 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { PostEntity } from '../../posts/entities/post.entity';
 
 @Entity('bloggers')
-export class Bloggers {
-  @PrimaryGeneratedColumn()
+export class BloggersEntity {
+  @PrimaryGeneratedColumn('uuid')
   id: string;
-  @Column()
+  @Column('text')
   name: string;
-  @Column()
+  @Column('text')
   youtubeUrl: string;
+  @OneToMany(() => PostEntity, (post) => post.blogger)
+  post: PostEntity[];
 }

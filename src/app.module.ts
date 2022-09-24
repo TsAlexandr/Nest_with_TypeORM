@@ -4,7 +4,7 @@ import { AttemptsRepository } from './attempts/attempts.repository';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { DropBase, TestRepo } from './dropBaseForTests/dropBase';
+import { TruncateBase, TestRepo } from './truncateBaseForTests/truncateBase';
 import {
   Attempts,
   AttemptsSchema,
@@ -42,7 +42,10 @@ import { EmailService } from './email/email.service';
 import { UserExistGuard } from './auth/guards/userExistGuard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BloggersRepositoryRAW } from './library/rawDb/bloggersRepositoryRAW';
-import { Bloggers } from './bloggers/entities/bloggers.entity';
+import { BloggersEntity } from './bloggers/entities/bloggers.entity';
+import { PostEntity } from './posts/entities/post.entity';
+import { CommentEntity } from './comments/entities/comment.entity';
+import { UserEntity } from './users/entities/user.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -65,7 +68,7 @@ import { Bloggers } from './bloggers/entities/bloggers.entity';
       host: 'ec2-3-208-79-113.compute-1.amazonaws.com',
       port: 5432,
       url: process.env.DATABASE_URL,
-      entities: [Bloggers],
+      entities: [BloggersEntity, PostEntity, CommentEntity, UserEntity],
       synchronize: true,
       ssl: { rejectUnauthorized: false },
     }),
@@ -87,7 +90,7 @@ import { Bloggers } from './bloggers/entities/bloggers.entity';
     CommentsController,
     UsersController,
     AuthController,
-    DropBase,
+    TruncateBase,
   ],
   providers: [
     BloggersService,
