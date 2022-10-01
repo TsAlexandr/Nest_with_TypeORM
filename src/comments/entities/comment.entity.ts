@@ -8,7 +8,7 @@ export class CommentEntity {
   id: string;
   @Column('uuid')
   postId: string;
-  @Column('string')
+  @Column('text')
   content: string;
   @Column('uuid')
   userId: string;

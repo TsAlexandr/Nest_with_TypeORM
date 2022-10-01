@@ -25,23 +25,38 @@ export class PostEntity {
   bloggerName: string;
   @Column('text')
   addedAt: string;
-  @Column('jsonb')
-  extendedLikesInfo: {
-    likesCount: number;
-    dislikesCount: number;
-    newestLikes: [];
-  };
-  @Column('jsonb', { array: true })
-  totalActions: {
-    addedAt: string;
-    userId: string;
-    login: string;
-    action: string;
-  };
   @ManyToOne(() => BloggersEntity, (blogger) => blogger.post)
   blogger: BloggersEntity;
   @ManyToOne(() => UserEntity, (user) => user.post)
   user: UserEntity;
   @OneToMany(() => CommentEntity, (comment) => comment.post)
   comment: CommentEntity;
+  @OneToMany(() => LikesInfoEntity, (likesInfo) => likesInfo.post)
+  likesInfo: LikesInfoEntity;
+  @OneToMany(() => TotalActionsEntity, (totalActions) => totalActions.post)
+  totalActions: TotalActionsEntity;
+}
+
+@Entity('likesInfo')
+export class LikesInfoEntity {
+  @Column('int')
+  likesCount: number;
+  @Column('int')
+  dislikesCount: number;
+  @ManyToOne(() => PostEntity, (post) => post.likesInfo)
+  post: PostEntity;
+}
+
+@Entity('TotalActions')
+export class TotalActionsEntity {
+  @Column('text')
+  addedAt: string;
+  @Column('uuid')
+  userId: string;
+  @Column('text')
+  login: string;
+  @Column('text')
+  action: string;
+  @ManyToOne(() => PostEntity, (post) => post.totalActions)
+  post: PostEntity;
 }
