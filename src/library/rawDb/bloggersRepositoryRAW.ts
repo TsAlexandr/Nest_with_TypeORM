@@ -12,40 +12,41 @@ export class BloggersRepositoryRAW {
     pageSize: number,
     searchNameTerm: string,
   ): Promise<Paginator<Blogger[]>> {
+    const filter = searchNameTerm ? searchNameTerm : '';
     const bloggers = await this.dataSource.query(
-      `SELECT * FROM "bloggers"
-            WHERE "name" LIKE $3
+      `SELECT id, name, "youtubeUrl" FROM "bloggers"
+            WHERE "name" LIKE $3 
             ORDER BY "name" DESC
-            OFFSET ($1 ROWS
-            FETCH NEXT $2 ROWS ONLY)`,
-      [(page - 1) * pageSize, pageSize, '%' + searchNameTerm + '%'],
+            OFFSET $1 ROWS FETCH NEXT $2 ROWS ONLY`,
+      [(page - 1) * pageSize, pageSize, '%' + filter + '%'],
     );
     const total = await this.dataSource.query(
       `SELECT COUNT(name) FROM "bloggers"
             WHERE "name" LIKE $1`,
-      ['%' + searchNameTerm + '%'],
+      ['%' + filter + '%'],
     );
-    const pages = Math.ceil(total.count / pageSize);
+    const pages = Math.ceil(total[0].count / pageSize);
     return {
       pagesCount: pages,
       page: page,
       pageSize: pageSize,
-      totalCount: total,
+      totalCount: parseInt(total[0].count),
       items: bloggers,
     };
   }
 
   async getBloggersById(id: string) {
-    return this.dataSource.query(
-      `SELECT * FROM "bloggers"
+    const blogger = await this.dataSource.query(
+      `SELECT id, name, "youtubeUrl" FROM "bloggers"
              WHERE "id" = $1`,
       [id],
     );
+    return blogger[0];
   }
 
   async deleteBloggerById(id: string) {
     return this.dataSource.query(
-      `DELETE * FROM "bloggers"
+      `DELETE FROM "bloggers"
             WHERE "id" = $1`,
       [id],
     );
@@ -61,10 +62,16 @@ export class BloggersRepositoryRAW {
   }
 
   async createBlogger(newBlogger: Blogger) {
-    return await this.dataSource.query(
+    await this.dataSource.query(
       `INSERT INTO "bloggers" ("name", "youtubeUrl")
             VALUES ($1, $2)`,
       [newBlogger.name, newBlogger.youtubeUrl],
     );
+    const blogger = await this.dataSource.query(
+      `SELECT id, name, "youtubeUrl" FROM "bloggers"
+             WHERE "name" = $1`,
+      [newBlogger.name],
+    );
+    return blogger[0];
   }
 }
