@@ -28,7 +28,7 @@ export class TestRepo {
 }
 
 @Controller('testing')
-export class DropBase {
+export class TruncateBase {
   constructor(private testRepo: TestRepo) {}
   @HttpCode(204)
   @Delete('/all-data')
