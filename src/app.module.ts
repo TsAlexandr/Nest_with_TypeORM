@@ -46,6 +46,8 @@ import { BloggersEntity } from './bloggers/entities/bloggers.entity';
 import { PostEntity } from './posts/entities/post.entity';
 import { CommentEntity } from './comments/entities/comment.entity';
 import { UserEntity } from './users/entities/user.entity';
+import { PostsRepositoryRAW } from './library/rawDb/postsRepositoryRAW';
+import { TotalActionsEntity } from './library/entities/actions.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -79,7 +81,13 @@ import { UserEntity } from './users/entities/user.entity';
       username: 'postgres',
       password: '123',
       database: 'postgres',
-      autoLoadEntities: true,
+      entities: [
+        UserEntity,
+        PostEntity,
+        CommentEntity,
+        BloggersEntity,
+        TotalActionsEntity,
+      ],
       synchronize: true,
     }),
   ],
@@ -116,6 +124,7 @@ import { UserEntity } from './users/entities/user.entity';
     UserExistGuard,
     JwtExtract,
     BloggersRepositoryRAW,
+    PostsRepositoryRAW,
   ],
 })
 export class AppModule {}
