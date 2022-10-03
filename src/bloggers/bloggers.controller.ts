@@ -10,6 +10,7 @@ import {
   Get,
   HttpCode,
   HttpStatus,
+  NotFoundException,
   Param,
   Post,
   Put,
@@ -31,16 +32,23 @@ export class BloggersController {
   async getAllBloggers(@Query() query) {
     const { page, pageSize, searchNameTerm } =
       Pagination.getPaginationData(query);
-    return await this.bloggersService.getBloggers(
+    const bloggers = await this.bloggersService.getBloggers(
       page,
       pageSize,
       searchNameTerm,
     );
+    if (!bloggers) {
+      throw new NotFoundException();
+    }
+    return bloggers;
   }
 
   @Get(':id')
   async getBlogger(@Param('id') id: string) {
-    return await this.bloggersService.getBloggerById(id);
+    const blogger = await this.bloggersService.getBloggerById(id);
+    if (!blogger) {
+      throw new NotFoundException();
+    }
   }
 
   @UseGuards(BasicGuards)
@@ -64,7 +72,11 @@ export class BloggersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteBlogger(@Param('id') id: string) {
-    return await this.bloggersService.deleteBlogger(id);
+    const removeBlogger = await this.bloggersService.deleteBlogger(id);
+    if (!removeBlogger) {
+      throw new NotFoundException();
+    }
+    return removeBlogger;
   }
 
   @UseGuards(JwtExtract)
