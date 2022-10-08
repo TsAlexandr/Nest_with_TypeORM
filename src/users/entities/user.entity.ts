@@ -12,20 +12,26 @@ import { CommentEntity } from '../../comments/entities/comment.entity';
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+  @Column('text')
   email: string;
+  @Column('text')
   login: string;
+  @Column('text')
   passwordHash: string;
+  @Column('time with time zone')
   createdAt: string;
+  @Column('text')
   unused: string;
+  @Column('boolean', { default: false })
+  isConfirmed: boolean;
+  @Column('text')
+  confirmationCode: string;
+  @Column()
+  sentDate: Date;
 
-  emailConfirm: {
-    isConfirmed: boolean;
-    confirmationCode: string;
-    sentEmails: { type: [Date]; required: false };
-  };
   @OneToMany(() => PostEntity, (post) => post.user)
   post: PostEntity[];
 
-  @OneToMany(() => CommentEntity, (comment) => comment.user)
+  @OneToMany(() => CommentEntity, (comment) => comment.userId)
   comment: CommentEntity[];
 }
