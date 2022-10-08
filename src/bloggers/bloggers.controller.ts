@@ -49,6 +49,7 @@ export class BloggersController {
     if (!blogger) {
       throw new NotFoundException();
     }
+    return blogger;
   }
 
   @UseGuards(BasicGuards)
