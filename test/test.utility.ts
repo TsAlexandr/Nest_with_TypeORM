@@ -12,7 +12,7 @@ export const getTestsApp = async () => {
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: false,
-      transform: true,
+      transform: false,
       exceptionFactory: (errors) => {
         const customErrors = errors.map((e) => {
           const firstError = JSON.stringify(e.constraints);
