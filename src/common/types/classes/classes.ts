@@ -61,19 +61,6 @@ export class NewPost {
   content: string;
 }
 
-export class Comment {
-  @IsString()
-  @IsNotEmpty()
-  postId: PostsCon['id'];
-  @IsString()
-  @IsNotEmpty()
-  content: string;
-  @IsString()
-  @IsNotEmpty()
-  userId: string;
-  userLogin: string;
-}
-
 export class User {
   constructor(
     public accountData: UserAccount,
@@ -111,7 +98,7 @@ export class SentConfirmEmailType {
   sentDate: Date;
 }
 
-export class emailClass {
+export class EmailClass {
   @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
   @IsNotEmpty()
   email: string;
@@ -123,7 +110,7 @@ export class emailClass {
   createdAt: Date;
 }
 
-export class attemptsClass {
+export class AttemptsClass {
   userIp: string;
   url: string;
   time: Date;

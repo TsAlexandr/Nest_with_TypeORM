@@ -41,13 +41,14 @@ export class PostsController {
     const { page, pageSize, searchNameTerm } =
       Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
-    return await this.postsService.findAll(
+    const posts = await this.postsService.findAll(
       page,
       pageSize,
       userId,
       null,
       searchNameTerm,
     );
+    return posts;
   }
 
   @UseGuards(JwtExtract)
@@ -65,7 +66,10 @@ export class PostsController {
       newPost.bloggerId,
     );
     if (!blogger) {
-      return new BadRequestException();
+      throw new HttpException(
+        { message: [{ message: 'blogger doesnt exist', field: 'bloggerId' }] },
+        HttpStatus.BAD_REQUEST,
+      );
     }
     const bloggerName = blogger.name;
     return await this.postsService.create({ ...newPost, bloggerName });
