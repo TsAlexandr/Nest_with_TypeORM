@@ -4,21 +4,24 @@ import { PostsCon } from '../../common/types/classes/classes';
 
 export class PostsRepositoryRAW {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
-  async createPosts(createPost: PostsCon) {
+  async createPosts(createPost) {
     await this.dataSource.query(
       `INSERT INTO "posts" 
               ("title", 
               "shortDescription", 
               "content", 
               "bloggerId", 
-              "bloggerName") 
-              VALUES ($1, $2, $3, $4, $5)`,
+              "bloggerName",
+              "addedAt"
+            ) 
+              VALUES ($1, $2, $3, $4, $5, $6)`,
       [
         createPost.title,
         createPost.shortDescription,
         createPost.content,
         createPost.bloggerId,
         createPost.bloggerName,
+        createPost.addedAt,
       ],
     );
     const post = await this.dataSource.query(
@@ -31,10 +34,18 @@ export class PostsRepositoryRAW {
                 "bloggerName", 
                 "addedAt"
               FROM public.posts
-              WHERE title LIKE $3`,
+              WHERE title LIKE $1`,
       ['%' + createPost.title + '%'],
     );
-    return post[0];
+    return {
+      ...post[0],
+      extendedLikesInfo: {
+        dislikesCount: 0,
+        likesCount: 0,
+        myStatus: 'None',
+        newestLikes: [],
+      },
+    };
   }
 
   async getPosts(
@@ -47,7 +58,14 @@ export class PostsRepositoryRAW {
     const filter = searchNameTerm ? searchNameTerm : '';
     const filterByBlogger = bloggerId ? bloggerId : '';
     const post = await this.dataSource.query(
-      `SELECT * FROM "posts"
+      `SELECT id, 
+                title, 
+                "shortDescription", 
+                content, 
+                "bloggerId", 
+                "bloggerName", 
+                "addedAt" 
+            FROM "posts"
             WHERE "title" LIKE $3
             AND "bloggerId" LIKE $4
             ORDER BY "title" DESC
@@ -85,9 +103,9 @@ export class PostsRepositoryRAW {
                 content, 
                 "bloggerId", 
                 "bloggerName", 
-                "addedAt",
-              FROM public.posts
-              WHERE "id" LIKE $1`,
+                "addedAt"
+              FROM "posts"
+              WHERE id LIKE $1`,
       [id],
     );
     return post[0];
