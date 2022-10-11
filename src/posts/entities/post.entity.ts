@@ -8,6 +8,7 @@ import {
 import { BloggersEntity } from '../../bloggers/entities/bloggers.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { CommentEntity } from '../../comments/entities/comment.entity';
+import { TotalActionsEntity } from '../../library/entities/actions.entity';
 
 @Entity('posts')
 export class PostEntity {
@@ -29,34 +30,8 @@ export class PostEntity {
   blogger: BloggersEntity;
   @ManyToOne(() => UserEntity, (user) => user.post)
   user: UserEntity;
-  @OneToMany(() => CommentEntity, (comment) => comment.post)
-  comment: CommentEntity;
-  @OneToMany(() => LikesInfoEntity, (likesInfo) => likesInfo.post)
-  likesInfo: LikesInfoEntity;
-  @OneToMany(() => TotalActionsEntity, (totalActions) => totalActions.post)
-  totalActions: TotalActionsEntity;
-}
-
-@Entity('likesInfo')
-export class LikesInfoEntity {
-  @Column('int')
-  likesCount: number;
-  @Column('int')
-  dislikesCount: number;
-  @ManyToOne(() => PostEntity, (post) => post.likesInfo)
-  post: PostEntity;
-}
-
-@Entity('TotalActions')
-export class TotalActionsEntity {
-  @Column('text')
-  addedAt: string;
-  @Column('uuid')
-  userId: string;
-  @Column('text')
-  login: string;
-  @Column('text')
-  action: string;
-  @ManyToOne(() => PostEntity, (post) => post.totalActions)
-  post: PostEntity;
+  @OneToMany(() => CommentEntity, (comment) => comment.postId)
+  comment: CommentEntity[];
+  @OneToMany(() => TotalActionsEntity, (totalActions) => totalActions.postId)
+  totalActions: TotalActionsEntity[];
 }
