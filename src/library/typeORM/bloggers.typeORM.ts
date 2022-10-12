@@ -17,21 +17,20 @@ export class BloggersRepositoryORM {
       .getRepository(BloggersEntity)
       .createQueryBuilder()
       .where('name like :filter', { filter: `%${filter}%` })
-      .orderBy({ name: 'DESC' })
       .skip((page - 1) * pageSize)
-      .limit(pageSize)
+      .take(pageSize)
+      .orderBy({ name: 'DESC' })
       .getMany();
     const total = await this.dataSource
       .getRepository(BloggersEntity)
       .createQueryBuilder()
-      .where('name like :filter', { filter: `%${filter}%` })
-      .getManyAndCount();
-    const pages = Math.ceil(total[1] / pageSize);
+      .getCount();
+    const pages = Math.ceil(total / pageSize);
     return {
       pagesCount: pages,
       page: page,
       pageSize: pageSize,
-      totalCount: total[1],
+      totalCount: total,
       items: bloggers,
     };
   }
@@ -40,7 +39,8 @@ export class BloggersRepositoryORM {
     const blogger = await this.dataSource
       .getRepository(BloggersEntity)
       .createQueryBuilder()
-      .where('id = :id', { id });
+      .where('id = :id', { id })
+      .getOne();
     return blogger;
   }
 
@@ -69,6 +69,7 @@ export class BloggersRepositoryORM {
       .into(BloggersEntity)
       .values([
         {
+          id: newBlogger.id,
           name: newBlogger.name,
           youtubeUrl: newBlogger.youtubeUrl,
         },
