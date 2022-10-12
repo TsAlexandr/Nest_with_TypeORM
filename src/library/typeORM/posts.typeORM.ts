@@ -2,13 +2,32 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { NewPost } from '../../common/types/classes/classes';
 import { Posts } from '../../common/types/schemas/schemas.model';
+import { PostEntity } from '../../posts/entities/post.entity';
 
 export class PostsTypeORM {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
   async createPosts(createPost: Posts) {
-    return await this.dataSource.query(`INSERT INTO "posts" VALUES $1`, [
-      createPost,
-    ]);
+    await this.dataSource
+      .createQueryBuilder()
+      .insert()
+      .into(PostEntity)
+      .values([
+        {
+          id: createPost.id,
+          title: createPost.title,
+          content: createPost.content,
+          shortDescription: createPost.shortDescription,
+          addedAt: createPost.addedAt,
+          bloggerId: createPost.bloggerId,
+          bloggerName: createPost.bloggerName,
+        },
+      ])
+      .execute();
+    const post = await this.dataSource
+      .getRepository(PostEntity)
+      .createQueryBuilder()
+      .where('id = :id', { id: createPost.id });
+    return post;
   }
 
   async getPosts(page: number, pageSize: number, searchNameTerm: string) {
@@ -36,11 +55,11 @@ export class PostsTypeORM {
   }
 
   async getPostById(id: string) {
-    return await this.dataSource.query(
-      `SELECT * FROM "posts"
-            WHERE "id" LIKE $1`,
-      [id],
-    );
+    const post = await this.dataSource
+      .getRepository(PostEntity)
+      .createQueryBuilder()
+      .where('id = :id', { id });
+    return post;
   }
 
   async updatePost(
@@ -49,27 +68,45 @@ export class PostsTypeORM {
     bloggerName: string,
     updPost: NewPost,
   ) {
-    const post = await this.dataSource.query(
-      `UPDATE "posts"
-        SET "id" = $1, "bloggerId" = $2,
-        "bloggerName" =  $3, "title" = $4,
-        "shortDescription" = $5, "content" = $6`,
-      [
-        id,
-        bloggerId,
-        bloggerName,
-        updPost.title,
-        updPost.shortDescription,
-        updPost.content,
-      ],
-    );
+    return this.dataSource
+      .createQueryBuilder()
+      .update(PostEntity)
+      .set({
+        bloggerId: bloggerId,
+        bloggerName: bloggerName,
+        title: updPost.title,
+        shortDescription: updPost.shortDescription,
+        content: updPost.content,
+      })
+      .where('id = :id', { id })
+      .execute();
   }
 
   async deletePost(id: string) {
-    return await this.dataSource.query(
-      `DELETE * FROM "posts"
-              WHERE "id" = $1`,
-      [id],
-    );
+    return this.dataSource
+      .createQueryBuilder()
+      .delete()
+      .from(PostEntity)
+      .where('id = :id', { id })
+      .execute();
   }
 }
+
+// async createPosts(postsNew: postsType): Promise<postsType> {
+//   const post = new Posts();
+//   post.id = postsNew.id;
+//   post.title = postsNew.title;
+//   post.shortDescription = postsNew.shortDescription;
+//   post.content = postsNew.content;
+//   post.addedAt = postsNew.addedAt;
+//
+//   const blogger = await this.dataSource.getRepository(Bloggers).findOne({
+//     where: {
+//       id: postsNew.bloggerId,
+//     },
+//   });
+//   post.blogger = blogger;
+//
+//   const postEntity = await this.dataSource.getRepository(Posts).save(post);
+//
+//   return postsNew;
