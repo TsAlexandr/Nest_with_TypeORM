@@ -51,26 +51,24 @@ import { TotalActionsEntity } from './library/entities/actions.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
-    MongooseModule.forRoot(
-      'mongodb+srv://hello:rerere@cluster0.rxylv.mongodb.net/Cluster0?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     MongooseModule.forFeature([
       { name: Attempts.name, schema: AttemptsSchema },
-    ]),
-    MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
-    MongooseModule.forFeature([
+      { name: Posts.name, schema: PostsSchema },
       { name: BloggersMongo.name, schema: BloggerSchema },
-    ]),
-    MongooseModule.forFeature([
       { name: Comments.name, schema: CommentsSchema },
+      { name: 'Users', schema: UsersSchema },
     ]),
-    MongooseModule.forFeature([{ name: 'Users', schema: UsersSchema }]),
     // TypeOrmModule.forRoot({
     //   type: 'postgres',
     //   host: 'ec2-3-208-79-113.compute-1.amazonaws.com',
     //   port: 5432,
     //   url: process.env.DATABASE_URL,
-    //   entities: [BloggersEntity, PostEntity, CommentEntity, UserEntity],
+    //   entities: [UserEntity,
+    //         PostEntity,
+    //         CommentEntity,
+    //         BloggersEntity,
+    //         TotalActionsEntity,],
     //   synchronize: true,
     //   ssl: { rejectUnauthorized: false },
     // }),
