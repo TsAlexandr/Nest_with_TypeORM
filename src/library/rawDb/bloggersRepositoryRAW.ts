@@ -55,8 +55,8 @@ export class BloggersRepositoryRAW {
   async updateBloggerById(id: string, update: BloggersDto) {
     return this.dataSource.query(
       `UPDATE "bloggers"
-            SET 'name' = $1, 'youtubeUrl' = $2
-            WHERE 'id' = $3`,
+            SET name = $1, "youtubeUrl" = $2
+            WHERE id = $3`,
       [update.name, update.youtubeUrl, id],
     );
   }
