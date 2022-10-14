@@ -9,6 +9,6 @@ export class BloggersEntity {
   name: string;
   @Column('text')
   youtubeUrl: string;
-  @OneToMany(() => PostEntity, (post) => post.blogger)
+  @OneToMany(() => PostEntity, (post) => post.bloggerId)
   post: PostEntity[];
 }

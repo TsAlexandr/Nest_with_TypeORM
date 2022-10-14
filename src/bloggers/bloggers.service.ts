@@ -2,10 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { BloggersRepository } from './bloggers.repository';
 import { v4 as uuidv4 } from 'uuid';
 import { BloggersDto } from './dto/bloggers.dto';
+import { BloggersRepositoryRAW } from '../library/rawDb/bloggersRepositoryRAW';
 
 @Injectable()
 export class BloggersService {
-  constructor(private bloggersRepository: BloggersRepository) {}
+  constructor(private bloggersRepository: BloggersRepositoryRAW) {}
   async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
     return await this.bloggersRepository.getBloggers(
       page,
