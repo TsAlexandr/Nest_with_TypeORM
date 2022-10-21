@@ -49,8 +49,7 @@ export class PostsRepository {
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
           newestLikes: actions
             .filter((el) => el.action === 'Like')
-            .reverse()
-            .slice(0, 3)
+            .slice(-3)
             .map((el) => {
               delete el.action;
               return el;
@@ -111,8 +110,7 @@ export class PostsRepository {
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
           newestLikes: actions
             .filter((el) => el.action === 'Like')
-            .reverse()
-            .slice(0, 3)
+            .slice(-3)
             .map((el) => {
               delete el.action;
               return el;
