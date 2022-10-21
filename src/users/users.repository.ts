@@ -57,6 +57,8 @@ export class UsersRepository {
     const user = await this.usersModel.findOne({
       'accountData.email': email,
     });
+    console.log('email', email);
+    console.log('user from find by email', user);
     return user;
   }
 
@@ -64,6 +66,8 @@ export class UsersRepository {
     const user = await this.usersModel.findOne({
       'emailConfirm.confirmationCode': code,
     });
+    console.log('code', code);
+    console.log('user from find by code', user);
     return user;
   }
 
