@@ -6,7 +6,7 @@ import { BloggersRepositoryRAW } from '../library/rawDb/bloggersRepositoryRAW';
 
 @Injectable()
 export class BloggersService {
-  constructor(private bloggersRepository: BloggersRepositoryRAW) {}
+  constructor(private bloggersRepository: BloggersRepository) {}
   async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
     return await this.bloggersRepository.getBloggers(
       page,

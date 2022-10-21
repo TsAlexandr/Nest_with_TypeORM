@@ -19,7 +19,7 @@ export class UserEntity {
   @Column('text')
   passwordHash: string;
   @Column('time with time zone')
-  createdAt: string;
+  createdAt: Date;
   @Column('text')
   unused: string;
   @Column('boolean', { default: false })

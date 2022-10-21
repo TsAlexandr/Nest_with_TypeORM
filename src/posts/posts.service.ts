@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PostsRepository } from './posts.repository';
 import { PostsCon } from '../common/types/classes/classes';
 import { v4 } from 'uuid';
+import { PostsRepositoryRAW } from '../library/rawDb/postsRepositoryRAW';
 
 @Injectable()
 export class PostsService {
