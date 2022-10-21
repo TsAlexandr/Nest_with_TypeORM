@@ -23,6 +23,7 @@ import {
   wrongBlogger,
 } from './tests.data';
 import { Actions } from '../src/common/types/classes/classes';
+import { DataSource } from 'typeorm';
 
 describe('App (e2e)', () => {
   jest.setTimeout(60000);
@@ -30,17 +31,31 @@ describe('App (e2e)', () => {
   beforeAll(async () => {
     app = await getTestsApp();
   });
-  afterAll(async () => {
-    await app.close();
-  });
+  afterEach(async () => {
+    const dataSource = await app.resolve(DataSource);
+    await dataSource.query(
+      `CREATE OR REPLACE FUNCTION truncate_tables(username IN VARCHAR) RETURNS void AS $$
+DECLARE
+    statements CURSOR FOR
+        SELECT tablename FROM pg_tables
+        WHERE tableowner = username AND schemaname = 'public';
+BEGIN
+    FOR stmt IN statements LOOP
+        EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
+    END LOOP;
+END;
+$$ LANGUAGE plpgsql;
+
+SELECT truncate_tables('postgres');`,
+    );
+  }),
+    afterAll(async () => {
+      await app.close();
+    });
   //TODO move methods for each entity into their directory,
   // because this version unreadable, doesn't work without setTimeout
   describe('Bloggers', () => {
     it('/bloggers all methods', async () => {
-      await request(app.getHttpServer())
-        .del('/testing/all-data')
-        .expect(HttpStatus.NO_CONTENT);
-
       const createBlogger = await request(app.getHttpServer())
         .post('/bloggers')
         .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
@@ -155,6 +170,7 @@ describe('App (e2e)', () => {
       });
 
       const id = createPost.body.id;
+      console.log(id);
       //create post with invalid blogger id
       await request(app.getHttpServer())
         .post('/posts')
@@ -298,10 +314,6 @@ describe('App (e2e)', () => {
   });
   describe('Authorization', () => {
     it('/auth all methods', async () => {
-      await request(app.getHttpServer())
-        .del('/testing/all-data')
-        .expect(HttpStatus.NO_CONTENT);
-
       const userCreated = await request(app.getHttpServer())
         .post('/auth/registration')
         .send(authUserRegistration)
@@ -348,10 +360,6 @@ describe('App (e2e)', () => {
   });
   describe('Comments', () => {
     it('/comments all methods', async () => {
-      await request(app.getHttpServer())
-        .del('/testing/all-data')
-        .expect(HttpStatus.NO_CONTENT);
-
       const createBlogger = await request(app.getHttpServer())
         .post('/bloggers')
         .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
