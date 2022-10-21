@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpStatus,
   NotFoundException,
   Post,
   Req,
@@ -30,6 +31,7 @@ export class AuthController {
     private emailService: EmailService,
   ) {}
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/registration')
   async registration(@Body() registr: RegistrationDto) {
     const created = await this.userService.createUser(registr);
@@ -50,7 +52,7 @@ export class AuthController {
     return null;
   }
   @UseGuards(LocalAuthGuards)
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   @Post('/login')
   async login(
     @Body() loginBody: LoginDto,
