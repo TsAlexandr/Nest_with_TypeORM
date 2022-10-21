@@ -121,8 +121,6 @@ import { TotalActionsEntity } from './library/entities/actions.entity';
     ExistingPostGuard,
     UserExistGuard,
     JwtExtract,
-    BloggersRepositoryRAW,
-    PostsRepositoryRAW,
   ],
 })
 export class AppModule {}
