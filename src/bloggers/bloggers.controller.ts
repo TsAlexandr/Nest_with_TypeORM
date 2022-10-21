@@ -21,7 +21,7 @@ import {
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 
-@Controller('bloggers')
+@Controller('blogs')
 export class BloggersController {
   constructor(
     private bloggersService: BloggersService,

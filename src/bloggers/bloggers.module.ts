@@ -16,8 +16,7 @@
 //   imports: [
 //     MongooseModule.forFeature([{ name: Bloggers.name, schema: BloggerSchema }]),
 //     MongooseModule.forFeature([{ name: Posts.name, schema: PostsSchema }]),
-//     forwardRef(() => PostsModule),
-//     forwardRef(() => BloggersModule),
+//     forwardRef(() => PostsModule)
 //   ],
 //   controllers: [BloggersController],
 //   providers: [BloggersService, BloggersRepository, PostsService],
