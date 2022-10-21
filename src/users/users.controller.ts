@@ -30,6 +30,8 @@ export class UsersController {
     return {
       id: user.accountData.id,
       login: user.accountData.login,
+      email: user.accountData.email,
+      createdAt: user.accountData.createdAt,
     };
   }
   @HttpCode(HttpStatus.NO_CONTENT)
