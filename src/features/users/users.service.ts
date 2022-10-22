@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { AuthService } from '../auth/auth.service';
-import { User } from '../common/types/classes/classes';
+import { User } from '../../common/types/classes/classes';
 import { v4 } from 'uuid';
-import { EmailService } from '../email/email.service';
+import { EmailService } from '../../email/email.service';
 import * as jwt from 'jsonwebtoken';
 import { RegistrationDto } from '../auth/dto/registration.dto';
 
@@ -14,6 +14,7 @@ export class UsersService {
     private authService: AuthService,
     private emailService: EmailService,
   ) {}
+
   async getAllUsers(page: number, pageSize: number) {
     return await this.usersRepository.getUsers(page, pageSize);
   }

@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../common/types/classes/classes';
+import { User } from '../../common/types/classes/classes';
 
 @Injectable()
 export class UsersRepository {
   constructor(@InjectModel('Users') private usersModel) {}
+
   async getUsers(page: number, pageSize: number) {
     const user = await this.usersModel
       .find({}, { _id: 0, passwordHash: false, __v: 0 })

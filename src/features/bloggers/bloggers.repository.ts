@@ -6,8 +6,8 @@ import {
   BloggersMongo,
   Posts,
   PostsDocument,
-} from '../common/types/schemas/schemas.model';
-import { Blogger, Paginator } from '../common/types/classes/classes';
+} from '../../common/types/schemas/schemas.model';
+import { Blogger, Paginator } from '../../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
 
 @Injectable()
@@ -17,6 +17,7 @@ export class BloggersRepository {
     private bloggersModel: Model<BloggersDocument>,
     @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
   ) {}
+
   async getBloggers(
     page: number,
     pageSize: number,

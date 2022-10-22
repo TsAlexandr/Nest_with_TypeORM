@@ -3,9 +3,9 @@ import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
 import { UsersRepository } from './users.repository';
 import { AuthService } from '../auth/auth.service';
-import { EmailService } from '../email/email.service';
+import { EmailService } from '../../email/email.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersSchema } from '../common/types/schemas/schemas.model';
+import { UsersSchema } from '../../common/types/schemas/schemas.model';
 
 describe('UsersController', () => {
   let controller: UsersController;

@@ -5,19 +5,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { PostsService } from '../../posts/posts.service';
+import { UsersService } from '../../users/users.service';
 
 @Injectable()
-export class ExistingPostGuard implements CanActivate {
-  constructor(private postsService: PostsService) {}
+export class UserExistGuard implements CanActivate {
+  constructor(private userService: UsersService) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> | null {
     const request: Request = context.switchToHttp().getRequest();
-    const id = request.params.postId;
-    const post = await this.postsService.findOne(id, null);
-    if (!post)
+    const id = request.params.userId;
+    const comment = await this.userService.findUserById(id);
+    if (!comment)
       throw new NotFoundException({
-        message: 'post not found',
-        field: 'postId',
+        message: 'user not found',
+        field: 'userId',
       });
     return true;
   }

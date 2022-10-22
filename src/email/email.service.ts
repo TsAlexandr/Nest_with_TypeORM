@@ -1,8 +1,9 @@
-import { UsersRepository } from '../users/users.repository';
+import { UsersRepository } from '../features/users/users.repository';
 import * as nodemailer from 'nodemailer';
 
 export class EmailService {
   constructor(private usersRepository: UsersRepository) {}
+
   async sendEmail(email: string, subject: string, message: string) {
     const transporter = nodemailer.createTransport({
       service: 'gmail',

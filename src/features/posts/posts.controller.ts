@@ -15,7 +15,7 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
-import { Actions } from '../common/types/classes/classes';
+import { Actions } from '../../common/types/classes/classes';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
@@ -24,7 +24,7 @@ import { BloggersService } from '../bloggers/bloggers.service';
 import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UsersService } from '../users/users.service';
-import { Pagination } from '../common/types/classes/pagination';
+import { Pagination } from '../../common/types/classes/pagination';
 
 @Controller('posts')
 export class PostsController {

@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { UserEntity } from '../../users/entities/user.entity';
 import { PostEntity } from '../../posts/entities/post.entity';
-import { TotalActionsEntity } from '../../library/entities/actions.entity';
+import { TotalActionsEntity } from '../../../library/entities/actions.entity';
 
 @Entity('comments')
 export class CommentEntity {

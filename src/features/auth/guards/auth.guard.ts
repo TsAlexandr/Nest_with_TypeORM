@@ -12,6 +12,7 @@ import * as jwt from 'jsonwebtoken';
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(private usersRepository: UsersRepository) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     if (!req.headers || !req.headers.authorization) {

@@ -8,7 +8,7 @@ import {
 import { BloggersEntity } from '../../bloggers/entities/bloggers.entity';
 import { UserEntity } from '../../users/entities/user.entity';
 import { CommentEntity } from '../../comments/entities/comment.entity';
-import { TotalActionsEntity } from '../../library/entities/actions.entity';
+import { TotalActionsEntity } from '../../../library/entities/actions.entity';
 
 @Entity('posts')
 export class PostEntity {

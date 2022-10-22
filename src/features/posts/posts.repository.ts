@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Posts, PostsDocument } from '../common/types/schemas/schemas.model';
-import { PostsCon } from '../common/types/classes/classes';
+import { Posts, PostsDocument } from '../../common/types/schemas/schemas.model';
+import { PostsCon } from '../../common/types/classes/classes';
 import { Model } from 'mongoose';
 
 export class PostsRepository {

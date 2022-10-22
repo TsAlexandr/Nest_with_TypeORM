@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { User, UserAccount } from '../../common/types/classes/classes';
-import { UserEntity } from '../../users/entities/user.entity';
+import { UserAccount } from '../../common/types/classes/classes';
+import { UserEntity } from '../../features/users/entities/user.entity';
 
 @Injectable()
 export class UsersRepositoryORM {

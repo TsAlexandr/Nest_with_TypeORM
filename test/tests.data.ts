@@ -1,6 +1,5 @@
-import { BloggersDto } from '../src/bloggers/dto/bloggers.dto';
+import { BloggersDto } from '../src/features/bloggers/dto/bloggers.dto';
 import { NewPost } from '../src/common/types/classes/classes';
-import { Comments, Posts } from '../src/common/types/schemas/schemas.model';
 
 export const bloggerCreate: BloggersDto = {
   name: 'hello blogger',

@@ -1,3 +1,4 @@
+import { CommentsService } from '../../comments/comments.service';
 import {
   CanActivate,
   ExecutionContext,
@@ -5,19 +6,19 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Request } from 'express';
-import { UsersService } from '../../users/users.service';
 
 @Injectable()
-export class UserExistGuard implements CanActivate {
-  constructor(private userService: UsersService) {}
+export class CommentBelongsGuard implements CanActivate {
+  constructor(private commentsService: CommentsService) {}
+
   async canActivate(context: ExecutionContext): Promise<boolean> | null {
     const request: Request = context.switchToHttp().getRequest();
-    const id = request.params.userId;
-    const comment = await this.userService.findUserById(id);
+    const commentId = request.params.commentId;
+    const comment = await this.commentsService.findComment(commentId, null);
     if (!comment)
       throw new NotFoundException({
-        message: 'user not found',
-        field: 'userId',
+        message: 'comment not found',
+        field: 'commentId',
       });
     return true;
   }

@@ -17,7 +17,7 @@ import { AuthGuard } from '../auth/guards/auth.guard';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentBelongsGuard } from '../auth/guards/commentBelongsGuard';
 import { UsersService } from '../users/users.service';
-import { Actions } from '../common/types/classes/classes';
+import { Actions } from '../../common/types/classes/classes';
 
 @Controller('comments')
 export class CommentsController {

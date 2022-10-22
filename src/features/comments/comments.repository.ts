@@ -2,13 +2,14 @@ import { InjectModel } from '@nestjs/mongoose';
 import {
   Comments,
   CommentsDocument,
-} from '../common/types/schemas/schemas.model';
+} from '../../common/types/schemas/schemas.model';
 import { Model } from 'mongoose';
 
 export class CommentsRepository {
   constructor(
     @InjectModel(Comments.name) private commentsModel: Model<CommentsDocument>,
   ) {}
+
   async findComment(commentId: string, userId: string) {
     const comment = await this.commentsModel.findOne(
       { id: commentId },

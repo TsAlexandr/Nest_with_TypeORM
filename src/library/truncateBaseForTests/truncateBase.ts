@@ -6,10 +6,10 @@ import {
   Comments,
   Posts,
   PostsDocument,
-} from '../common/types/schemas/schemas.model';
+} from '../../common/types/schemas/schemas.model';
 import { Model } from 'mongoose';
 import mongoose from 'mongoose';
-import { User } from '../common/types/classes/classes';
+import { User } from '../../common/types/classes/classes';
 
 export class TestRepo {
   constructor(
@@ -19,6 +19,7 @@ export class TestRepo {
     @InjectModel('Users') private usersModel: mongoose.Model<User>,
     @InjectModel(Comments.name) private commentsModel: mongoose.Model<Comment>,
   ) {}
+
   async removeAllData() {
     await this.bloggersModel.deleteMany();
     await this.postsModel.deleteMany();
@@ -30,6 +31,7 @@ export class TestRepo {
 @Controller('testing')
 export class TruncateBase {
   constructor(private testRepo: TestRepo) {}
+
   @HttpCode(204)
   @Delete('/all-data')
   async dropData() {

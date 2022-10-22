@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Blogger, Paginator } from '../../common/types/classes/classes';
-import { BloggersEntity } from '../../bloggers/entities/bloggers.entity';
+import { BloggersEntity } from '../../features/bloggers/entities/bloggers.entity';
 
 @Injectable()
 export class BloggersRepositoryORM {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
+
   async getBloggers(
     page: number,
     pageSize: number,

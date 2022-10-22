@@ -2,10 +2,11 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { NewPost } from '../../common/types/classes/classes';
 import { Posts } from '../../common/types/schemas/schemas.model';
-import { PostEntity } from '../../posts/entities/post.entity';
+import { PostEntity } from '../../features/posts/entities/post.entity';
 
 export class PostsTypeORM {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
+
   async createPosts(createPost: Posts) {
     await this.dataSource
       .createQueryBuilder()

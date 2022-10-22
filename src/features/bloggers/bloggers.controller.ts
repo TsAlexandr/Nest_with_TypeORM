@@ -1,8 +1,8 @@
 import { BloggersService } from './bloggers.service';
 import { PostsService } from '../posts/posts.service';
-import { NewPost } from '../common/types/classes/classes';
+import { NewPost } from '../../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
-import { Pagination } from '../common/types/classes/pagination';
+import { Pagination } from '../../common/types/classes/pagination';
 import {
   Body,
   Controller,
@@ -20,6 +20,7 @@ import {
 } from '@nestjs/common';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtExtract } from '../auth/guards/jwt.extract';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('blogs')
 export class BloggersController {
