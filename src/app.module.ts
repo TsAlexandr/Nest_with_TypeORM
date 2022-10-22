@@ -4,7 +4,10 @@ import { AttemptsRepository } from './attempts/attempts.repository';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
-import { TruncateBase, TestRepo } from './truncateBaseForTests/truncateBase';
+import {
+  TruncateBase,
+  TestRepo,
+} from './library/truncateBaseForTests/truncateBase';
 import {
   Attempts,
   AttemptsSchema,
@@ -16,38 +19,42 @@ import {
   PostsSchema,
   UsersSchema,
 } from './common/types/schemas/schemas.model';
-import { PostsController } from './posts/posts.controller';
-import { BloggersController } from './bloggers/bloggers.controller';
-import { UsersController } from './users/users.controller';
-import { AuthController } from './auth/auth.controller';
-import { CommentsController } from './comments/comments.controller';
-import { BloggersRepository } from './bloggers/bloggers.repository';
-import { CommentsRepository } from './comments/comments.repository';
-import { UsersService } from './users/users.service';
-import { ExistingPostGuard } from './auth/guards/existingPostGuard';
-import { JwtExtractStrategy } from './auth/strategies/jwt.extract.strategy';
-import { LocalStrategy } from './auth/strategies/local.strategy';
-import { JwtExtract } from './auth/guards/jwt.extract';
-import { JwtAuthGuards } from './auth/guards/jwt-auth.guards';
-import { LocalAuthGuards } from './auth/guards/local-auth.guards';
-import { UsersRepository } from './users/users.repository';
-import { BasicGuards } from './auth/guards/basic.guards';
-import { JwtStrategy } from './auth/strategies/jwt.strategy';
-import { BloggersService } from './bloggers/bloggers.service';
-import { PostsService } from './posts/posts.service';
-import { CommentsService } from './comments/comments.service';
-import { PostsRepository } from './posts/posts.repository';
-import { AuthService } from './auth/auth.service';
+import { PostsController } from './features/posts/posts.controller';
+import { BloggersController } from './features/bloggers/bloggers.controller';
+import { UsersController } from './features/users/users.controller';
+import { AuthController } from './features/auth/auth.controller';
+import { CommentsController } from './features/comments/comments.controller';
+import { BloggersRepository } from './features/bloggers/bloggers.repository';
+import { CommentsRepository } from './features/comments/comments.repository';
+import { UsersService } from './features/users/users.service';
+import { ExistingPostGuard } from './features/auth/guards/existingPostGuard';
+import { JwtExtractStrategy } from './features/auth/strategies/jwt.extract.strategy';
+import { LocalStrategy } from './features/auth/strategies/local.strategy';
+import { JwtExtract } from './features/auth/guards/jwt.extract';
+import { JwtAuthGuards } from './features/auth/guards/jwt-auth.guards';
+import { LocalAuthGuards } from './features/auth/guards/local-auth.guards';
+import { UsersRepository } from './features/users/users.repository';
+import { BasicGuards } from './features/auth/guards/basic.guards';
+import { JwtStrategy } from './features/auth/strategies/jwt.strategy';
+import { BloggersService } from './features/bloggers/bloggers.service';
+import { PostsService } from './features/posts/posts.service';
+import { CommentsService } from './features/comments/comments.service';
+import { PostsRepository } from './features/posts/posts.repository';
+import { AuthService } from './features/auth/auth.service';
 import { EmailService } from './email/email.service';
-import { UserExistGuard } from './auth/guards/userExistGuard';
+import { UserExistGuard } from './features/auth/guards/userExistGuard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BloggersRepositoryRAW } from './library/rawDb/bloggersRepositoryRAW';
-import { BloggersEntity } from './bloggers/entities/bloggers.entity';
-import { PostEntity } from './posts/entities/post.entity';
-import { CommentEntity } from './comments/entities/comment.entity';
-import { UserEntity } from './users/entities/user.entity';
+import { BloggersEntity } from './features/bloggers/entities/bloggers.entity';
+import { PostEntity } from './features/posts/entities/post.entity';
+import { CommentEntity } from './features/comments/entities/comment.entity';
+import { UserEntity } from './features/users/entities/user.entity';
 import { PostsRepositoryRAW } from './library/rawDb/postsRepositoryRAW';
 import { TotalActionsEntity } from './library/entities/actions.entity';
+import { DeviceController } from './features/devices/device.controller';
+import { DeviceService } from './features/devices/device.service';
+import { ThrottlerModule } from '@nestjs/throttler';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
@@ -77,7 +84,7 @@ import { TotalActionsEntity } from './library/entities/actions.entity';
     //   host: 'localhost',
     //   port: 5432,
     //   username: 'postgres',
-    //   password: '123',
+    //   password: 'root',
     //   database: 'postgres',
     //   entities: [
     //     UserEntity,
@@ -88,6 +95,10 @@ import { TotalActionsEntity } from './library/entities/actions.entity';
     //   ],
     //   synchronize: true,
     // }),
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
+    }),
   ],
   controllers: [
     AppController,
@@ -97,6 +108,7 @@ import { TotalActionsEntity } from './library/entities/actions.entity';
     UsersController,
     AuthController,
     TruncateBase,
+    DeviceController,
   ],
   providers: [
     BloggersService,
@@ -121,6 +133,7 @@ import { TotalActionsEntity } from './library/entities/actions.entity';
     ExistingPostGuard,
     UserExistGuard,
     JwtExtract,
+    DeviceService,
   ],
 })
 export class AppModule {}
