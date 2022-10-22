@@ -34,6 +34,7 @@ export class UsersController {
       createdAt: user.accountData.createdAt,
     };
   }
+
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id') id: string) {

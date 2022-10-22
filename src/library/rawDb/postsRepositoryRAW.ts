@@ -4,6 +4,7 @@ import { PostsCon } from '../../common/types/classes/classes';
 
 export class PostsRepositoryRAW {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
+
   async createPosts(createPost) {
     await this.dataSource.query(
       `INSERT INTO "posts" 
