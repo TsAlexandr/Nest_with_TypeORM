@@ -39,10 +39,10 @@ export class UsersService {
     const createdUser = await this.usersRepository.createUser(user);
     if (createdUser) {
       const messageBody = this.emailService.getConfirmMessage(
-        createdUser.emailConfirm.confirmationCode,
+        user.emailConfirm.confirmationCode,
       );
       await this.emailService.sendEmail(
-        createdUser.accountData.email,
+        user.accountData.email,
         'Confirm your email',
         messageBody,
       );
