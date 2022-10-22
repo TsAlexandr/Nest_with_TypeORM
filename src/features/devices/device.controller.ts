@@ -17,7 +17,7 @@ export class DeviceController {
   @UseGuards(JwtExtract)
   @Get('/devices')
   async getDevice(@Req() req) {
-    const device = await this.deviceService.getDevices();
+    const device = await this.deviceService.getDevices(req.user.payload.id);
     return device;
   }
 
