@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-import { AttemptsRepository } from './attempts/attempts.repository';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
@@ -9,12 +8,12 @@ import {
   TestRepo,
 } from './library/truncateBaseForTests/truncateBase';
 import {
-  Attempts,
-  AttemptsSchema,
   BloggerSchema,
   BloggersMongo,
   Comments,
   CommentsSchema,
+  Device,
+  DeviceSchema,
   Posts,
   PostsSchema,
   UsersSchema,
@@ -54,17 +53,18 @@ import { TotalActionsEntity } from './library/entities/actions.entity';
 import { DeviceController } from './features/devices/device.controller';
 import { DeviceService } from './features/devices/device.service';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { DeviceRepository } from './features/devices/device.repository';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     MongooseModule.forFeature([
-      { name: Attempts.name, schema: AttemptsSchema },
       { name: Posts.name, schema: PostsSchema },
       { name: BloggersMongo.name, schema: BloggerSchema },
       { name: Comments.name, schema: CommentsSchema },
       { name: 'Users', schema: UsersSchema },
+      { name: Device.name, schema: DeviceSchema },
     ]),
     // TypeOrmModule.forRoot({
     //   type: 'postgres',
@@ -121,7 +121,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
     UsersRepository,
     AuthService,
     EmailService,
-    AttemptsRepository,
     AppService,
     JwtExtractStrategy,
     JwtStrategy,
@@ -134,6 +133,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
     UserExistGuard,
     JwtExtract,
     DeviceService,
+    DeviceRepository,
   ],
 })
 export class AppModule {}

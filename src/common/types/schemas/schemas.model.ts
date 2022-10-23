@@ -102,19 +102,6 @@ export class Comments {
 
 export const CommentsSchema = SchemaFactory.createForClass(Comments);
 
-export type AttemptsDocument = Attempts & Document;
-
-export class Attempts {
-  @Prop()
-  userIp: string;
-  @Prop()
-  url: string;
-  @Prop()
-  time: Date;
-}
-
-export const AttemptsSchema = SchemaFactory.createForClass(Attempts);
-
 export const InfoAboutUser = new mongoose.Schema<UserAccount>({
   id: String,
   email: String,
@@ -142,3 +129,25 @@ export const UsersSchema = new mongoose.Schema<User>({
 //   login: String,
 //   postId: String,
 // });
+
+export type DeviceDocument = Device & Document;
+
+@Schema()
+export class Device {
+  @Prop()
+  ip: string;
+
+  @Prop()
+  title: string;
+
+  @Prop()
+  lastActiveDate: string;
+
+  @Prop()
+  deviceId: string;
+
+  @Prop()
+  userId: string;
+}
+
+export const DeviceSchema = SchemaFactory.createForClass(Device);
