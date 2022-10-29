@@ -54,6 +54,8 @@ import { DeviceController } from './features/devices/device.controller';
 import { DeviceService } from './features/devices/device.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DeviceRepository } from './features/devices/device.repository';
+import { CommandBus } from '@nestjs/cqrs';
+import { HelperService } from './common/helpers/helper.service';
 
 @Module({
   imports: [
@@ -134,6 +136,8 @@ import { DeviceRepository } from './features/devices/device.repository';
     JwtExtract,
     DeviceService,
     DeviceRepository,
+    CommandBus,
+    HelperService,
   ],
 })
 export class AppModule {}

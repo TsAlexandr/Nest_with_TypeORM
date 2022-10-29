@@ -1,0 +1,8 @@
+export class GetCommentsCommand {
+  constructor(
+    public readonly postId: string,
+    public readonly page: number,
+    public readonly pageSize: number,
+    public readonly userId: string,
+  ) {}
+}
