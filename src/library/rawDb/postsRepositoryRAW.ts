@@ -11,8 +11,8 @@ export class PostsRepositoryRAW {
               ("title", 
               "shortDescription", 
               "content", 
-              "bloggerId", 
-              "bloggerName",
+              "blogId", 
+              "blogName",
               "addedAt"
             ) 
               VALUES ($1, $2, $3, $4, $5, $6)`,
@@ -20,8 +20,8 @@ export class PostsRepositoryRAW {
         createPost.title,
         createPost.shortDescription,
         createPost.content,
-        createPost.bloggerId,
-        createPost.bloggerName,
+        createPost.blogId,
+        createPost.blogName,
         createPost.addedAt,
       ],
     );
@@ -31,8 +31,8 @@ export class PostsRepositoryRAW {
                 title, 
                 "shortDescription", 
                 content, 
-                "bloggerId", 
-                "bloggerName", 
+                "blogId", 
+                "blogName", 
                 "addedAt"
               FROM public.posts
               WHERE title LIKE $1`,
@@ -53,22 +53,22 @@ export class PostsRepositoryRAW {
     page: number,
     pageSize: number,
     userId: string,
-    bloggerId: string,
+    blogId: string,
     searchNameTerm: string,
   ) {
     const filter = searchNameTerm ? searchNameTerm : '';
-    const filterByBlogger = bloggerId ? bloggerId : '';
+    const filterByBlogger = blogId ? blogId : '';
     const post = await this.dataSource.query(
       `SELECT id, 
                 title, 
                 "shortDescription", 
                 content, 
-                "bloggerId", 
-                "bloggerName", 
+                "blogId", 
+                "blogName", 
                 "addedAt" 
             FROM "posts"
             WHERE "title" LIKE $3
-            AND "bloggerId" LIKE $4
+            AND "blogId" LIKE $4
             ORDER BY "title" DESC
             OFFSET $1 ROWS
             FETCH NEXT $2 ROWS ONLY`,
@@ -82,7 +82,7 @@ export class PostsRepositoryRAW {
     const total = await this.dataSource.query(
       `SELECT COUNT(name) FROM "posts"
             WHERE "title" LIKE $1
-            AND "bloggerId" LIKE $2`,
+            AND "blogId" LIKE $2`,
       ['%' + filter + '%', '%' + filterByBlogger + '%'],
     );
     const pages = Math.ceil(total.count / pageSize);
@@ -102,8 +102,8 @@ export class PostsRepositoryRAW {
                 title, 
                 "shortDescription", 
                 content, 
-                "bloggerId", 
-                "bloggerName", 
+                "blogId", 
+                "blogName", 
                 "addedAt"
               FROM "posts"
               WHERE id LIKE $1`,
@@ -115,13 +115,13 @@ export class PostsRepositoryRAW {
   async updatePost(updPost: PostsCon) {
     return await this.dataSource.query(
       `UPDATE "posts"
-        SET "id" = $1, "bloggerId" = $2,
-        "bloggerName" =  $3, "title" = $4,
+        SET "id" = $1, "blogId" = $2,
+        "blogName" =  $3, "title" = $4,
         "shortDescription" = $5, "content" = $6`,
       [
         updPost.id,
-        updPost.bloggerId,
-        updPost.bloggerName,
+        updPost.blogId,
+        updPost.blogName,
         updPost.title,
         updPost.shortDescription,
         updPost.content,

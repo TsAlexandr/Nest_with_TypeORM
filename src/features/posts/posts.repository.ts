@@ -10,11 +10,11 @@ export class PostsRepository {
     page: number,
     pageSize: number,
     userId: string,
-    bloggerId: string | null,
+    blogId: string | null,
     searchNameTerm: string,
   ) {
-    const filter = bloggerId
-      ? { title: { $regex: searchNameTerm ? searchNameTerm : '' }, bloggerId }
+    const filter = blogId
+      ? { title: { $regex: searchNameTerm ? searchNameTerm : '' }, blogId }
       : { title: { $regex: searchNameTerm ? searchNameTerm : '' } };
 
     const post = await this.postsModel
@@ -40,9 +40,9 @@ export class PostsRepository {
         title: obj.title,
         shortDescription: obj.shortDescription,
         content: obj.content,
-        bloggerId: obj.bloggerId,
+        blogId: obj.blogId,
         addedAt: obj.addedAt,
-        bloggerName: obj.bloggerName,
+        blogName: obj.blogName,
         extendedLikesInfo: {
           likesCount: likesCount,
           dislikesCount: dislikesCount,
@@ -76,8 +76,8 @@ export class PostsRepository {
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
-        bloggerId: post.bloggerId,
-        bloggerName: post.bloggerName,
+        blogId: post.blogId,
+        blogName: post.blogName,
         extendedLikesInfo: {
           dislikesCount: 0,
           likesCount: 0,
@@ -102,8 +102,8 @@ export class PostsRepository {
         title: post.title,
         shortDescription: post.shortDescription,
         content: post.content,
-        bloggerId: post.bloggerId,
-        bloggerName: post.bloggerName,
+        blogId: post.blogId,
+        blogName: post.blogName,
         extendedLikesInfo: {
           likesCount: likesCount,
           dislikesCount: dislikesCount,
@@ -128,8 +128,8 @@ export class PostsRepository {
       title: post.title,
       shortDescription: post.shortDescription,
       content: post.content,
-      bloggerId: post.bloggerId,
-      bloggerName: post.bloggerName,
+      blogId: post.blogId,
+      blogName: post.blogName,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,

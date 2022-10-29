@@ -65,7 +65,7 @@ export class BloggersRepository {
       },
     );
     await this.postsModel.updateMany(
-      { bloggerId: id },
+      { blogsId: id },
       { $set: { bloggerName: update.name } },
     );
     return updBlog.modifiedCount === 1;

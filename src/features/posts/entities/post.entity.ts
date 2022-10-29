@@ -21,9 +21,9 @@ export class PostEntity {
   @Column('text')
   content: string;
   @Column('uuid')
-  bloggerId: string;
+  blogId: string;
   @Column('text')
-  bloggerName: string;
+  blogName: string;
   @Column('text')
   addedAt: Date;
   @ManyToOne(() => BloggersEntity, (blogger) => blogger.post)

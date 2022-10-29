@@ -12,14 +12,14 @@ export class PostsService {
     page: number,
     pageSize: number,
     userId: string,
-    bloggerId: string | null,
+    blogId: string | null,
     searchNameTerm: string,
   ) {
     return await this.postsRepository.getPosts(
       page,
       pageSize,
       userId,
-      bloggerId,
+      blogId,
       searchNameTerm,
     );
   }
@@ -36,8 +36,8 @@ export class PostsService {
       title: newPost.title,
       shortDescription: newPost.shortDescription,
       content: newPost.content,
-      bloggerId: newPost.bloggerId,
-      bloggerName: newPost.bloggerName,
+      blogId: newPost.blogId,
+      blogName: newPost.blogName,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,

@@ -26,7 +26,7 @@ export class PostsCon {
 
   @IsString()
   @IsNotEmpty()
-  bloggerId: Blogger['id'];
+  blogId: Blogger['id'];
 
   @IsString()
   @IsNotEmpty()
@@ -43,7 +43,7 @@ export class PostsCon {
   @MaxLength(1000)
   content: string;
 
-  bloggerName: Blogger['name'];
+  blogName: Blogger['name'];
 }
 
 export class NewPost {

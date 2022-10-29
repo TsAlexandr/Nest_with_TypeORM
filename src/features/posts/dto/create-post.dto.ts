@@ -11,5 +11,5 @@ export class CreatePostDto {
   @Length(0, 1000)
   content: string;
   @IsString()
-  bloggerId: string;
+  blogId: string;
 }

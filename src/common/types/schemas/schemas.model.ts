@@ -46,10 +46,10 @@ export class Posts {
   content: string;
 
   @Prop()
-  bloggerId: string;
+  blogId: string;
 
   @Prop()
-  bloggerName: string;
+  blogName: string;
 
   @Prop({ type: Action })
   extendedLikesInfo: {
@@ -141,7 +141,7 @@ export class Device {
   title: string;
 
   @Prop()
-  lastActiveDate: string;
+  lastActiveDate: Date;
 
   @Prop()
   deviceId: string;

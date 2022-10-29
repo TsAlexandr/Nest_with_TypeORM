@@ -19,8 +19,8 @@ export class PostsTypeORM {
           content: createPost.content,
           shortDescription: createPost.shortDescription,
           addedAt: createPost.addedAt,
-          bloggerId: createPost.bloggerId,
-          bloggerName: createPost.bloggerName,
+          blogId: createPost.blogId,
+          blogName: createPost.blogName,
         },
       ])
       .execute();
@@ -65,16 +65,16 @@ export class PostsTypeORM {
 
   async updatePost(
     id: string,
-    bloggerId: string,
-    bloggerName: string,
+    blogId: string,
+    blogName: string,
     updPost: NewPost,
   ) {
     return this.dataSource
       .createQueryBuilder()
       .update(PostEntity)
       .set({
-        bloggerId: bloggerId,
-        bloggerName: bloggerName,
+        blogId: blogId,
+        blogName: blogName,
         title: updPost.title,
         shortDescription: updPost.shortDescription,
         content: updPost.content,

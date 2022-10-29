@@ -82,9 +82,9 @@ export class BloggersController {
   }
 
   @UseGuards(JwtExtract)
-  @Get(':bloggerId/posts')
+  @Get(':blogId/posts')
   async getPostForBlogger(
-    @Param('bloggerId') bloggerId: string,
+    @Param('blogId') blogId: string,
     @Query() query,
     @Req() req,
   ) {
@@ -95,24 +95,24 @@ export class BloggersController {
       page,
       pageSize,
       userId,
-      bloggerId,
+      blogId,
       searchNameTerm,
     );
     return pages;
   }
 
   @UseGuards(BasicGuards)
-  @Post(':bloggerId/posts')
+  @Post(':blogId/posts')
   async createNewPostForBlogger(
-    @Param('bloggerId') bloggerId: string,
+    @Param('blogId') blogId: string,
     @Body() newPost: NewPost,
   ) {
-    const blogger = await this.bloggersService.getBloggerById(bloggerId);
-    const bloggerName = blogger.name;
+    const blogger = await this.bloggersService.getBloggerById(blogId);
+    const blogName = blogger.name;
     const newPostForBlogger = await this.postsService.create({
       ...newPost,
-      bloggerId,
-      bloggerName,
+      blogId,
+      blogName,
     });
     return newPostForBlogger;
   }

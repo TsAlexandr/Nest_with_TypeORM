@@ -62,30 +62,26 @@ export class PostsController {
   @UseGuards(BasicGuards)
   @Post()
   async create(@Body() newPost: CreatePostDto) {
-    const blogger = await this.bloggersService.getBloggerById(
-      newPost.bloggerId,
-    );
+    const blogger = await this.bloggersService.getBloggerById(newPost.blogId);
     if (!blogger) {
       throw new HttpException(
-        { message: [{ message: 'blogger doesnt exist', field: 'bloggerId' }] },
+        { message: [{ message: 'blogger doesnt exist', field: 'blogId' }] },
         HttpStatus.BAD_REQUEST,
       );
     }
-    const bloggerName = blogger.name;
-    return await this.postsService.create({ ...newPost, bloggerName });
+    const blogName = blogger.name;
+    return await this.postsService.create({ ...newPost, blogName });
   }
 
   @UseGuards(BasicGuards)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updPost: CreatePostDto) {
-    const blogger = await this.bloggersService.getBloggerById(
-      updPost.bloggerId,
-    );
-    const bloggerName = blogger.name;
+    const blogger = await this.bloggersService.getBloggerById(updPost.blogId);
+    const blogName = blogger.name;
     return await this.postsService.update({
       id,
-      bloggerName,
+      blogName,
       ...updPost,
     });
   }
