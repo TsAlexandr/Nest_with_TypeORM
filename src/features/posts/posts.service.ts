@@ -29,7 +29,7 @@ export class PostsService {
     return post;
   }
 
-  async create(newPost: PostsCon) {
+  async create(newPost: any): Promise<PostsCon> {
     const createPost = {
       addedAt: new Date(),
       id: v4(),
@@ -37,7 +37,6 @@ export class PostsService {
       shortDescription: newPost.shortDescription,
       content: newPost.content,
       blogId: newPost.blogId,
-      blogName: newPost.blogName,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,
@@ -49,7 +48,7 @@ export class PostsService {
     return await this.postsRepository.createPosts(createPost);
   }
 
-  async update(updPost: PostsCon) {
+  async update(updPost: any) {
     return await this.postsRepository.updatePost(updPost);
   }
 

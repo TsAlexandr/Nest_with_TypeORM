@@ -9,9 +9,10 @@ import {
 } from '../../common/types/schemas/schemas.model';
 import { Blogger, Paginator } from '../../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
+import { IBlogsRepository } from '../../common/interfaces/IBlogsRepository';
 
 @Injectable()
-export class BloggersRepository {
+export class BloggersRepository implements IBlogsRepository {
   constructor(
     @InjectModel(BloggersMongo.name)
     private bloggersModel: Model<BloggersDocument>,
@@ -42,19 +43,19 @@ export class BloggersRepository {
     };
   }
 
-  async getBloggersById(id: string) {
+  async getBloggersById(id: string): Promise<BloggersMongo> {
     const blogger = await this.bloggersModel
       .findOne({ id }, { _id: 0, __v: 0 })
       .lean();
     return blogger;
   }
 
-  async deleteBloggerById(id: string) {
+  async deleteBloggerById(id: string): Promise<boolean> {
     const delBlog = await this.bloggersModel.deleteOne({ id });
     return delBlog.deletedCount === 1;
   }
 
-  async updateBloggerById(id: string, update: BloggersDto) {
+  async updateBloggerById(id: string, update: BloggersDto): Promise<boolean> {
     const updBlog = await this.bloggersModel.updateOne(
       { id },
       {
@@ -71,7 +72,7 @@ export class BloggersRepository {
     return updBlog.modifiedCount === 1;
   }
 
-  async createBlogger(newBlogger: BloggersMongo) {
+  async createBlogger(newBlogger: BloggersMongo): Promise<BloggersMongo> {
     await this.bloggersModel.create(newBlogger);
     const blogger = await this.getBloggersById(newBlogger.id);
     return blogger;

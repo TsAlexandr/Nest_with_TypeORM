@@ -54,8 +54,13 @@ import { DeviceController } from './features/devices/device.controller';
 import { DeviceService } from './features/devices/device.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DeviceRepository } from './features/devices/device.repository';
-import { CommandBus } from '@nestjs/cqrs';
-import { HelperService } from './common/helpers/helper.service';
+import { CqrsModule } from '@nestjs/cqrs';
+import { GetCommentsHandler } from './features/usecase/handlers/getComments.handler';
+import { CreateCommentHandler } from './features/usecase/handlers/createComment.handler';
+import { BloggersModule } from './features/bloggers/bloggers.module';
+import { BloggersRepositoryORM } from './library/typeORM/bloggers.typeORM';
+
+export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
 
 @Module({
   imports: [
@@ -101,10 +106,11 @@ import { HelperService } from './common/helpers/helper.service';
       ttl: 10,
       limit: 5,
     }),
+    CqrsModule,
+    BloggersModule,
   ],
   controllers: [
     AppController,
-    BloggersController,
     PostsController,
     CommentsController,
     UsersController,
@@ -113,11 +119,9 @@ import { HelperService } from './common/helpers/helper.service';
     DeviceController,
   ],
   providers: [
-    BloggersService,
     PostsService,
     CommentsService,
     UsersService,
-    BloggersRepository,
     PostsRepository,
     CommentsRepository,
     UsersRepository,
@@ -136,8 +140,7 @@ import { HelperService } from './common/helpers/helper.service';
     JwtExtract,
     DeviceService,
     DeviceRepository,
-    CommandBus,
-    HelperService,
+    ...CommandHandlers,
   ],
 })
 export class AppModule {}

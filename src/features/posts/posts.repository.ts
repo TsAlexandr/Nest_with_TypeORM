@@ -1,6 +1,6 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { Posts, PostsDocument } from '../../common/types/schemas/schemas.model';
-import { PostsCon } from '../../common/types/classes/classes';
+import { PostsDocument } from '../../common/types/schemas/schemas.model';
+import { Paginator, PostsCon } from '../../common/types/classes/classes';
 import { Model } from 'mongoose';
 
 export class PostsRepository {
@@ -12,7 +12,7 @@ export class PostsRepository {
     userId: string,
     blogId: string | null,
     searchNameTerm: string,
-  ) {
+  ): Promise<Paginator<PostsCon[]>> {
     const filter = blogId
       ? { title: { $regex: searchNameTerm ? searchNameTerm : '' }, blogId }
       : { title: { $regex: searchNameTerm ? searchNameTerm : '' } };
@@ -120,7 +120,7 @@ export class PostsRepository {
     }
   }
 
-  async createPosts(createPost: Posts) {
+  async createPosts(createPost: any) {
     const post = await this.postsModel.create(createPost);
     return {
       addedAt: post.addedAt,
@@ -139,7 +139,7 @@ export class PostsRepository {
     };
   }
 
-  async updatePost(updPost: PostsCon) {
+  async updatePost(updPost: any) {
     const post = await this.postsModel.updateOne(
       { id: updPost.id },
       { $set: { ...updPost } },

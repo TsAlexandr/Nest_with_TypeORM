@@ -12,7 +12,6 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
-  BadRequestException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Actions } from '../../common/types/classes/classes';
@@ -20,7 +19,6 @@ import { JwtExtract } from '../auth/guards/jwt.extract';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentsService } from '../comments/comments.service';
-import { BloggersService } from '../bloggers/bloggers.service';
 import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UsersService } from '../users/users.service';
@@ -31,7 +29,6 @@ export class PostsController {
   constructor(
     private postsService: PostsService,
     private commentsService: CommentsService,
-    private bloggersService: BloggersService,
     private usersService: UsersService,
   ) {}
 
@@ -62,26 +59,15 @@ export class PostsController {
   @UseGuards(BasicGuards)
   @Post()
   async create(@Body() newPost: CreatePostDto) {
-    const blogger = await this.bloggersService.getBloggerById(newPost.blogId);
-    if (!blogger) {
-      throw new HttpException(
-        { message: [{ message: 'blogger doesnt exist', field: 'blogId' }] },
-        HttpStatus.BAD_REQUEST,
-      );
-    }
-    const blogName = blogger.name;
-    return await this.postsService.create({ ...newPost, blogName });
+    return await this.postsService.create({ ...newPost });
   }
 
   @UseGuards(BasicGuards)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updPost: CreatePostDto) {
-    const blogger = await this.bloggersService.getBloggerById(updPost.blogId);
-    const blogName = blogger.name;
     return await this.postsService.update({
       id,
-      blogName,
       ...updPost,
     });
   }

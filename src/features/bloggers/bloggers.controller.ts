@@ -1,6 +1,11 @@
 import { BloggersService } from './bloggers.service';
 import { PostsService } from '../posts/posts.service';
-import { NewPost } from '../../common/types/classes/classes';
+import {
+  Blogger,
+  NewPost,
+  Paginator,
+  PostsCon,
+} from '../../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
 import { Pagination } from '../../common/types/classes/pagination';
 import {
@@ -20,7 +25,6 @@ import {
 } from '@nestjs/common';
 import { BasicGuards } from '../auth/guards/basic.guards';
 import { JwtExtract } from '../auth/guards/jwt.extract';
-import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 
 @Controller('blogs')
 export class BloggersController {
@@ -30,7 +34,7 @@ export class BloggersController {
   ) {}
 
   @Get()
-  async getAllBloggers(@Query() query) {
+  async getAllBloggers(@Query() query): Promise<Paginator<Blogger[]>> {
     const { page, pageSize, searchNameTerm } =
       Pagination.getPaginationData(query);
     const bloggers = await this.bloggersService.getBloggers(
@@ -45,7 +49,7 @@ export class BloggersController {
   }
 
   @Get(':id')
-  async getBlogger(@Param('id') id: string) {
+  async getBlogger(@Param('id') id: string): Promise<Blogger> {
     const blogger = await this.bloggersService.getBloggerById(id);
     if (!blogger) {
       throw new NotFoundException();
@@ -55,7 +59,7 @@ export class BloggersController {
 
   @UseGuards(BasicGuards)
   @Post()
-  async createBlogger(@Body() bloggersDto: BloggersDto) {
+  async createBlogger(@Body() bloggersDto: BloggersDto): Promise<Blogger> {
     return await this.bloggersService.createBlogger(bloggersDto);
   }
 
@@ -65,7 +69,7 @@ export class BloggersController {
   async updateBlogger(
     @Param('id') id: string,
     @Body() bloggersDto: BloggersDto,
-  ) {
+  ): Promise<boolean> {
     const update = { ...bloggersDto };
     return await this.bloggersService.updateBlogger(id, update);
   }
@@ -73,7 +77,7 @@ export class BloggersController {
   @UseGuards(BasicGuards)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async deleteBlogger(@Param('id') id: string) {
+  async deleteBlogger(@Param('id') id: string): Promise<boolean> {
     const removeBlogger = await this.bloggersService.deleteBlogger(id);
     if (!removeBlogger) {
       throw new NotFoundException();
@@ -87,7 +91,7 @@ export class BloggersController {
     @Param('blogId') blogId: string,
     @Query() query,
     @Req() req,
-  ) {
+  ): Promise<Paginator<PostsCon[]>> {
     const { page, pageSize, searchNameTerm } =
       Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
@@ -106,7 +110,7 @@ export class BloggersController {
   async createNewPostForBlogger(
     @Param('blogId') blogId: string,
     @Body() newPost: NewPost,
-  ) {
+  ): Promise<PostsCon> {
     const blogger = await this.bloggersService.getBloggerById(blogId);
     const blogName = blogger.name;
     const newPostForBlogger = await this.postsService.create({

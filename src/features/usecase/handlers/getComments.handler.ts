@@ -1,13 +1,14 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { GetCommentsCommand } from '../commands/getComments.command';
-import { CommentsService } from '../../../features/comments/comments.service';
+import { CommentsRepository } from '../../comments/comments.repository';
 
 @CommandHandler(GetCommentsCommand)
 export class GetCommentsHandler implements ICommandHandler<GetCommentsCommand> {
-  constructor(private commentsService: CommentsService) {}
+  constructor(private commentsRepository: CommentsRepository) {}
+
   async execute(command: GetCommentsCommand) {
     const { postId, page, pageSize, userId } = command;
-    const comments = await this.commentsService.getCommentWithPage(
+    const comments = await this.commentsRepository.getCommentWithPage(
       postId,
       page,
       pageSize,

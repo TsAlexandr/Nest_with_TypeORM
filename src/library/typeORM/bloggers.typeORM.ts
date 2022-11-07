@@ -3,9 +3,11 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Blogger, Paginator } from '../../common/types/classes/classes';
 import { BloggersEntity } from '../../features/bloggers/entities/bloggers.entity';
+import { IBlogsRepository } from '../../common/interfaces/IBlogsRepository';
+import { BloggersDto } from '../../features/bloggers/dto/bloggers.dto';
 
 @Injectable()
-export class BloggersRepositoryORM {
+export class BloggersRepositoryORM implements IBlogsRepository {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   async getBloggers(
@@ -36,34 +38,36 @@ export class BloggersRepositoryORM {
     };
   }
 
-  async getBloggersById(id: string) {
+  async getBloggersById(id: string): Promise<Blogger> {
     const blogger = await this.dataSource
       .getRepository(BloggersEntity)
       .createQueryBuilder()
       .where('id = :id', { id })
       .getOne();
-    return blogger;
+    return blogger[0];
   }
 
-  async deleteBloggerById(id: string) {
-    return this.dataSource
+  async deleteBloggerById(id: string): Promise<boolean> {
+    const result = await this.dataSource
       .createQueryBuilder()
       .delete()
       .from(BloggersEntity)
       .where('id = :id', { id })
       .execute();
+    if (result) return true;
   }
 
-  async updateBloggerById(id: string, name: string, youtubeUrl: string) {
-    return this.dataSource
+  async updateBloggerById(id: string, update: BloggersDto): Promise<boolean> {
+    const result = await this.dataSource
       .createQueryBuilder()
       .update(BloggersEntity)
-      .set({ name: name, youtubeUrl: youtubeUrl })
+      .set({ name: update.name, youtubeUrl: update.youtubeUrl })
       .where('id = :id', { id })
       .execute();
+    if (result) return true;
   }
 
-  async createBlogger(newBlogger: Blogger) {
+  async createBlogger(newBlogger: Blogger): Promise<Blogger> {
     await this.dataSource
       .createQueryBuilder()
       .insert()
@@ -80,6 +84,6 @@ export class BloggersRepositoryORM {
       .getRepository(BloggersEntity)
       .createQueryBuilder()
       .where('name = :name', { name: newBlogger.name });
-    return blogger;
+    return blogger[0];
   }
 }
