@@ -35,12 +35,14 @@ export class BloggersController {
 
   @Get()
   async getAllBloggers(@Query() query): Promise<Paginator<Blogger[]>> {
-    const { page, pageSize, searchNameTerm } =
+    const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
     const bloggers = await this.bloggersService.getBloggers(
       page,
       pageSize,
       searchNameTerm,
+      sortBy,
+      sortDirection,
     );
     if (!bloggers) {
       throw new NotFoundException();
@@ -92,7 +94,7 @@ export class BloggersController {
     @Query() query,
     @Req() req,
   ): Promise<Paginator<PostsCon[]>> {
-    const { page, pageSize, searchNameTerm } =
+    const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
     const pages = await this.postsService.findAll(
@@ -101,6 +103,8 @@ export class BloggersController {
       userId,
       blogId,
       searchNameTerm,
+      sortBy,
+      sortDirection,
     );
     return pages;
   }

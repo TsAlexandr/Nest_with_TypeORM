@@ -23,12 +23,15 @@ export class BloggersRepository implements IBlogsRepository {
     page: number,
     pageSize: number,
     searchNameTerm: string,
+    sortBy: string,
+    sortDirection: any,
   ): Promise<Paginator<Blogger[]>> {
     const filter = { name: { $regex: searchNameTerm ? searchNameTerm : '' } };
     const bloggers = await this.bloggersModel
       .find(filter, { _id: 0, __v: 0 })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
+      .sort({ [sortBy]: sortDirection })
       .lean();
 
     const count = await this.bloggersModel.countDocuments(filter);

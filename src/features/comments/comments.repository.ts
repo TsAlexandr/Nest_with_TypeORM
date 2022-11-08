@@ -50,12 +50,15 @@ export class CommentsRepository {
     page: number,
     pageSize: number,
     userId: string,
+    sortBy: string,
+    sortDirection: any,
   ) {
     const filter = { postId };
     const commentsForPosts = await this.commentsModel
       .find(filter, { _id: 0, postId: 0, __v: 0 })
       .limit(pageSize)
       .skip((page - 1) * pageSize)
+      .sort({ [sortBy]: sortDirection })
       .lean();
     const total = await this.commentsModel.countDocuments(filter);
     const pages = Math.ceil(total / pageSize);

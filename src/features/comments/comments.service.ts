@@ -47,12 +47,16 @@ export class CommentsService {
     page: number,
     pageSize: number,
     userId: string,
+    sortBy: string,
+    sortDirection: number,
   ) {
     return await this.commentsRepository.getCommentWithPage(
       postId,
       page,
       pageSize,
       userId,
+      sortBy,
+      sortDirection,
     );
   }
 

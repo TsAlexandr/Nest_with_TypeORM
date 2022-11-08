@@ -12,6 +12,8 @@ export class PostsRepository {
     userId: string,
     blogId: string | null,
     searchNameTerm: string,
+    sortBy: string,
+    sortDirection: any,
   ): Promise<Paginator<PostsCon[]>> {
     const filter = blogId
       ? { title: { $regex: searchNameTerm ? searchNameTerm : '' }, blogId }
@@ -21,6 +23,7 @@ export class PostsRepository {
       .find(filter, { projection: { _id: 0 } })
       .limit(pageSize)
       .skip((page - 1) * pageSize)
+      .sort({ [sortBy]: sortDirection })
       .lean();
     const total = await this.postsModel.countDocuments(filter);
     const pages = Math.ceil(total / pageSize);

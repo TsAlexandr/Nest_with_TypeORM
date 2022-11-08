@@ -6,6 +6,8 @@ export interface IBlogsRepository {
     page: number,
     pageSize: number,
     searchNameTerm: string,
+    sortBy: string,
+    sortDirection: number,
   ): Promise<Paginator<Blogger[]>>;
 
   getBloggersById(id: string): Promise<Blogger>;

@@ -35,7 +35,7 @@ export class PostsController {
   @UseGuards(JwtExtract)
   @Get()
   async getAll(@Query() query, @Req() req) {
-    const { page, pageSize, searchNameTerm } =
+    const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
     const posts = await this.postsService.findAll(
@@ -44,6 +44,8 @@ export class PostsController {
       userId,
       null,
       searchNameTerm,
+      sortBy,
+      sortDirection,
     );
     return posts;
   }
@@ -86,13 +88,15 @@ export class PostsController {
     @Param('postId') postId: string,
     @Req() req,
   ) {
-    const { page, pageSize } = Pagination.getData(query);
+    const { page, pageSize, sortBy, sortDirection } = Pagination.getData(query);
     const userId = req.user.userId || null;
     return await this.commentsService.getCommentWithPage(
       postId,
       page,
       pageSize,
       userId,
+      sortBy,
+      sortDirection,
     );
   }
 

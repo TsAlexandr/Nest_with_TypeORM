@@ -45,7 +45,7 @@ export class Posts {
   @Prop()
   content: string;
 
-  @Prop()
+  @Prop({ ref: () => `${BloggersMongo}` })
   blogId: string;
 
   @Prop()

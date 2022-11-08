@@ -4,5 +4,7 @@ export class GetCommentsCommand {
     public readonly page: number,
     public readonly pageSize: number,
     public readonly userId: string,
+    public readonly sortBy: string,
+    public readonly sortDirection: number,
   ) {}
 }

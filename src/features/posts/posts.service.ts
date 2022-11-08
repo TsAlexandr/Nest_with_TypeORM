@@ -14,6 +14,8 @@ export class PostsService {
     userId: string,
     blogId: string | null,
     searchNameTerm: string,
+    sortBy: string,
+    sortDirection: number,
   ) {
     return await this.postsRepository.getPosts(
       page,
@@ -21,6 +23,8 @@ export class PostsService {
       userId,
       blogId,
       searchNameTerm,
+      sortBy,
+      sortDirection,
     );
   }
 

@@ -10,11 +10,19 @@ export class BloggersService {
     private bloggersRepository: IBlogsRepository,
   ) {}
 
-  async getBloggers(page: number, pageSize: number, searchNameTerm: string) {
+  async getBloggers(
+    page: number,
+    pageSize: number,
+    searchNameTerm: string,
+    sortBy: string,
+    sortDirection: number,
+  ) {
     return await this.bloggersRepository.getBloggers(
       page,
       pageSize,
       searchNameTerm,
+      sortBy,
+      sortDirection,
     );
   }
 
