@@ -53,6 +53,7 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @Post('/registration-email-resending')
   async resendEmail(@Body() email: string) {
+    console.log(email);
     const send = await this.emailService.resendRegistrationCode(email);
     if (!send) throw new BadRequestException();
     return null;
