@@ -103,4 +103,39 @@ export class UsersRepository {
     );
     return updatedUser;
   }
+
+  async updateUserWithRecoveryData(
+    id: string,
+    recoveryData: {
+      recoveryCode: string;
+      isConfirmed: boolean;
+      expirationDate: any;
+    },
+  ) {
+    await this.usersModel.updateOne(
+      { 'accountData.id': id },
+      { $set: { recoveryData: recoveryData } },
+    );
+    return this.usersModel.findOne({ 'accountData.id': id });
+  }
+
+  async findUserByCode(recoveryCode: string) {
+    const user = await this.usersModel.findOne({
+      'recoveryData.recoveryCode': recoveryCode,
+    });
+    return user;
+  }
+
+  async confirmPassword(id: string, generatePassword: string) {
+    const user = await this.usersModel.findOneAndUpdate(
+      { 'accountData.id': id },
+      {
+        set: {
+          'recoveryData.isConfirmed': true,
+          'accountData.passwordHash': generatePassword,
+        },
+      },
+    );
+    return user;
+  }
 }

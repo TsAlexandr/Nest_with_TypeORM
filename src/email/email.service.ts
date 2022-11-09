@@ -1,5 +1,6 @@
 import { UsersRepository } from '../features/users/users.repository';
 import * as nodemailer from 'nodemailer';
+import { v4 } from 'uuid';
 
 export class EmailService {
   constructor(private usersRepository: UsersRepository) {}
@@ -63,5 +64,31 @@ export class EmailService {
       return true;
     }
     return null;
+  }
+
+  async sendRecoveryCode(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
+    if (!user) return null;
+    const recoveryCode = v4();
+    const recoveryData = {
+      recoveryCode: recoveryCode,
+      expirationDate: new Date(),
+      isConfirmed: false,
+    };
+
+    const updateUser = await this.usersRepository.updateUserWithRecoveryData(
+      user.accountData.id,
+      recoveryData,
+    );
+    if (updateUser) {
+      await this.sendEmail(
+        updateUser.accountData.email,
+        'Your recovery code',
+        recoveryCode,
+      );
+      return true;
+    } else {
+      return false;
+    }
   }
 }

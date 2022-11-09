@@ -6,6 +6,7 @@ import { v4 } from 'uuid';
 import { EmailService } from '../../email/email.service';
 import * as jwt from 'jsonwebtoken';
 import { RegistrationDto } from '../auth/dto/registration.dto';
+import { NewPasswordDto } from '../auth/dto/newPassword.dto';
 
 @Injectable()
 export class UsersService {
@@ -68,5 +69,21 @@ export class UsersService {
 
   async findUserById(currentUserId: string) {
     return await this.usersRepository.findById(currentUserId);
+  }
+
+  async confirmPassword(newPasswordDto: NewPasswordDto) {
+    const userCode = await this.usersRepository.findUserByCode(
+      newPasswordDto.recoveryCode,
+    );
+    if (userCode.recoveryData.recoveryCode) {
+      return false;
+    }
+    const generatePassword = await this.authService._generateHash(
+      newPasswordDto.newPassword,
+    );
+    await this.usersRepository.confirmPassword(
+      userCode.accountData.id,
+      generatePassword,
+    );
   }
 }

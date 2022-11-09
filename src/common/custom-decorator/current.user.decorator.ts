@@ -8,8 +8,8 @@ export const CurrentUserId = createParamDecorator(
 );
 
 export const Cookies = createParamDecorator(
-  (data: string, ctx: ExecutionContext) => {
+  (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return data ? request.cookies?.[data] : request.cookies;
+    return request.cookies.refreshToken;
   },
 );

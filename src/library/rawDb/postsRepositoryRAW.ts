@@ -91,7 +91,7 @@ export class PostsRepositoryRAW {
       page: page,
       pageSize: pageSize,
       totalCount: parseInt(total[0].count),
-      items: post,
+      items: post[0],
     };
   }
 
@@ -143,7 +143,20 @@ export class PostsRepositoryRAW {
     userId: string,
     login: string,
   ) {
-    const addedAt = new Date();
-    return Promise.resolve(undefined);
+    if (likeStatus === 'Like' || 'Dislike' || 'None') {
+      await this.dataSource.query(
+        `DELETE FROM 'totalActions'
+              WHERE 'postId' = $1 AND 'userId' = $2`,
+        [postId, userId],
+      );
+    }
+    if (likeStatus === 'Like' || 'Dislike') {
+      await this.dataSource.query(
+        `INSERT INTO 'totalActions'
+              ('postId', action, 'userId', login, "addedAt")
+              VALUES ($1, $2, $3, $4, $5)`,
+        [postId, likeStatus, userId, login, new Date()],
+      );
+    }
   }
 }

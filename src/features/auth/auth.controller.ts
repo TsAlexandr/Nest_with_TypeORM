@@ -4,12 +4,14 @@ import {
   Controller,
   HttpCode,
   HttpStatus,
+  Ip,
   NotFoundException,
   Post,
   Req,
   Res,
   UnauthorizedException,
   UseGuards,
+  Headers,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
@@ -19,10 +21,10 @@ import {
 } from '../../common/custom-decorator/current.user.decorator';
 import { JwtAuthGuards } from './guards/jwt-auth.guards';
 import { EmailService } from '../../email/email.service';
-import { LocalAuthGuards } from './guards/local-auth.guards';
 import { RegistrationDto } from './dto/registration.dto';
 import { LoginDto } from './dto/login.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
+import { NewPasswordDto } from './dto/newPassword.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -57,15 +59,19 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
-  @UseGuards(LocalAuthGuards)
   @HttpCode(HttpStatus.OK)
   @Post('/login')
   async login(
     @Body() loginBody: LoginDto,
-    @Req() req,
     @Res({ passthrough: true }) res,
+    @Ip() ip: string,
+    @Headers('user-agent') title: string,
   ) {
-    const result = await this.authService.checkCredentials(loginBody);
+    const result = await this.authService.checkCredentials(
+      loginBody,
+      ip,
+      title,
+    );
     res.cookie('refreshToken', result.data.refreshToken, {
       httpOnly: true,
       secure: true,
@@ -75,11 +81,12 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuards)
   @Post('/refresh-token')
-  async refresh(@Req() req, @Res() res, @Cookies() cookie) {
-    console.log(cookie);
-    if (!cookie.refreshToken) throw new UnauthorizedException();
-    const userId = req.user.payload.sub;
-    const tokens = await this.authService.createTokens(userId);
+  async refresh(@Req() req, @Res() res, @Cookies() cookies) {
+    console.log(cookies);
+    if (!cookies) {
+      throw new UnauthorizedException();
+    }
+    const tokens = await this.authService.updateDevice(cookies);
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
@@ -88,10 +95,12 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(@Req() req) {
-    if (!req.cookie.refreshToken) throw new UnauthorizedException();
-    await this.userService.addToken(req.cookies.refreshToken);
-    return null;
+  async logout(@Res() res, @Cookies() cookies) {
+    if (!cookies) {
+      throw new UnauthorizedException();
+    }
+    await this.authService.removeSession(cookies);
+    res.clearCookie('refreshToken');
   }
 
   @UseGuards(JwtAuthGuards)
@@ -106,14 +115,17 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/password-recovery')
   async recoveryPass(@Body() email: string) {
-    return;
+    await this.emailService.sendRecoveryCode(email);
+    return null;
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/new-password')
-  async getNewPass(@Body() login: string) {
-    return;
+  async getNewPass(@Body() newPasswordDto: NewPasswordDto) {
+    await this.userService.confirmPassword(newPasswordDto);
+    return null;
   }
 }

@@ -28,7 +28,6 @@ import { CommentsRepository } from './features/comments/comments.repository';
 import { UsersService } from './features/users/users.service';
 import { ExistingPostGuard } from './features/auth/guards/existingPostGuard';
 import { JwtExtractStrategy } from './features/auth/strategies/jwt.extract.strategy';
-import { LocalStrategy } from './features/auth/strategies/local.strategy';
 import { JwtExtract } from './features/auth/guards/jwt.extract';
 import { JwtAuthGuards } from './features/auth/guards/jwt-auth.guards';
 import { LocalAuthGuards } from './features/auth/guards/local-auth.guards';
@@ -130,10 +129,8 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     AppService,
     JwtExtractStrategy,
     JwtStrategy,
-    LocalStrategy,
     JwtAuthGuards,
     BasicGuards,
-    LocalAuthGuards,
     TestRepo,
     ExistingPostGuard,
     UserExistGuard,

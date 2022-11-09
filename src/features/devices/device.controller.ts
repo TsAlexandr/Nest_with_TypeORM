@@ -4,11 +4,13 @@ import {
   Get,
   HttpCode,
   HttpStatus,
-  Req,
+  Param,
+  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 import { DeviceService } from './device.service';
+import { Cookies } from '../../common/custom-decorator/current.user.decorator';
 
 @Controller('security')
 export class DeviceController {
@@ -16,20 +18,31 @@ export class DeviceController {
 
   @UseGuards(JwtExtract)
   @Get('/devices')
-  async getDevice(@Req() req) {
-    const device = await this.deviceService.getDevices(req.user.payload.id);
+  async getDevice(@Cookies() cookies) {
+    if (!cookies) {
+      throw new UnauthorizedException();
+    }
+    const device = await this.deviceService.getDevices(cookies);
     return device;
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/devices')
-  async deleteAllDevice() {
-    return;
+  async deleteAllDevice(@Cookies() cookies) {
+    if (!cookies) {
+      throw new UnauthorizedException();
+    }
+    const deleteDevices = await this.deviceService.deleteDevices(cookies);
+    return deleteDevices;
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/devices/:deviceId')
-  async deleteDeviceById() {
-    return;
+  async deleteDeviceById(
+    @Param('deviceId') deviceId: string,
+    @Cookies() cookies,
+  ) {
+    const deleteDevice = await this.deviceService.deleteById(cookies, deviceId);
+    return deleteDevice;
   }
 }
