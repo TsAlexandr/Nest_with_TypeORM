@@ -1,7 +1,7 @@
 import { UsersRepository } from '../features/users/users.repository';
 import * as nodemailer from 'nodemailer';
 import { v4 } from 'uuid';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
 export class EmailService {
@@ -30,7 +30,11 @@ export class EmailService {
   async confirmEmail(code: string) {
     const user = await this.usersRepository.findByConfirmCode(code);
     if (!user) return false;
-    if (user.emailConfirm.isConfirmed) return false;
+    if (user.emailConfirm.isConfirmed)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'code' }] },
+        HttpStatus.BAD_REQUEST,
+      );
     const dbConfirmCode = user.emailConfirm.confirmationCode;
     if (dbConfirmCode === code) {
       const result = await this.usersRepository.updateConfirm(
