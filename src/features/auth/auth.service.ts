@@ -5,12 +5,14 @@ import * as jwt from 'jsonwebtoken';
 import { LoginDto } from './dto/login.dto';
 import { v4 } from 'uuid';
 import { DeviceRepository } from '../devices/device.repository';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersRepository: UsersRepository,
     private deviceRepository: DeviceRepository,
+    private configService: ConfigService,
   ) {}
 
   async checkCredentials(loginBody: LoginDto, ip: string, title: string) {
@@ -69,20 +71,18 @@ export class AuthService {
   }
 
   async _extractPayload(refreshToken: string) {
-    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
+    const secret = this.configService.get('JWT_SECRET_KEY');
+    const payload = jwt.verify(refreshToken, secret);
     return payload;
   }
   async createTokens(userId: string, deviceId) {
-    const accessToken = jwt.sign(
-      { userId: userId },
-      process.env.JWT_SECRET_KEY,
-      {
-        expiresIn: '4h',
-      },
-    );
+    const secret = this.configService.get('JWT_SECRET_KEY');
+    const accessToken = jwt.sign({ userId: userId }, secret, {
+      expiresIn: '4h',
+    });
     const refreshToken = jwt.sign(
       { userId: userId, deviceId: deviceId },
-      process.env.JWT_SECRET,
+      secret,
       { expiresIn: '24h' },
     );
 
