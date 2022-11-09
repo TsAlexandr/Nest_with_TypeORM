@@ -44,8 +44,9 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/registration-confirmation')
-  async confirmClient(@Body() code: string) {
+  async confirmClient(@Body('code') code: string) {
     const confirm = await this.emailService.confirmEmail(code);
     if (!confirm)
       throw new HttpException(
@@ -56,9 +57,10 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/registration-email-resending')
-  async resendEmail(@Body() email: string) {
-    console.log(email);
+  async resendEmail(@Body('email') email: string) {
+    console.log(email, 'from controller');
     const send = await this.emailService.resendRegistrationCode(email);
     if (!send)
       throw new HttpException(
@@ -133,7 +135,7 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/password-recovery')
-  async recoveryPass(@Body() email: string) {
+  async recoveryPass(@Body('email') email: string) {
     await this.emailService.sendRecoveryCode(email);
     return null;
   }

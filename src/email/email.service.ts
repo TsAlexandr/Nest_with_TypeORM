@@ -1,7 +1,9 @@
 import { UsersRepository } from '../features/users/users.repository';
 import * as nodemailer from 'nodemailer';
 import { v4 } from 'uuid';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class EmailService {
   constructor(private usersRepository: UsersRepository) {}
 
@@ -23,10 +25,6 @@ export class EmailService {
     } catch (e) {
       console.log(e);
     }
-  }
-
-  getConfirmMessage(confirmationCode: string) {
-    return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`;
   }
 
   async confirmEmail(code: string) {
@@ -90,5 +88,9 @@ export class EmailService {
     } else {
       return false;
     }
+  }
+
+  getConfirmMessage(confirmationCode: string) {
+    return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`;
   }
 }
