@@ -69,13 +69,17 @@ export class AuthService {
   }
 
   async _extractPayload(refreshToken: string) {
-    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    const payload = jwt.verify(refreshToken, process.env.JWT_SECRET_KEY);
     return payload;
   }
   async createTokens(userId: string, deviceId) {
-    const accessToken = jwt.sign({ userId: userId }, process.env.JWT_SECRET, {
-      expiresIn: '4h',
-    });
+    const accessToken = jwt.sign(
+      { userId: userId },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: '4h',
+      },
+    );
     const refreshToken = jwt.sign(
       { userId: userId, deviceId: deviceId },
       process.env.JWT_SECRET,
