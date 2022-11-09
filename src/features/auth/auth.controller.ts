@@ -12,6 +12,7 @@ import {
   UnauthorizedException,
   UseGuards,
   Headers,
+  HttpException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
@@ -46,7 +47,11 @@ export class AuthController {
   @Post('/registration-confirmation')
   async confirmClient(@Body() code: string) {
     const confirm = await this.emailService.confirmEmail(code);
-    if (!confirm) throw new NotFoundException();
+    if (!confirm)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'code' }] },
+        HttpStatus.NOT_FOUND,
+      );
     return null;
   }
 
@@ -55,7 +60,11 @@ export class AuthController {
   async resendEmail(@Body() email: string) {
     console.log(email);
     const send = await this.emailService.resendRegistrationCode(email);
-    if (!send) throw new BadRequestException();
+    if (!send)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'email' }] },
+        HttpStatus.BAD_REQUEST,
+      );
     return null;
   }
 
@@ -85,7 +94,10 @@ export class AuthController {
   async refresh(@Req() req, @Res() res, @Cookies() cookies) {
     console.log(cookies);
     if (!cookies) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     const tokens = await this.authService.updateDevice(cookies);
     res.cookie('refreshToken', tokens.refreshToken, {
@@ -98,7 +110,10 @@ export class AuthController {
   @Post('/logout')
   async logout(@Res() res, @Cookies() cookies) {
     if (!cookies) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     await this.authService.removeSession(cookies);
     res.clearCookie('refreshToken');

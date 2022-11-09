@@ -3,6 +3,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   UnauthorizedException,
@@ -20,7 +21,10 @@ export class DeviceController {
   @Get('/devices')
   async getDevice(@Cookies() cookies) {
     if (!cookies) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     const device = await this.deviceService.getDevices(cookies);
     return device;
@@ -30,7 +34,10 @@ export class DeviceController {
   @Delete('/devices')
   async deleteAllDevice(@Cookies() cookies) {
     if (!cookies) {
-      throw new UnauthorizedException();
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
     }
     const deleteDevices = await this.deviceService.deleteDevices(cookies);
     return deleteDevices;

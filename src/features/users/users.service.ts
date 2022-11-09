@@ -1,4 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { AuthService } from '../auth/auth.service';
 import { User } from '../../common/types/classes/classes';
@@ -21,6 +26,18 @@ export class UsersService {
   }
 
   async createUser(registr: RegistrationDto) {
+    const validEmail = await this.usersRepository.findByEmail(registr.email);
+    if (validEmail)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'email' }] },
+        HttpStatus.BAD_REQUEST,
+      );
+    const validLogin = await this.usersRepository.findByLogin(registr.login);
+    if (validLogin)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'login' }] },
+        HttpStatus.BAD_REQUEST,
+      );
     const passwordHash = await this.authService._generateHash(registr.password);
     const user: User = new User(
       {

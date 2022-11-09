@@ -5,7 +5,6 @@ import * as jwt from 'jsonwebtoken';
 import { LoginDto } from './dto/login.dto';
 import { v4 } from 'uuid';
 import { DeviceRepository } from '../devices/device.repository';
-import { Device } from '../../common/types/schemas/schemas.model';
 
 @Injectable()
 export class AuthService {
