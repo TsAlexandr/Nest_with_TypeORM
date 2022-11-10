@@ -4,7 +4,9 @@ import {
   DeviceDocument,
 } from '../../common/types/schemas/schemas.model';
 import { Model } from 'mongoose';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class DeviceRepository {
   constructor(
     @InjectModel(Device.name) private deviceModel: Model<DeviceDocument>,

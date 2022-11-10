@@ -2,11 +2,13 @@ import { DeviceRepository } from './device.repository';
 import * as jwt from 'jsonwebtoken';
 import {
   ForbiddenException,
+  Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+@Injectable()
 export class DeviceService {
   constructor(
     private deviceRepository: DeviceRepository,
@@ -46,11 +48,8 @@ export class DeviceService {
 
   async _extractPayload(refreshToken: string) {
     try {
-      // const secret = this.configService.get('JWT_SECRET_KEY');
-      const payload = jwt.verify(
-        refreshToken,
-        this.configService.get('JWT_SECRET_KEY'),
-      );
+      const secret = this.configService.get('JWT_SECRET_KEY');
+      const payload = jwt.verify(refreshToken, secret);
       return payload;
     } catch (e) {
       console.log(e);
