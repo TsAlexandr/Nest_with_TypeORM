@@ -44,10 +44,13 @@ export class DeviceService {
     return deleteDevice;
   }
 
-  _extractPayload(refreshToken: string) {
+  async _extractPayload(refreshToken: string) {
     try {
-      const secret = this.configService.get('JWT_SECRET_KEY');
-      const payload = jwt.verify(refreshToken, secret);
+      // const secret = this.configService.get('JWT_SECRET_KEY');
+      const payload = jwt.verify(
+        refreshToken,
+        this.configService.get('JWT_SECRET_KEY'),
+      );
       return payload;
     } catch (e) {
       console.log(e);
