@@ -20,6 +20,7 @@ export class DeviceController {
   @UseGuards(JwtExtract)
   @Get('/devices')
   async getDevice(@Cookies() cookies) {
+    console.log(cookies);
     if (!cookies) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },

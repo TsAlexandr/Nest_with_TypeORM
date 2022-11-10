@@ -1,5 +1,4 @@
 import { DeviceRepository } from './device.repository';
-import { Device } from '../../common/types/schemas/schemas.model';
 import * as jwt from 'jsonwebtoken';
 import {
   ForbiddenException,

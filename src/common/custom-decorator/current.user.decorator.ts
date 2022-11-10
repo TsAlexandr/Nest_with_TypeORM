@@ -10,6 +10,6 @@ export const CurrentUserId = createParamDecorator(
 export const Cookies = createParamDecorator(
   (data: unknown, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest();
-    return request.cookies.refreshToken;
+    return request.cookies;
   },
 );
