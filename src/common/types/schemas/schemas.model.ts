@@ -12,15 +12,15 @@ import {
 
 export type BloggersDocument = BloggersMongo & Document;
 
-@Schema()
+@Schema({ versionKey: false })
 export class BloggersMongo {
-  @Prop()
+  @Prop({ type: String, required: true })
   id: string;
 
-  @Prop()
+  @Prop({ type: String, required: true, unique: true })
   name: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   youtubeUrl: string;
 }
 
@@ -28,27 +28,27 @@ export const BloggerSchema = SchemaFactory.createForClass(BloggersMongo);
 
 export type PostsDocument = Posts & Document;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Posts {
   @Prop()
   addedAt: Date;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   id: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   title: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   shortDescription: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   content: string;
 
   @Prop({ ref: () => `${BloggersMongo}` })
   blogId: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   blogName: string;
 
   @Prop({ type: Action })
@@ -71,17 +71,17 @@ export const PostsSchema = SchemaFactory.createForClass(Posts);
 
 export type CommentsDocument = Comments & Document;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Comments {
-  @Prop()
+  @Prop({ type: String, required: true })
   id: string;
-  @Prop()
+  @Prop({ type: String, required: true })
   postId: string;
-  @Prop()
+  @Prop({ type: String, required: true })
   content: string;
-  @Prop()
+  @Prop({ type: String, required: true })
   userId: string;
-  @Prop()
+  @Prop({ type: String, required: true })
   userLogin: string;
   @Prop()
   addedAt: Date;
@@ -132,21 +132,24 @@ export const UsersSchema = new mongoose.Schema<User>({
 
 export type DeviceDocument = Device & Document;
 
-@Schema()
+@Schema({ versionKey: false })
 export class Device {
-  @Prop()
+  @Prop({ type: String, required: true })
   ip: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   title: string;
 
-  @Prop()
+  @Prop({ type: Date, required: true, default: Date.now })
   lastActiveDate: Date;
 
-  @Prop()
+  @Prop({ type: Date, required: true, default: Date.now })
+  expiredDate: Date;
+
+  @Prop({ type: String, required: true })
   deviceId: string;
 
-  @Prop()
+  @Prop({ type: String, required: true })
   userId: string;
 }
 

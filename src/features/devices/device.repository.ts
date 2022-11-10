@@ -16,6 +16,7 @@ export class DeviceRepository {
   }
 
   async addDevices(newDevice: Device) {
+    console.log('from device repo', newDevice);
     await this.deviceModel.create(newDevice);
     const currentDevice = await this.deviceModel.findOne({
       deviceId: newDevice.deviceId,

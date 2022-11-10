@@ -6,8 +6,7 @@ export class Pagination {
       typeof query.searchNameTerm === 'string' ? query.searchNameTerm : '';
     const sortBy =
       typeof query.sortBy === 'string' ? query.sortBy : 'createdAt';
-    const sortDirection =
-      typeof query.sortDirection === 'string' ? +query.sortDirection : -1;
+    const sortDirection = query.sortDirection === 'asc' ? 1 : -1;
     return { page, pageSize, searchNameTerm, sortBy, sortDirection };
   }
 
@@ -16,8 +15,7 @@ export class Pagination {
     const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10;
     const sortBy =
       typeof query.sortBy === 'string' ? query.sortBy : 'createdAt';
-    const sortDirection =
-      typeof query.sortDirection === 'string' ? +query.sortDirection : -1;
+    const sortDirection = query.sortDirection === 'asc' ? 1 : -1;
     return { page, pageSize, sortBy, sortDirection };
   }
 }

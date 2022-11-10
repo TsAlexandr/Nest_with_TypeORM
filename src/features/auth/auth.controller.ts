@@ -51,7 +51,7 @@ export class AuthController {
     if (!confirm)
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'code' }] },
-        HttpStatus.NOT_FOUND,
+        HttpStatus.BAD_REQUEST,
       );
     return null;
   }

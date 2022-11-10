@@ -41,12 +41,17 @@ export class AuthService {
     } else {
       const tokens = await this.createTokens(user.accountData.id, deviceId);
       const payloadInfo: any = this._extractPayload(tokens.refreshToken);
+      console.log(payloadInfo);
+
+      const iat = new Date(payloadInfo.iat * 1000);
+      const exp = new Date(payloadInfo.exp * 1000);
+      console.log(iat, 'after cast');
       const newDevice = {
         deviceId: deviceId,
         ip: ip,
         title: title,
-        lastActiveDate: new Date(payloadInfo.iat * 1000),
-        expiredDate: new Date(payloadInfo.exp * 1000),
+        lastActiveDate: iat,
+        expiredDate: exp,
         userId: user.accountData.id,
       };
       await this.deviceRepository.addDevices(newDevice);
@@ -70,10 +75,14 @@ export class AuthService {
     return equal;
   }
 
-  async _extractPayload(refreshToken: string) {
-    const secret = this.configService.get('JWT_SECRET_KEY');
-    const payload = jwt.verify(refreshToken, secret);
-    return payload;
+  _extractPayload(refreshToken: string) {
+    try {
+      const secret = this.configService.get('JWT_SECRET_KEY');
+      const payload = jwt.verify(refreshToken, secret);
+      return payload;
+    } catch (e) {
+      console.log(e);
+    }
   }
   async createTokens(userId: string, deviceId) {
     const secret = this.configService.get('JWT_SECRET_KEY');
