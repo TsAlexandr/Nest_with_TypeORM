@@ -87,12 +87,12 @@ export class AuthService {
   async createTokens(userId: string, deviceId) {
     const secret = this.configService.get('JWT_SECRET_KEY');
     const accessToken = jwt.sign({ userId: userId }, secret, {
-      expiresIn: '4h',
+      expiresIn: '10s',
     });
     const refreshToken = jwt.sign(
       { userId: userId, deviceId: deviceId },
       secret,
-      { expiresIn: '24h' },
+      { expiresIn: '20s' },
     );
 
     return {
