@@ -6,9 +6,13 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 export class DeviceService {
-  constructor(private deviceRepository: DeviceRepository) {}
+  constructor(
+    private deviceRepository: DeviceRepository,
+    private configService: ConfigService,
+  ) {}
 
   async getDevices(refreshToken: string) {
     const payload: any = await this._extractPayload(refreshToken);
@@ -41,8 +45,13 @@ export class DeviceService {
     return deleteDevice;
   }
 
-  async _extractPayload(refreshToken: string) {
-    const payload: any = jwt.verify(refreshToken, process.env.JWT_SECRET);
-    return payload;
+  _extractPayload(refreshToken: string) {
+    try {
+      const secret = this.configService.get('JWT_SECRET_KEY');
+      const payload = jwt.verify(refreshToken, secret);
+      return payload;
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
