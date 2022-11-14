@@ -132,7 +132,7 @@ export const UsersSchema = new mongoose.Schema<User>({
 
 export type DeviceDocument = Device & Document;
 
-@Schema({ versionKey: false })
+@Schema({ _id: false, versionKey: false })
 export class Device {
   @Prop({ type: String, required: true })
   ip: string;
