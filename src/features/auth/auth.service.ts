@@ -73,15 +73,6 @@ export class AuthService {
     return equal;
   }
 
-  _extractPayload(refreshToken: string) {
-    try {
-      const secret = this.configService.get('JWT_SECRET_KEY');
-      const payload = jwt.verify(refreshToken, secret);
-      return payload;
-    } catch (e) {
-      console.log(e);
-    }
-  }
   async createTokens(userId: string, deviceId) {
     const secret = this.configService.get('JWT_SECRET_KEY');
     const accessToken = jwt.sign({ userId: userId }, secret, {
@@ -97,17 +88,6 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
-  }
-
-  async validUser(loginBody: LoginDto) {
-    const user: any = await this.usersRepository.findByLogin(loginBody.login);
-    if (!user) return null;
-    const correctPassword = await this._correctHash(
-      loginBody.password,
-      user.accountData.passwordHash,
-    );
-    if (!correctPassword) return null;
-    return user;
   }
 
   async updateDevice(refreshToken: string) {
@@ -129,7 +109,7 @@ export class AuthService {
     );
     const newIat = new Date(newPayloadInfo.iat * 1000);
     const newExp = new Date(newPayloadInfo.expiredDate * 1000);
-    const updateDevices = await this.deviceRepository.updateDevices(
+    await this.deviceRepository.updateDevices(
       newPayloadInfo.userId,
       newPayloadInfo.deviceId,
       newExp,
@@ -149,5 +129,15 @@ export class AuthService {
       payload.userId,
       payload.deviceId,
     );
+  }
+
+  _extractPayload(refreshToken: string) {
+    try {
+      const secret = this.configService.get('JWT_SECRET_KEY');
+      const payload = jwt.verify(refreshToken, secret);
+      return payload;
+    } catch (e) {
+      console.log(e);
+    }
   }
 }
