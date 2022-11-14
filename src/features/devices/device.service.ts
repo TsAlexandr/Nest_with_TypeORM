@@ -13,7 +13,6 @@ export class DeviceService {
   async getDevices(refreshToken: string) {
     console.log(refreshToken);
     const payload: any = this._extractPayload(refreshToken);
-    console.log(payload);
     const deviceForUser = await this.deviceRepository.findAllDevice(
       payload.userId,
     );
@@ -61,6 +60,7 @@ export class DeviceService {
 
   _extractPayload(refreshToken: string) {
     try {
+      console.log(refreshToken, 'extract token');
       const secret = this.configService.get('JWT_SECRET_KEY');
       const payload = jwt.verify(refreshToken, secret);
       return payload;
