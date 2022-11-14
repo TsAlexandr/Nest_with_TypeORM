@@ -20,7 +20,6 @@ export class DeviceRepository {
   }
 
   async addDevices(newDevice: Device) {
-    console.log('from device repo', newDevice);
     await this.deviceModel.create(newDevice);
     const currentDevice = await this.deviceModel.findOne({
       deviceId: newDevice.deviceId,
@@ -34,7 +33,6 @@ export class DeviceRepository {
   }
 
   async deleteAllDevice(userId: string, deviceId: string) {
-    console.log(userId, deviceId, 'from repository delete all device');
     const remove = await this.deviceModel.deleteMany({
       userId: userId,
       deviceId: { $ne: deviceId },
@@ -63,7 +61,6 @@ export class DeviceRepository {
   }
 
   async removeSession(userId: string, deviceId: string) {
-    console.log(userId, deviceId, 'from repository delete session');
     const result = await this.deviceModel.deleteOne({
       userId: userId,
       deviceId: deviceId,
