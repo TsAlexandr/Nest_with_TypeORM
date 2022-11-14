@@ -94,7 +94,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuards)
   @Post('/refresh-token')
   async refresh(@Req() req, @Res() res, @Cookies() cookies) {
-    console.log(cookies);
+    console.log(cookies, 'from auth controller refresh token');
     if (!cookies) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
