@@ -14,7 +14,7 @@ export class DeviceRepository {
 
   async findAllDevice(userId: string) {
     const devices = await this.deviceModel
-      .find({ userId: userId }, { _id: 0, userId: 0 })
+      .find({ userId: userId }, { _id: 0, userId: 0, expiredDate: 0 })
       .lean();
     return devices;
   }
