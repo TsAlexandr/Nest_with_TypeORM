@@ -60,7 +60,7 @@ export class DeviceService {
 
   _extractPayload(refreshToken: string) {
     const secret = this.configService.get('JWT_SECRET_KEY');
-    const payload = jwt.decode(refreshToken, secret);
+    const payload = jwt.verify(refreshToken, secret);
     return payload;
   }
 }
