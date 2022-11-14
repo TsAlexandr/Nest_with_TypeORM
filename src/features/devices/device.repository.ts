@@ -14,7 +14,7 @@ export class DeviceRepository {
 
   async findAllDevice(userId: string) {
     const devices = await this.deviceModel
-      .find({ userId: userId }, { _id: 0 })
+      .find({ userId: userId }, { _id: 0, userId: 0 })
       .lean();
     return devices;
   }
@@ -34,6 +34,7 @@ export class DeviceRepository {
   }
 
   async deleteAllDevice(userId: string, deviceId: string) {
+    console.log(userId, deviceId, 'from repository delete all device');
     const remove = await this.deviceModel.deleteMany({
       userId: userId,
       deviceId: { $ne: deviceId },
@@ -62,6 +63,7 @@ export class DeviceRepository {
   }
 
   async removeSession(userId: string, deviceId: string) {
+    console.log(userId, deviceId, 'from repository delete session');
     const result = await this.deviceModel.deleteOne({
       userId: userId,
       deviceId: deviceId,
