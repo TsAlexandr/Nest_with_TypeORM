@@ -64,6 +64,10 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    ThrottlerModule.forRoot({
+      ttl: 10,
+      limit: 5,
+    }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     MongooseModule.forFeature([
       { name: Posts.name, schema: PostsSchema },
@@ -101,10 +105,6 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     //   ],
     //   synchronize: true,
     // }),
-    ThrottlerModule.forRoot({
-      ttl: 10,
-      limit: 5,
-    }),
     CqrsModule,
     BloggersModule,
   ],

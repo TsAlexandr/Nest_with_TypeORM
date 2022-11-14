@@ -49,7 +49,6 @@ export class DeviceController {
     @Param('deviceId') deviceId: string,
     @Cookies() cookies,
   ) {
-    console.log(deviceId, cookies);
     const deleteDevice = await this.deviceService.deleteById(cookies, deviceId);
     return deleteDevice;
   }

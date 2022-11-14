@@ -1,15 +1,12 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   HttpCode,
   HttpStatus,
   Ip,
-  NotFoundException,
   Post,
   Req,
   Res,
-  UnauthorizedException,
   UseGuards,
   Headers,
   HttpException,
@@ -76,7 +73,7 @@ export class AuthController {
   @Post('/login')
   async login(
     @Body() loginBody: LoginDto,
-    @Res({ passthrough: true }) res,
+    @Res({ passthrough: true }) res: Response,
     @Ip() ip: string,
     @Headers('user-agent') title: string,
   ) {
@@ -116,7 +113,7 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(@Res({ passthrough: true }) res, @Cookies() cookies) {
+  async logout(@Res({ passthrough: true }) res: Response, @Cookies() cookies) {
     if (!cookies) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
