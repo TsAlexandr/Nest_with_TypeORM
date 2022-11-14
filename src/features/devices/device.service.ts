@@ -20,7 +20,7 @@ export class DeviceService {
   }
 
   async deleteDevices(refreshToken: string) {
-    const payload: any = await this._extractPayload(refreshToken);
+    const payload: any = this._extractPayload(refreshToken);
     if (!payload)
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
@@ -34,7 +34,7 @@ export class DeviceService {
   }
 
   async deleteById(refreshToken: string, deviceId: string) {
-    const payload: any = await this._extractPayload(refreshToken);
+    const payload: any = this._extractPayload(refreshToken);
     if (!payload)
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
