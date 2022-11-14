@@ -93,15 +93,17 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuards)
   @Post('/refresh-token')
-  async refresh(@Req() req, @Res() res, @Cookies() cookies) {
-    console.log(cookies, 'from auth controller refresh token');
-    if (!cookies) {
+  async refresh(@Req() req, @Res() res) {
+    console.log(req.cookies.refreshToken, 'from auth controller refresh token');
+    if (!req.cookies.refreshToken) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const tokens = await this.authService.updateDevice(cookies);
+    const tokens = await this.authService.updateDevice(
+      req.cookies.refreshToken,
+    );
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
