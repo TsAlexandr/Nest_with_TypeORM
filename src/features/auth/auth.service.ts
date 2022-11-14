@@ -108,7 +108,7 @@ export class AuthService {
       'new payload info after getting new pair tokens',
     );
     const newIat = new Date(newPayloadInfo.iat * 1000);
-    const newExp = new Date(newPayloadInfo.expiredDate * 1000);
+    const newExp = new Date(newPayloadInfo.exp * 1000);
     await this.deviceRepository.updateDevices(
       newPayloadInfo.userId,
       newPayloadInfo.deviceId,
