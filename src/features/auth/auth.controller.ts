@@ -92,7 +92,7 @@ export class AuthController {
     return { accessToken: result.data.accessToken };
   }
 
-  @UseGuards(JwtAuthGuards)
+  @HttpCode(HttpStatus.OK)
   @Post('/refresh-token')
   async refresh(
     @Req() req: Request,
@@ -116,7 +116,7 @@ export class AuthController {
   }
 
   @Post('/logout')
-  async logout(@Res() res, @Cookies() cookies) {
+  async logout(@Res({ passthrough: true }) res, @Cookies() cookies) {
     if (!cookies) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
