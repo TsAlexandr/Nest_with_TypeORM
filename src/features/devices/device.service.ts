@@ -1,11 +1,6 @@
 import { DeviceRepository } from './device.repository';
 import * as jwt from 'jsonwebtoken';
-import {
-  ForbiddenException,
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
 @Injectable()
@@ -16,6 +11,7 @@ export class DeviceService {
   ) {}
 
   async getDevices(refreshToken: string) {
+    console.log(refreshToken);
     const payload: any = await this._extractPayload(refreshToken);
     const deviceForUser = await this.deviceRepository.findAllDevice(
       payload.userId,
@@ -25,7 +21,11 @@ export class DeviceService {
 
   async deleteDevices(refreshToken: string) {
     const payload: any = await this._extractPayload(refreshToken);
-    if (!payload) throw new UnauthorizedException();
+    if (!payload)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
     const remove = await this.deviceRepository.deleteAllDevice(
       payload.userId,
       payload.deviceId,
@@ -35,10 +35,22 @@ export class DeviceService {
 
   async deleteById(refreshToken: string, deviceId: string) {
     const payload: any = await this._extractPayload(refreshToken);
-    if (!payload) throw new UnauthorizedException();
+    if (!payload)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
     const device = await this.deviceRepository.getDeviceById(deviceId);
-    if (!device) throw new NotFoundException();
-    if (payload.userId !== device.userId) throw new ForbiddenException();
+    if (!device)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'deviceId' }] },
+        HttpStatus.NOT_FOUND,
+      );
+    if (payload.userId !== device.userId)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.FORBIDDEN,
+      );
     const deleteDevice = await this.deviceRepository.deleteById(
       payload.userId,
       deviceId,
@@ -46,7 +58,7 @@ export class DeviceService {
     return deleteDevice;
   }
 
-  async _extractPayload(refreshToken: string) {
+  _extractPayload(refreshToken: string) {
     try {
       const secret = this.configService.get('JWT_SECRET_KEY');
       const payload = jwt.verify(refreshToken, secret);
