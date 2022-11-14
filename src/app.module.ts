@@ -102,7 +102,7 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     //   synchronize: true,
     // }),
     ThrottlerModule.forRoot({
-      ttl: 10,
+      ttl: 5,
       limit: 5,
     }),
     CqrsModule,
