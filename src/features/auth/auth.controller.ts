@@ -26,6 +26,7 @@ import { RegistrationDto } from './dto/registration.dto';
 import { LoginDto } from './dto/login.dto';
 import { ThrottlerGuard } from '@nestjs/throttler';
 import { NewPasswordDto } from './dto/newPassword.dto';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
@@ -93,8 +94,11 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuards)
   @Post('/refresh-token')
-  async refresh(@Req() req, @Res() res) {
-    console.log(req.cookies.refreshToken, 'from auth controller refresh token');
+  async refresh(
+    @Req() req: Request,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    console.log(req.cookies, 'from auth controller refresh token');
     if (!req.cookies.refreshToken) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
