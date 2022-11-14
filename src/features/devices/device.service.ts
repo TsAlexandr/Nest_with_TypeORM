@@ -12,7 +12,7 @@ export class DeviceService {
 
   async getDevices(refreshToken: string) {
     console.log(refreshToken);
-    const payload: any = await this._extractPayload(refreshToken);
+    const payload: any = this._extractPayload(refreshToken);
     const deviceForUser = await this.deviceRepository.findAllDevice(
       payload.userId,
     );
