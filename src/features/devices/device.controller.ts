@@ -21,28 +21,26 @@ export class DeviceController {
   @Get('/devices')
   async getDevice(@Cookies() cookies) {
     console.log(cookies);
-    if (!cookies.refreshToken) {
+    if (!cookies) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const device = await this.deviceService.getDevices(cookies.refreshToken);
+    const device = await this.deviceService.getDevices(cookies);
     return device;
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/devices')
   async deleteAllDevice(@Cookies() cookies) {
-    if (!cookies.refreshToken) {
+    if (!cookies) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
         HttpStatus.UNAUTHORIZED,
       );
     }
-    const deleteDevices = await this.deviceService.deleteDevices(
-      cookies.refreshToken,
-    );
+    const deleteDevices = await this.deviceService.deleteDevices(cookies);
     return deleteDevices;
   }
 
@@ -52,10 +50,8 @@ export class DeviceController {
     @Param('deviceId') deviceId: string,
     @Cookies() cookies,
   ) {
-    const deleteDevice = await this.deviceService.deleteById(
-      cookies.refreshToken,
-      deviceId,
-    );
+    console.log(deviceId, cookies);
+    const deleteDevice = await this.deviceService.deleteById(cookies, deviceId);
     return deleteDevice;
   }
 }

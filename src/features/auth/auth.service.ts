@@ -41,11 +41,9 @@ export class AuthService {
     } else {
       const tokens = await this.createTokens(user.accountData.id, deviceId);
       const payloadInfo: any = this._extractPayload(tokens.refreshToken);
-      console.log(payloadInfo);
 
       const iat = new Date(payloadInfo.iat * 1000);
       const exp = new Date(payloadInfo.exp * 1000);
-      console.log(iat, 'after cast');
       const newDevice = {
         deviceId: deviceId,
         ip: ip,
@@ -87,12 +85,12 @@ export class AuthService {
   async createTokens(userId: string, deviceId) {
     const secret = this.configService.get('JWT_SECRET_KEY');
     const accessToken = jwt.sign({ userId: userId }, secret, {
-      expiresIn: '1h',
+      expiresIn: '10s',
     });
     const refreshToken = jwt.sign(
       { userId: userId, deviceId: deviceId },
       secret,
-      { expiresIn: '3h' },
+      { expiresIn: '20s' },
     );
 
     return {
@@ -113,7 +111,7 @@ export class AuthService {
   }
 
   async updateDevice(refreshToken: string) {
-    const payload: any = await this._extractPayload(refreshToken);
+    const payload: any = this._extractPayload(refreshToken);
     if (!payload) return null;
     const session = await this.deviceRepository.findDeviceById(
       payload.userId,
@@ -122,7 +120,7 @@ export class AuthService {
     );
     if (!session) return null;
     const tokens = await this.createTokens(payload.userId, payload.deviceId);
-    const newPayloadInfo: any = await this._extractPayload(tokens.refreshToken);
+    const newPayloadInfo: any = this._extractPayload(tokens.refreshToken);
     const updateDevices = await this.deviceRepository.updateDevices(
       newPayloadInfo.userId,
       newPayloadInfo.deviceId,
@@ -137,7 +135,7 @@ export class AuthService {
   }
 
   async removeSession(token: string) {
-    const payload: any = await this._extractPayload(token);
+    const payload: any = this._extractPayload(token);
     if (!payload) return null;
     const remove = await this.deviceRepository.removeSession(
       payload.userId,
