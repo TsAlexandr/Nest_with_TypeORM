@@ -22,7 +22,7 @@ import { JwtAuthGuards } from './guards/jwt-auth.guards';
 import { EmailService } from '../../email/email.service';
 import { RegistrationDto } from './dto/registration.dto';
 import { LoginDto } from './dto/login.dto';
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { NewPasswordDto } from './dto/newPassword.dto';
 import { Request, Response } from 'express';
 
@@ -75,6 +75,7 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
+  @Throttle(5, 10)
   @HttpCode(HttpStatus.OK)
   @Post('/login')
   async login(
