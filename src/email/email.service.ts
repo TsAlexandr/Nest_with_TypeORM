@@ -2,6 +2,7 @@ import { UsersRepository } from '../features/users/users.repository';
 import * as nodemailer from 'nodemailer';
 import { v4 } from 'uuid';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { EmailInputDto } from '../features/auth/dto/emailInput.dto';
 
 @Injectable()
 export class EmailService {

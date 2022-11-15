@@ -25,6 +25,7 @@ import { LoginDto } from './dto/login.dto';
 import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { NewPasswordDto } from './dto/newPassword.dto';
 import { Request, Response } from 'express';
+import { EmailInputDto } from './dto/emailInput.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -64,8 +65,10 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/registration-email-resending')
-  async resendEmail(@Body('email') email: string) {
-    const send = await this.emailService.resendRegistrationCode(email);
+  async resendEmail(@Body() inputEmail: EmailInputDto) {
+    const send = await this.emailService.resendRegistrationCode(
+      inputEmail.email,
+    );
     if (!send)
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'email' }] },
@@ -150,15 +153,20 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/password-recovery')
-  async recoveryPass(@Body('email') email: string) {
-    await this.emailService.sendRecoveryCode(email);
+  async recoveryPass(@Body() inputEmail: EmailInputDto) {
+    await this.emailService.sendRecoveryCode(inputEmail.email);
     return null;
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/new-password')
   async getNewPass(@Body() newPasswordDto: NewPasswordDto) {
-    await this.userService.confirmPassword(newPasswordDto);
+    const newPassword = await this.userService.confirmPassword(newPasswordDto);
+    if (!newPassword)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'email' }] },
+        HttpStatus.BAD_REQUEST,
+      );
     return null;
   }
 }

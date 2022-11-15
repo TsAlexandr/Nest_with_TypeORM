@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../common/types/classes/classes';
+import { EmailInputDto } from '../auth/dto/emailInput.dto';
 
 @Injectable()
 export class UsersRepository {
