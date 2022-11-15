@@ -48,7 +48,7 @@ export class Posts {
   @Prop({ ref: () => `${BloggersMongo}` })
   blogId: string;
 
-  @Prop({ type: String, required: true })
+  @Prop({ type: String })
   blogName: string;
 
   @Prop({ type: Action })
