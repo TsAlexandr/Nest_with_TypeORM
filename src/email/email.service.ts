@@ -52,12 +52,10 @@ export class EmailService {
     const updUser = await this.usersRepository.updateConfirmationCode(
       user.accountData.id,
     );
-    console.log(updUser);
     if (updUser) {
       const message = this.getConfirmMessage(
         updUser.emailConfirm.confirmationCode,
       );
-      console.log(message);
       await this.sendEmail(
         updUser.accountData.email,
         'Confirm your email',

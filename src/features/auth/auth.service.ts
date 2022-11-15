@@ -92,7 +92,6 @@ export class AuthService {
 
   async updateDevice(refreshToken: string) {
     const payload: any = this._extractPayload(refreshToken);
-    console.log(payload, 'from refresh token when we wanna get a new pair');
     if (!payload) return null;
     const iat = new Date(payload.iat * 1000);
     const session = await this.deviceRepository.findDeviceById(
@@ -103,10 +102,6 @@ export class AuthService {
     if (!session) return null;
     const tokens = await this.createTokens(payload.userId, payload.deviceId);
     const newPayloadInfo: any = this._extractPayload(tokens.refreshToken);
-    console.log(
-      newPayloadInfo,
-      'new payload info after getting new pair tokens',
-    );
     const newIat = new Date(newPayloadInfo.iat * 1000);
     const newExp = new Date(newPayloadInfo.exp * 1000);
     await this.deviceRepository.updateDevices(

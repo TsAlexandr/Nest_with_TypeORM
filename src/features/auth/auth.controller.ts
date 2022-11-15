@@ -58,7 +58,6 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/registration-email-resending')
   async resendEmail(@Body('email') email: string) {
-    console.log(email, 'from controller');
     const send = await this.emailService.resendRegistrationCode(email);
     if (!send)
       throw new HttpException(
@@ -95,7 +94,6 @@ export class AuthController {
     @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    console.log(req.cookies, 'from auth controller refresh token');
     if (!req.cookies.refreshToken) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
