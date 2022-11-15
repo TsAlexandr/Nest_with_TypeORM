@@ -67,10 +67,14 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     ThrottlerModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (config: ConfigService) => ({
-        ttl: config.get('THROTTLE_TTL'),
-        limit: config.get('THROTTLE_LIMIT'),
-      }),
+      useFactory: (config: ConfigService) => {
+        console.log('time', config.get('THROTTLE_TTL'));
+        console.log('time', config.get('THROTTLE_LIMIT'));
+        return {
+          ttl: config.get('THROTTLE_TTL'),
+          limit: config.get('THROTTLE_LIMIT'),
+        };
+      },
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     MongooseModule.forFeature([
