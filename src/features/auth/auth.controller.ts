@@ -50,7 +50,9 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/registration-confirmation')
   async confirmClient(@Body('code') code: string) {
+    console.log(code, 'code');
     const confirm = await this.emailService.confirmEmail(code);
+    console.log(confirm, 'confirm');
     if (!confirm)
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'code' }] },
