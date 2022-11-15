@@ -155,18 +155,19 @@ export class AuthController {
   @Post('/password-recovery')
   async recoveryPass(@Body() inputEmail: EmailInputDto) {
     await this.emailService.sendRecoveryCode(inputEmail.email);
-    return null;
+    return true;
   }
 
   @UseGuards(ThrottlerGuard)
   @Post('/new-password')
   async getNewPass(@Body() newPasswordDto: NewPasswordDto) {
+    console.log(newPasswordDto);
     const newPassword = await this.userService.confirmPassword(newPasswordDto);
     if (!newPassword)
       throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'email' }] },
+        { message: [{ message: 'invalid value', field: 'recoveryCode' }] },
         HttpStatus.BAD_REQUEST,
       );
-    return null;
+    return true;
   }
 }
