@@ -7,6 +7,7 @@ import { ValidationException } from './common/exceptions/validation.exception';
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
   const app = await NestFactory.create(AppModule);
+  app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       stopAtFirstError: false,
@@ -21,7 +22,6 @@ async function bootstrap() {
     }),
   );
   app.enableCors();
-  app.use(cookieParser());
   app.useGlobalFilters(new ValidationException());
   await app.listen(PORT, () => console.log('Server started on port ' + PORT));
 }
