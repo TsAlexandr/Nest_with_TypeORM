@@ -1,6 +1,5 @@
 {
   "version": 2,
-  "name": "home-tasks-in-nest",
   "builds": [
     {
       "src": "src/main.ts",
