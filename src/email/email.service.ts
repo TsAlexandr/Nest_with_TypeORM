@@ -2,7 +2,6 @@ import { UsersRepository } from '../features/users/users.repository';
 import * as nodemailer from 'nodemailer';
 import { v4 } from 'uuid';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { EmailInputDto } from '../features/auth/dto/emailInput.dto';
 
 @Injectable()
 export class EmailService {
@@ -71,6 +70,7 @@ export class EmailService {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) return null;
     const recoveryCode = v4();
+    const formRecoveryCodeToMessage = this.getConfirmMessage(recoveryCode);
     const recoveryData = {
       recoveryCode: recoveryCode,
       expirationDate: new Date(),
@@ -85,7 +85,7 @@ export class EmailService {
       await this.sendEmail(
         updateUser.accountData.email,
         'Your recovery code',
-        recoveryCode,
+        formRecoveryCodeToMessage,
       );
       return true;
     } else {
@@ -94,6 +94,6 @@ export class EmailService {
   }
 
   getConfirmMessage(confirmationCode: string) {
-    return `<a href="https://homework00001.herokuapp.com/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`;
+    return `<a href="https://home-tasks-in-nest.vercel.app/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`;
   }
 }
