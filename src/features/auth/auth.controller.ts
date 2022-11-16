@@ -161,11 +161,10 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @Post('/new-password')
   async getNewPass(@Body() newPasswordDto: NewPasswordDto) {
-    console.log(newPasswordDto);
     const newPassword = await this.userService.confirmPassword(newPasswordDto);
     if (!newPassword)
       throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'recoveryCode' }] },
+        { message: [{ message: 'invalid value', field: 'newPassword' }] },
         HttpStatus.BAD_REQUEST,
       );
     return true;

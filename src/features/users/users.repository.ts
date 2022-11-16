@@ -124,15 +124,15 @@ export class UsersRepository {
   }
 
   async confirmPassword(id: string, generatePassword: string) {
-    const user = await this.usersModel.findOneAndUpdate(
+    await this.usersModel.updateOne(
       { 'accountData.id': id },
       {
-        set: {
+        $set: {
           'recoveryData.isConfirmed': true,
           'accountData.passwordHash': generatePassword,
         },
       },
     );
-    return user;
+    return this.usersModel.findOne({ 'accountData.id': id });
   }
 }

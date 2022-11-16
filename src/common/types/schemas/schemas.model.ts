@@ -5,6 +5,7 @@ import {
   Action,
   EmailConfirmType,
   LikesInfo,
+  RecoveryDataType,
   TotalActions,
   User,
   UserAccount,
@@ -117,9 +118,16 @@ export const EmailInfo = new mongoose.Schema<EmailConfirmType>({
   sentEmails: { type: [Date], required: false },
 });
 
+export const RecoveryData = new mongoose.Schema<RecoveryDataType>({
+  recoveryCode: String,
+  isConfirmed: Boolean,
+  expirationDate: Date,
+});
+
 export const UsersSchema = new mongoose.Schema<User>({
   accountData: InfoAboutUser,
   emailConfirm: EmailInfo,
+  recoveryData: RecoveryData,
 });
 
 // export const LikesSchema = new mongoose.Schema<TotalActions>({

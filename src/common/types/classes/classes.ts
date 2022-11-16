@@ -65,6 +65,7 @@ export class User {
   constructor(
     public accountData: UserAccount,
     public emailConfirm: EmailConfirmType,
+    public recoveryData: RecoveryDataType,
   ) {}
 }
 
@@ -92,6 +93,12 @@ export class EmailConfirmType {
   isConfirmed: boolean;
   confirmationCode: string;
   sentEmails: SentConfirmEmailType[];
+}
+
+export class RecoveryDataType {
+  recoveryCode: string;
+  isConfirmed: boolean;
+  expirationDate: any;
 }
 
 export class SentConfirmEmailType {

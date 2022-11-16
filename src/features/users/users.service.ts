@@ -52,6 +52,11 @@ export class UsersService {
         confirmationCode: v4(),
         isConfirmed: false,
       },
+      {
+        recoveryCode: '',
+        isConfirmed: false,
+        expirationDate: '',
+      },
     );
 
     const createdUser = await this.usersRepository.createUser(user);
@@ -92,15 +97,17 @@ export class UsersService {
     const userCode = await this.usersRepository.findUserByCode(
       newPasswordDto.recoveryCode,
     );
-    if (userCode.recoveryData.recoveryCode) {
+    if (!userCode.recoveryData.recoveryCode) {
       return false;
     }
     const generatePassword = await this.authService._generateHash(
       newPasswordDto.newPassword,
     );
-    await this.usersRepository.confirmPassword(
+    const user = await this.usersRepository.confirmPassword(
       userCode.accountData.id,
       generatePassword,
     );
+    if (!user) return false;
+    return user;
   }
 }
