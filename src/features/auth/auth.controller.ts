@@ -154,6 +154,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/password-recovery')
   async recoveryPass(@Body() inputEmail: EmailInputDto) {
+    console.log(inputEmail, 'email from password recovery');
     await this.emailService.sendRecoveryCode(inputEmail.email);
     return true;
   }
@@ -161,6 +162,7 @@ export class AuthController {
   @UseGuards(ThrottlerGuard)
   @Post('/new-password')
   async getNewPass(@Body() newPasswordDto: NewPasswordDto) {
+    console.log(newPasswordDto, 'new password');
     const newPassword = await this.userService.confirmPassword(newPasswordDto);
     if (!newPassword)
       throw new HttpException(
