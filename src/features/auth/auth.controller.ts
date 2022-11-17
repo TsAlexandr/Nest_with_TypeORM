@@ -91,12 +91,6 @@ export class AuthController {
       ip,
       title,
     );
-    if (result.resultCode === 1) {
-      throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
-        HttpStatus.UNAUTHORIZED,
-      );
-    }
     res.cookie('refreshToken', result.data.refreshToken, {
       httpOnly: true,
       secure: true,

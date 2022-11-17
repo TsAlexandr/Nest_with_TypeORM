@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../users/users.repository';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
@@ -17,27 +17,22 @@ export class AuthService {
 
   async checkCredentials(loginBody: LoginDto, ip: string, title: string) {
     const user: any = await this.usersRepository.findByLogin(loginBody.login);
-    if (!user)
-      return {
-        resultCode: 1,
-        data: {
-          accessToken: null,
-          refreshToken: null,
-        },
-      };
+    if (!user) {
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'login' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
     const deviceId = v4();
     const isItHash = await this._correctHash(
       loginBody.password,
       user.accountData.passwordHash,
     );
     if (!isItHash) {
-      return {
-        resultCode: 1,
-        data: {
-          accessToken: null,
-          refreshToken: null,
-        },
-      };
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'password' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
     } else {
       const tokens = await this.createTokens(user.accountData.id, deviceId);
       const payloadInfo: any = this._extractPayload(tokens.refreshToken);
