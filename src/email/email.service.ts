@@ -68,6 +68,7 @@ export class EmailService {
 
   async sendRecoveryCode(email: string) {
     const user = await this.usersRepository.findByEmail(email);
+    console.log(user, 'from send recovery code');
     if (!user) return true;
     const recoveryCode = v4();
     const formRecoveryCodeToMessage = this.getConfirmMessage(recoveryCode);
@@ -80,6 +81,10 @@ export class EmailService {
     const updateUser = await this.usersRepository.updateUserWithRecoveryData(
       user.accountData.id,
       recoveryData,
+    );
+    console.log(
+      updateUser,
+      'user after update information about recovery data',
     );
     if (updateUser) {
       await this.sendEmail(
