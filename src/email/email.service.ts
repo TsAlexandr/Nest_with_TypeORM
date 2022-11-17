@@ -68,6 +68,7 @@ export class EmailService {
 
   async sendRecoveryCode(email: string) {
     const user = await this.usersRepository.findByEmail(email);
+    console.log(user, 'from send recovery code');
     if (!user) return null;
     const recoveryCode = v4();
     const formRecoveryCodeToMessage = this.getConfirmMessage(recoveryCode);
