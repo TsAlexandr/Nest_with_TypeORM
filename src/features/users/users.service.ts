@@ -113,12 +113,11 @@ export class UsersService {
 
   async sendRecoveryCode(email: string) {
     const user = await this.usersRepository.findByEmail(email);
-    console.log(user, 'from send recovery code');
     if (!user) return true;
     const recoveryCode = v4();
     const formRecoveryCodeToMessage =
       this.emailService.getRecoveryMessage(recoveryCode);
-    console.log(formRecoveryCodeToMessage);
+    console.log(formRecoveryCodeToMessage, 'recovery code for sending');
     const recoveryData = {
       recoveryCode: recoveryCode,
       expirationDate: new Date(),
