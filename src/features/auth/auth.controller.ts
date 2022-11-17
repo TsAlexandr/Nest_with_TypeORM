@@ -152,6 +152,7 @@ export class AuthController {
   }
 
   @UseGuards(ThrottlerGuard)
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/new-password')
   async getNewPass(@Body() newPasswordDto: NewPasswordDto) {
     console.log(newPasswordDto, 'new password');
