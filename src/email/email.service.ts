@@ -87,7 +87,7 @@ export class EmailService {
       'user after update information about recovery data',
     );
     if (updateUser) {
-      await this.sendEmail(
+      this.sendEmail(
         updateUser.accountData.email,
         'Your recovery code',
         formRecoveryCodeToMessage,
