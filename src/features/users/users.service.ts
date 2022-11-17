@@ -97,7 +97,7 @@ export class UsersService {
     const userCode = await this.usersRepository.findUserByCode(
       newPasswordDto.recoveryCode,
     );
-    if (!userCode.recoveryData) {
+    if (!userCode) {
       return false;
     }
     const generatePassword = await this.authService._generateHash(
