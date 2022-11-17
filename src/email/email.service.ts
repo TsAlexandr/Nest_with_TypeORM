@@ -1,6 +1,5 @@
 import { UsersRepository } from '../features/users/users.repository';
 import * as nodemailer from 'nodemailer';
-import { v4 } from 'uuid';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 
 @Injectable()
@@ -16,7 +15,6 @@ export class EmailService {
       },
     });
     try {
-      console.log('I send your message');
       await transporter.sendMail({
         from: 'Alex Gerber <process.env.EMAIL_LOGIN>', // sender address
         to: email, // list of receivers
