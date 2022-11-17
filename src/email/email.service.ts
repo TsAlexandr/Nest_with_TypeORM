@@ -70,6 +70,6 @@ export class EmailService {
   }
 
   getRecoveryMessage(recoveryCode: string) {
-    return `<a href="https://home-tasks-in-nest.vercel.app/auth/password-recovery/?code=${recoveryCode}">${recoveryCode}</a>`;
+    return `<a href="https://home-tasks-in-nest.vercel.app/auth/password-recovery/?recoveryCode=${recoveryCode}">${recoveryCode}</a>`;
   }
 }
