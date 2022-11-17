@@ -67,6 +67,8 @@ export class EmailService {
   }
 
   async sendRecoveryCode(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
+    if (!user) return true;
     const recoveryCode = v4();
     const formRecoveryCodeToMessage = this.getConfirmMessage(recoveryCode);
     const recoveryData = {
@@ -74,15 +76,7 @@ export class EmailService {
       expirationDate: new Date(),
       isConfirmed: false,
     };
-    const user = await this.usersRepository.findByEmail(email);
-    if (user === null) {
-      await this.sendEmail(
-        email,
-        'Your recovery code',
-        formRecoveryCodeToMessage,
-      );
-      return;
-    }
+
     const updateUser = await this.usersRepository.updateUserWithRecoveryData(
       user.accountData.id,
       recoveryData,
@@ -93,9 +87,7 @@ export class EmailService {
         'Your recovery code',
         formRecoveryCodeToMessage,
       );
-      return true;
-    } else {
-      return false;
+      return;
     }
   }
 
