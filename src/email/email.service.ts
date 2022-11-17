@@ -16,6 +16,7 @@ export class EmailService {
       },
     });
     try {
+      console.log('I send your message');
       await transporter.sendMail({
         from: 'Alex Gerber <process.env.EMAIL_LOGIN>', // sender address
         to: email, // list of receivers
@@ -68,5 +69,9 @@ export class EmailService {
 
   getConfirmMessage(confirmationCode: string) {
     return `<a href="https://home-tasks-in-nest.vercel.app/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`;
+  }
+
+  getRecoveryMessage(recoveryCode: string) {
+    return `<a href="https://home-tasks-in-nest.vercel.app/auth/password-recovery/?code=${recoveryCode}">${recoveryCode}</a>`;
   }
 }

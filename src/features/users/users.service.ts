@@ -117,7 +117,7 @@ export class UsersService {
     if (!user) return true;
     const recoveryCode = v4();
     const formRecoveryCodeToMessage =
-      this.emailService.getConfirmMessage(recoveryCode);
+      this.emailService.getRecoveryMessage(recoveryCode);
     const recoveryData = {
       recoveryCode: recoveryCode,
       expirationDate: new Date(),
