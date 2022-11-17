@@ -75,12 +75,13 @@ export class EmailService {
       isConfirmed: false,
     };
     const user = await this.usersRepository.findByEmail(email);
-    if (!user) {
+    if (user === null) {
       await this.sendEmail(
         email,
         'Your recovery code',
         formRecoveryCodeToMessage,
       );
+      return;
     }
     const updateUser = await this.usersRepository.updateUserWithRecoveryData(
       user.accountData.id,
