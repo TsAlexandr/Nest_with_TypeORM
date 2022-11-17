@@ -165,7 +165,7 @@ export class AuthController {
     const newPassword = await this.userService.confirmPassword(newPasswordDto);
     if (!newPassword)
       throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'newPassword' }] },
+        { message: [{ message: 'invalid value', field: 'recoveryCode' }] },
         HttpStatus.BAD_REQUEST,
       );
     return true;
