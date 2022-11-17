@@ -66,36 +66,6 @@ export class EmailService {
     return null;
   }
 
-  async sendRecoveryCode(email: string) {
-    const user = await this.usersRepository.findByEmail(email);
-    console.log(user, 'from send recovery code');
-    if (!user) return true;
-    const recoveryCode = v4();
-    const formRecoveryCodeToMessage = this.getConfirmMessage(recoveryCode);
-    const recoveryData = {
-      recoveryCode: recoveryCode,
-      expirationDate: new Date(),
-      isConfirmed: false,
-    };
-
-    const updateUser = await this.usersRepository.updateUserWithRecoveryData(
-      user.accountData.id,
-      recoveryData,
-    );
-    console.log(
-      updateUser,
-      'user after update information about recovery data',
-    );
-    if (updateUser) {
-      this.sendEmail(
-        updateUser.accountData.email,
-        'Your recovery code',
-        formRecoveryCodeToMessage,
-      );
-      return;
-    }
-  }
-
   getConfirmMessage(confirmationCode: string) {
     return `<a href="https://home-tasks-in-nest.vercel.app/auth/registration-confirmation/?code=${confirmationCode}">${confirmationCode}</a>`;
   }

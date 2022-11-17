@@ -147,7 +147,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/password-recovery')
   async recoveryPass(@Body() inputEmail: EmailInputDto) {
-    await this.emailService.sendRecoveryCode(inputEmail.email);
+    await this.userService.sendRecoveryCode(inputEmail.email);
     return true;
   }
 

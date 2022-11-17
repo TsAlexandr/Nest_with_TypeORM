@@ -110,4 +110,35 @@ export class UsersService {
     if (!user) return false;
     return user;
   }
+
+  async sendRecoveryCode(email: string) {
+    const user = await this.usersRepository.findByEmail(email);
+    console.log(user, 'from send recovery code');
+    if (!user) return true;
+    const recoveryCode = v4();
+    const formRecoveryCodeToMessage =
+      this.emailService.getConfirmMessage(recoveryCode);
+    const recoveryData = {
+      recoveryCode: recoveryCode,
+      expirationDate: new Date(),
+      isConfirmed: false,
+    };
+
+    const updateUser = await this.usersRepository.updateUserWithRecoveryData(
+      user.accountData.id,
+      recoveryData,
+    );
+    console.log(
+      updateUser,
+      'user after update information about recovery data',
+    );
+    if (updateUser) {
+      await this.emailService.sendEmail(
+        updateUser.accountData.email,
+        'Your recovery code',
+        formRecoveryCodeToMessage,
+      );
+      return;
+    }
+  }
 }
