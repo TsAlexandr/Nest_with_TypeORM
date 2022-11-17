@@ -91,7 +91,6 @@ export class AuthController {
       ip,
       title,
     );
-    console.log(ip, 'from auth controller ip');
     if (result.resultCode === 1) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
