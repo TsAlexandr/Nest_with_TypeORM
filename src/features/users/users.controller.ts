@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('users')
 export class UsersController {
@@ -23,7 +24,7 @@ export class UsersController {
   ) {
     return await this.usersService.getAllUsers(page, pageSize);
   }
-
+  @SkipThrottle()
   @Post()
   async create(@Body() createUser: CreateUserDto) {
     console.log(createUser, 'user created');

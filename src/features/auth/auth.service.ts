@@ -16,7 +16,9 @@ export class AuthService {
   ) {}
 
   async checkCredentials(loginBody: LoginDto, ip: string, title: string) {
-    const user: any = await this.usersRepository.findByLogin(loginBody.login);
+    const user: any = await this.usersRepository.findByLogin(
+      loginBody.loginOrEmail,
+    );
     if (!user) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'login' }] },
