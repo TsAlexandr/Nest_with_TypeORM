@@ -33,7 +33,7 @@ export class PostsService {
     return post;
   }
 
-  async create(newPost: any): Promise<PostsCon> {
+  async create(newPost: any, blogName: string): Promise<PostsCon> {
     const createPost = {
       addedAt: new Date(),
       id: v4(),
@@ -41,6 +41,7 @@ export class PostsService {
       shortDescription: newPost.shortDescription,
       content: newPost.content,
       blogId: newPost.blogId,
+      blogName: blogName,
       extendedLikesInfo: {
         dislikesCount: 0,
         likesCount: 0,

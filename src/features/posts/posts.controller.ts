@@ -23,6 +23,7 @@ import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UsersService } from '../users/users.service';
 import { Pagination } from '../../common/types/classes/pagination';
+import { BloggersService } from '../bloggers/bloggers.service';
 
 @Controller('posts')
 export class PostsController {
@@ -30,6 +31,7 @@ export class PostsController {
     private postsService: PostsService,
     private commentsService: CommentsService,
     private usersService: UsersService,
+    private bloggersService: BloggersService,
   ) {}
 
   @UseGuards(JwtExtract)
@@ -61,7 +63,13 @@ export class PostsController {
   @UseGuards(BasicGuards)
   @Post()
   async create(@Body() newPost: CreatePostDto) {
-    return await this.postsService.create({ ...newPost });
+    const blogger = await this.bloggersService.getBloggerById(newPost.blogId);
+    if (!blogger)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'likeStatus' }] },
+        HttpStatus.BAD_REQUEST,
+      );
+    return await this.postsService.create({ ...newPost }, blogger.name);
   }
 
   @UseGuards(BasicGuards)

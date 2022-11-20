@@ -116,12 +116,13 @@ export class BloggersController {
     @Body() newPost: NewPost,
   ): Promise<PostsCon> {
     const blogger = await this.bloggersService.getBloggerById(blogId);
-    const blogName = blogger.name;
-    const newPostForBlogger = await this.postsService.create({
-      ...newPost,
-      blogId,
-      blogName,
-    });
+    const newPostForBlogger = await this.postsService.create(
+      {
+        ...newPost,
+        blogId,
+      },
+      blogger.name,
+    );
     return newPostForBlogger;
   }
 }
