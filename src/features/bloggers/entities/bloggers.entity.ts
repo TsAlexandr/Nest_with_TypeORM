@@ -8,7 +8,11 @@ export class BloggersEntity {
   @Column('text')
   name: string;
   @Column('text')
-  youtubeUrl: string;
+  websiteUrl: string;
+  @Column('text')
+  description: string;
+  @Column('date')
+  createdAt: Date;
   @OneToMany(() => PostEntity, (post) => post.blogId)
   post: PostEntity[];
 }

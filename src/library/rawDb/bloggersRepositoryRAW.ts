@@ -15,7 +15,7 @@ export class BloggersRepositoryRAW {
   ): Promise<Paginator<Blogger[]>> {
     const filter = searchNameTerm ? searchNameTerm : '';
     const bloggers = await this.dataSource.query(
-      `SELECT id, name, "youtubeUrl" FROM "bloggers"
+      `SELECT id, name, "websiteUrl" FROM "bloggers"
             WHERE "name" LIKE $3 
             ORDER BY "name" DESC
             OFFSET $1 ROWS FETCH NEXT $2 ROWS ONLY`,
@@ -38,7 +38,7 @@ export class BloggersRepositoryRAW {
 
   async getBloggersById(id: string) {
     const blogger = await this.dataSource.query(
-      `SELECT id, name, "youtubeUrl" FROM "bloggers"
+      `SELECT id, name, "websiteUrl" FROM "bloggers"
              WHERE "id" = $1`,
       [id],
     );
@@ -56,20 +56,20 @@ export class BloggersRepositoryRAW {
   async updateBloggerById(id: string, update: BloggersDto) {
     return this.dataSource.query(
       `UPDATE "bloggers"
-            SET name = $1, "youtubeUrl" = $2
+            SET name = $1, "websiteUrl" = $2
             WHERE id = $3`,
-      [update.name, update.youtubeUrl, id],
+      [update.name, update.websiteUrl, id],
     );
   }
 
   async createBlogger(newBlogger: Blogger) {
     await this.dataSource.query(
-      `INSERT INTO "bloggers" ("name", "youtubeUrl")
+      `INSERT INTO "bloggers" ("name", "websiteUrl")
             VALUES ($1, $2)`,
-      [newBlogger.name, newBlogger.youtubeUrl],
+      [newBlogger.name, newBlogger.websiteUrl],
     );
     const blogger = await this.dataSource.query(
-      `SELECT id, name, "youtubeUrl" FROM "bloggers"
+      `SELECT id, name, "websiteUrl" FROM "bloggers"
              WHERE "name" = $1`,
       [newBlogger.name],
     );

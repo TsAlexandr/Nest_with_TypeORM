@@ -34,6 +34,7 @@ export class BloggersService {
     const newBlogger = {
       id: uuidv4(),
       ...bloggersDto,
+      createdAt: new Date().toISOString(),
     };
     return await this.bloggersRepository.createBlogger(newBlogger);
   }

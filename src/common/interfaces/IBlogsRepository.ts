@@ -13,7 +13,7 @@ export interface IBlogsRepository {
   getBloggersById(id: string): Promise<Blogger>;
 
   createBlogger(newBlogger: {
-    youtubeUrl: string;
+    websiteUrl: string;
     name: string;
     id: string;
   }): Promise<Blogger>;

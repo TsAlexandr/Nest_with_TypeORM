@@ -17,7 +17,11 @@ export class Blogger {
   @Matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/)
   @IsNotEmpty()
   @MaxLength(100)
-  youtubeUrl: string;
+  websiteUrl: string;
+  @IsString()
+  description: string;
+  @IsString()
+  createdAt: Date;
 }
 
 export class PostsCon {

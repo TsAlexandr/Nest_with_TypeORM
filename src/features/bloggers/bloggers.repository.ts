@@ -64,7 +64,8 @@ export class BloggersRepository implements IBlogsRepository {
       {
         $set: {
           name: update.name,
-          youtubeUrl: update.youtubeUrl,
+          youtubeUrl: update.websiteUrl,
+          description: update.description,
         },
       },
     );

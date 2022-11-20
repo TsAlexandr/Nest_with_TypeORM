@@ -56,7 +56,6 @@ import { DeviceRepository } from './features/devices/device.repository';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GetCommentsHandler } from './features/usecase/handlers/getComments.handler';
 import { CreateCommentHandler } from './features/usecase/handlers/createComment.handler';
-import { BloggersModule } from './features/bloggers/bloggers.module';
 import { BloggersRepositoryORM } from './library/typeORM/bloggers.typeORM';
 
 export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
@@ -106,7 +105,6 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     //   synchronize: true,
     // }),
     CqrsModule,
-    BloggersModule,
   ],
   controllers: [
     AppController,
@@ -116,8 +114,15 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     AuthController,
     TruncateBase,
     DeviceController,
+    BloggersController,
   ],
   providers: [
+    BloggersService,
+    BloggersRepository,
+    {
+      provide: 'IBlogsRepository',
+      useClass: BloggersRepository,
+    },
     PostsService,
     CommentsService,
     UsersService,

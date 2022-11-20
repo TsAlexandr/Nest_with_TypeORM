@@ -61,7 +61,11 @@ export class BloggersRepositoryORM implements IBlogsRepository {
     const result = await this.dataSource
       .createQueryBuilder()
       .update(BloggersEntity)
-      .set({ name: update.name, youtubeUrl: update.youtubeUrl })
+      .set({
+        name: update.name,
+        websiteUrl: update.websiteUrl,
+        description: update.description,
+      })
       .where('id = :id', { id })
       .execute();
     if (result) return true;
@@ -76,7 +80,9 @@ export class BloggersRepositoryORM implements IBlogsRepository {
         {
           id: newBlogger.id,
           name: newBlogger.name,
-          youtubeUrl: newBlogger.youtubeUrl,
+          websiteUrl: newBlogger.websiteUrl,
+          description: newBlogger.description,
+          createdAt: newBlogger.createdAt,
         },
       ])
       .execute();

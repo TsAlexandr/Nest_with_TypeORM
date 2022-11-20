@@ -22,7 +22,13 @@ export class BloggersMongo {
   name: string;
 
   @Prop({ type: String, required: true })
-  youtubeUrl: string;
+  websiteUrl: string;
+
+  @Prop({ type: String, required: true })
+  description: string;
+
+  @Prop({ type: Date, required: true })
+  createdAt: Date;
 }
 
 export const BloggerSchema = SchemaFactory.createForClass(BloggersMongo);
@@ -46,7 +52,7 @@ export class Posts {
   @Prop({ type: String, required: true })
   content: string;
 
-  @Prop({ ref: () => `${BloggersMongo}` })
+  @Prop({ type: String, ref: () => `${BloggersMongo}` })
   blogId: string;
 
   @Prop({ type: String })
