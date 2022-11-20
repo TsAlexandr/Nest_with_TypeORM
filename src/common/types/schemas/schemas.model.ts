@@ -52,7 +52,7 @@ export class Posts {
   @Prop({ type: String, required: true })
   content: string;
 
-  @Prop({ type: String, ref: () => `${BloggersMongo}` })
+  @Prop({ type: String })
   blogId: string;
 
   @Prop({ type: String })
