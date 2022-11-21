@@ -99,14 +99,7 @@ export class PostsRepository {
       const dislikesCount = post.totalActions.filter(
         (el) => el.action === 'Dislike',
       ).length;
-      const actions = post.totalActions
-        .filter((el) => el.action === 'Like')
-        .reverse()
-        .slice(0, 3)
-        .map((el) => {
-          delete el.action;
-          return el;
-        });
+      const actions = post.totalActions;
       return {
         createdAt: post.createdAt,
         id: post.id,
@@ -119,7 +112,14 @@ export class PostsRepository {
           likesCount: likesCount,
           dislikesCount: dislikesCount,
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
-          newestLikes: actions,
+          newestLikes: actions
+            .filter((el) => el.action === 'Like')
+            .reverse()
+            .slice(0, 3)
+            .map((el) => {
+              delete el.action;
+              return el;
+            }),
         },
       };
     }
