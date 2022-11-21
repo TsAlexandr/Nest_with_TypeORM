@@ -52,7 +52,8 @@ export class PostsRepository {
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
           newestLikes: actions
             .filter((el) => el.action === 'Like')
-            .slice(0, -3)
+            .reverse()
+            .slice(0, 3)
             .map((el) => {
               delete el.action;
               return el;
@@ -70,7 +71,7 @@ export class PostsRepository {
   }
 
   async getPostById(id: string, userId: string) {
-    const post = await this.postsModel.findOne({ id }).lean();
+    const post = await this.postsModel.findOne({ id: id }).lean();
     if (!post) return null;
     if (!userId) {
       return {
@@ -98,7 +99,14 @@ export class PostsRepository {
       const dislikesCount = post.totalActions.filter(
         (el) => el.action === 'Dislike',
       ).length;
-      const actions = post.totalActions;
+      const actions = post.totalActions
+        .filter((el) => el.action === 'Like')
+        .reverse()
+        .slice(0, 3)
+        .map((el) => {
+          delete el.action;
+          return el;
+        });
       return {
         createdAt: post.createdAt,
         id: post.id,
@@ -111,13 +119,7 @@ export class PostsRepository {
           likesCount: likesCount,
           dislikesCount: dislikesCount,
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
-          newestLikes: actions
-            .filter((el) => el.action === 'Like')
-            .slice(0, -3)
-            .map((el) => {
-              delete el.action;
-              return el;
-            }),
+          newestLikes: actions,
         },
       };
     }
