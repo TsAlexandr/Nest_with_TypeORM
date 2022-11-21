@@ -24,6 +24,7 @@ export class UsersController {
   ) {
     return await this.usersService.getAllUsers(page, pageSize);
   }
+  @SkipThrottle()
   @Post()
   async create(@Body() createUser: CreateUserDto) {
     console.log(createUser, 'user created');
