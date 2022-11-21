@@ -10,7 +10,7 @@ export function mapper(value, userId) {
   ).length;
   const actions = value.totalActions;
   return {
-    addedAt: value.addedAt,
+    createdAt: value.createdAt,
     id: value.id,
     title: value.title,
     shortDescription: value.shortDescription,
@@ -23,7 +23,7 @@ export function mapper(value, userId) {
       myStatus: currentUserStatus ? currentUserStatus.action : 'None',
       newestLikes: actions
         .filter((el) => el.action === 'Like')
-        .slice(-3)
+        .slice(0, -3)
         .map((el) => {
           delete el.action;
           return el;
