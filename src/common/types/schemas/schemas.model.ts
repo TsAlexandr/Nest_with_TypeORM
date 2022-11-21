@@ -18,7 +18,7 @@ export class BloggersMongo {
   @Prop({ type: String, required: true })
   id: string;
 
-  @Prop({ type: String, required: true })
+  @Prop()
   name: string;
 
   @Prop({ type: String, required: true })
