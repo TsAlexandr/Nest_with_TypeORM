@@ -21,6 +21,7 @@ export class TestRepo {
   ) {}
 
   async removeAllData() {
+    await this.bloggersModel.syncIndexes();
     await this.bloggersModel.deleteMany();
     await this.postsModel.deleteMany();
     await this.usersModel.deleteMany();
