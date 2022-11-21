@@ -2,7 +2,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PostsDocument } from '../../common/types/schemas/schemas.model';
 import { Paginator, PostsCon } from '../../common/types/classes/classes';
 import { Model } from 'mongoose';
-import { mapper } from '../../common/helpers/helpers';
 
 export class PostsRepository {
   constructor(@InjectModel('Posts') private postsModel: Model<PostsDocument>) {}
@@ -29,7 +28,37 @@ export class PostsRepository {
     const total = await this.postsModel.countDocuments(filter);
     const pages = Math.ceil(total / pageSize);
     const postAfterDeleteField = post.map((obj) => {
-      return mapper(obj, userId);
+      const currentUserStatus = obj.totalActions.find(
+        (el: { userId: string }) => el.userId === userId,
+      );
+      const likesCount = obj.totalActions.filter(
+        (el) => el.action === 'Like',
+      ).length;
+      const dislikesCount = obj.totalActions.filter(
+        (el) => el.action === 'Dislike',
+      ).length;
+      const actions = obj.totalActions;
+      return {
+        createdAt: obj.createdAt,
+        id: obj.id,
+        title: obj.title,
+        shortDescription: obj.shortDescription,
+        content: obj.content,
+        blogId: obj.blogId,
+        blogName: obj.blogName,
+        extendedLikesInfo: {
+          likesCount: likesCount,
+          dislikesCount: dislikesCount,
+          myStatus: currentUserStatus ? currentUserStatus.action : 'None',
+          newestLikes: actions
+            .filter((el) => el.action === 'Like')
+            .slice(0, -3)
+            .map((el) => {
+              delete el.action;
+              return el;
+            }),
+        },
+      };
     });
     return {
       pagesCount: pages,
@@ -60,7 +89,37 @@ export class PostsRepository {
         },
       };
     } else {
-      return mapper(post, userId);
+      const currentUserStatus = post.totalActions.find(
+        (el: { userId: string }) => el.userId === userId,
+      );
+      const likesCount = post.totalActions.filter(
+        (el) => el.action === 'Like',
+      ).length;
+      const dislikesCount = post.totalActions.filter(
+        (el) => el.action === 'Dislike',
+      ).length;
+      const actions = post.totalActions;
+      return {
+        createdAt: post.createdAt,
+        id: post.id,
+        title: post.title,
+        shortDescription: post.shortDescription,
+        content: post.content,
+        blogId: post.blogId,
+        blogName: post.blogName,
+        extendedLikesInfo: {
+          likesCount: likesCount,
+          dislikesCount: dislikesCount,
+          myStatus: currentUserStatus ? currentUserStatus.action : 'None',
+          newestLikes: actions
+            .filter((el) => el.action === 'Like')
+            .slice(0, -3)
+            .map((el) => {
+              delete el.action;
+              return el;
+            }),
+        },
+      };
     }
   }
 
