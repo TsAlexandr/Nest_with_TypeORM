@@ -17,7 +17,7 @@ export class CreateCommentHandler
       content,
       userId,
       userLogin,
-      addedAt: new Date(),
+      createdAt: new Date(),
       likesInfo: {
         dislikesCount: 0,
         likesCount: 0,

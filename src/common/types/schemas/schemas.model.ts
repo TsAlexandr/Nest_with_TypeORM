@@ -91,7 +91,7 @@ export class Comments {
   @Prop({ type: String, required: true })
   userLogin: string;
   @Prop()
-  addedAt: Date;
+  createdAt: Date;
   @Prop({ type: LikesInfo })
   likesInfo: {
     dislikesCount: number;
@@ -100,7 +100,7 @@ export class Comments {
   };
   @Prop({ type: TotalActions })
   totalActions: {
-    addedAt: Date;
+    createdAt: Date;
     action: string;
     userId: string;
     login: string;

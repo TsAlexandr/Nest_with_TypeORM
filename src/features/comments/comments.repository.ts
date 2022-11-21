@@ -30,7 +30,7 @@ export class CommentsRepository {
       (el) => el.action === 'Dislike',
     ).length;
     return {
-      addedAt: comment.addedAt,
+      createdAt: comment.createdAt,
       content: comment.content,
       id: comment.id,
       userId: comment.userId,
@@ -74,7 +74,7 @@ export class CommentsRepository {
         (el) => el.action === 'Dislike',
       ).length;
       return {
-        addedAt: obj.addedAt,
+        createdAt: obj.createdAt,
         content: obj.content,
         id: obj.id,
         likesInfo: {
@@ -119,7 +119,7 @@ export class CommentsRepository {
     status: string,
     userId: string,
     login: string,
-    addedAt: Date,
+    createdAt: Date,
   ) {
     if (status === 'Like' || status === 'Dislike' || status === 'None') {
       await this.commentsModel.updateOne(
@@ -133,7 +133,7 @@ export class CommentsRepository {
         {
           $push: {
             totalActions: {
-              addedAt,
+              createdAt,
               action: status,
               userId: userId,
               login: login,
