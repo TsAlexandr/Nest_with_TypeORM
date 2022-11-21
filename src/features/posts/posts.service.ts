@@ -35,7 +35,7 @@ export class PostsService {
 
   async create(newPost: any, blogName: string): Promise<PostsCon> {
     const createPost = {
-      addedAt: new Date(),
+      createdAt: new Date(),
       id: v4(),
       title: newPost.title,
       shortDescription: newPost.shortDescription,

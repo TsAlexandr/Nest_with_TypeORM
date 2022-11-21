@@ -38,7 +38,7 @@ export type PostsDocument = Posts & Document;
 @Schema({ versionKey: false })
 export class Posts {
   @Prop()
-  addedAt: Date;
+  createdAt: Date;
 
   @Prop({ type: String, required: true })
   id: string;

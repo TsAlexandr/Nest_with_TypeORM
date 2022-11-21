@@ -25,7 +25,7 @@ export class PostEntity {
   @Column('text')
   blogName: string;
   @Column('text')
-  addedAt: Date;
+  createdAt: Date;
   @ManyToOne(() => BloggersEntity, (blogger) => blogger.post)
   blogger: BloggersEntity;
   @ManyToOne(() => UserEntity, (user) => user.post)

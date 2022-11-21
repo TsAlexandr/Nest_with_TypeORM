@@ -45,7 +45,7 @@ export class PostsRepository {
     if (!post) return null;
     if (!userId) {
       return {
-        addedAt: post.addedAt,
+        createdAt: post.createdAt,
         id: post.id,
         title: post.title,
         shortDescription: post.shortDescription,
@@ -67,7 +67,7 @@ export class PostsRepository {
   async createPosts(createPost: any) {
     const post = await this.postsModel.create(createPost);
     return {
-      addedAt: post.addedAt,
+      createdAt: post.createdAt,
       id: post.id,
       title: post.title,
       shortDescription: post.shortDescription,

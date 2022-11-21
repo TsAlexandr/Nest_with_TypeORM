@@ -18,7 +18,7 @@ export class PostsTypeORM {
           title: createPost.title,
           content: createPost.content,
           shortDescription: createPost.shortDescription,
-          addedAt: createPost.addedAt,
+          createdAt: createPost.createdAt,
           blogId: createPost.blogId,
           blogName: createPost.blogName,
         },
