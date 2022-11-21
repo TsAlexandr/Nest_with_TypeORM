@@ -136,7 +136,7 @@ export class PostsController {
     @Req() req,
   ) {
     if (Object.values(Actions).includes(likeStatus)) {
-      const userId = req.user.payload.sub;
+      const userId = req.user.payload.userId;
       const user = await this.usersService.findUserById(userId);
 
       return await this.postsService.updateActions(

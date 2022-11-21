@@ -57,7 +57,7 @@ export class CommentsController {
     @Req() req,
   ) {
     if (Object.values(Actions).includes(status)) {
-      const userId = req.user.payload.sub;
+      const userId = req.user.payload.userId;
       const user = await this.usersService.findUserById(userId);
       return await this.commentsService.updateLikes(
         commentId,
