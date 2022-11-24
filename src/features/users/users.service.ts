@@ -57,6 +57,11 @@ export class UsersService {
         isConfirmed: false,
         expirationDate: '',
       },
+      {
+        banDate: new Date(),
+        banReason: null,
+        isBanned: false,
+      },
     );
 
     const createdUser = await this.usersRepository.createUser(user);

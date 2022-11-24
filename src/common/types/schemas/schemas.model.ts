@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 import * as mongoose from 'mongoose';
 import {
   Action,
+  BanInfoType,
   EmailConfirmType,
   LikesInfo,
   RecoveryDataType,
@@ -130,10 +131,17 @@ export const RecoveryData = new mongoose.Schema<RecoveryDataType>({
   expirationDate: Date,
 });
 
+export const BanInfo = new mongoose.Schema<BanInfoType>({
+  banDate: Date,
+  banReason: String,
+  isBanned: Boolean,
+});
+
 export const UsersSchema = new mongoose.Schema<User>({
   accountData: InfoAboutUser,
   emailConfirm: EmailInfo,
   recoveryData: RecoveryData,
+  banInfo: BanInfo,
 });
 
 // export const LikesSchema = new mongoose.Schema<TotalActions>({

@@ -65,11 +65,18 @@ export class NewPost {
   content: string;
 }
 
+export class BanInfoType {
+  banDate: Date;
+  banReason: string;
+  isBanned: boolean;
+}
+
 export class User {
   constructor(
     public accountData: UserAccount,
     public emailConfirm: EmailConfirmType,
     public recoveryData: RecoveryDataType,
+    public banInfo: BanInfoType,
   ) {}
 }
 

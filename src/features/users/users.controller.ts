@@ -4,19 +4,23 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SkipThrottle } from '@nestjs/throttler';
+import { BasicGuards } from '../auth/guards/basic.guards';
 
 @Controller('users')
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
+  @UseGuards(BasicGuards)
   @Get()
   async getAll(
     @Query('page') page: number,
@@ -25,6 +29,7 @@ export class UsersController {
     return await this.usersService.getAllUsers(page, pageSize);
   }
   @SkipThrottle()
+  @UseGuards(BasicGuards)
   @Post()
   async create(@Body() createUser: CreateUserDto) {
     console.log(createUser, 'user created');
@@ -34,12 +39,19 @@ export class UsersController {
       login: user.accountData.login,
       email: user.accountData.email,
       createdAt: user.accountData.createdAt,
+      banInfo: user.banInfo,
     };
   }
-
+  @UseGuards(BasicGuards)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async delete(@Param('id') id: string) {
+    const user = await this.usersService.findUserById(id);
+    if (!user)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'deviceId' }] },
+        HttpStatus.NOT_FOUND,
+      );
     return await this.usersService.deleteUser(id);
   }
 }
