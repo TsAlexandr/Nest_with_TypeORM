@@ -28,7 +28,7 @@ export class AuthService {
     const deviceId = v4();
     const isItHash = await this._correctHash(
       loginBody.password,
-      user.accountData.passwordHash,
+      user.passwordHash,
     );
     if (!isItHash) {
       throw new HttpException(
@@ -36,7 +36,7 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     } else {
-      const tokens = await this.createTokens(user.accountData.id, deviceId);
+      const tokens = await this.createTokens(user.id, deviceId);
       const payloadInfo: any = this._extractPayload(tokens.refreshToken);
 
       const iat = new Date(payloadInfo.iat * 1000);
@@ -47,7 +47,7 @@ export class AuthService {
         title: title,
         lastActiveDate: iat,
         expiredDate: exp,
-        userId: user.accountData.id,
+        userId: user.id,
       };
       await this.deviceRepository.addDevices(newDevice);
       return {
