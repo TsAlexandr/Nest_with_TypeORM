@@ -25,15 +25,16 @@ export class UsersRepository {
           ],
         },
         {
-          passwordHash: 0,
-          passwordSalt: 0,
-          emailConfirmation: 0,
-          recoveryData: 0,
+          passwordHash: false,
+          passwordSalt: false,
+          emailConfirmation: false,
+          recoveryData: false,
         },
       )
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection });
+    console.log(sortDirection, sortBy);
     const total = await this.usersModel.count({
       $or: [
         { login: { $regex: searchLoginTerm, $options: 'i' } },

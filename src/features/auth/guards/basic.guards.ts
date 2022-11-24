@@ -15,7 +15,9 @@ export class BasicGuards implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const input = 'Basic YWRtaW46cXdlcnR5';
     if (!request.headers || !request.headers.authorization) {
-      throw new BadRequestException({ message: 'Where is your header?' });
+      throw new UnauthorizedException({
+        message: 'Invalid pass or login',
+      });
     } else {
       if (request.headers.authorization != input) {
         throw new UnauthorizedException({
