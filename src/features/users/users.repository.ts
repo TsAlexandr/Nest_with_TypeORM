@@ -112,15 +112,15 @@ export class UsersRepository {
 
   async findByConfirmCode(code: string) {
     const user = await this.usersModel.findOne({
-      'emailConfirm.confirmationCode': code,
+      'emailConfirmation.confirmationCode': code,
     });
     return user;
   }
 
   async updateConfirm(id: string) {
     const result = await this.usersModel.updateOne(
-      { 'accountData.id': id },
-      { $set: { 'emailConfirm.isConfirmed': true } },
+      { id },
+      { $set: { 'emailConfirmation.isConfirmed': true } },
     );
     return result.modifiedCount === 1;
   }
@@ -130,7 +130,7 @@ export class UsersRepository {
       { id },
       {
         $set: {
-          'emailConfirm.confirmationCode': v4(),
+          'emailConfirmation.confirmationCode': v4(),
         },
       },
       { returnDocument: 'after' },
@@ -142,7 +142,7 @@ export class UsersRepository {
     const updatedUser = await this.usersModel.findOneAndUpdate(
       { id },
       {
-        $push: { 'accountData.unused': token.toString() },
+        $push: { unused: token.toString() },
       },
       { returnDocument: 'after' },
     );
