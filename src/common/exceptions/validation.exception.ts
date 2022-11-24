@@ -13,15 +13,15 @@ export class ValidationException implements ExceptionFilter {
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
+
     if (status === 400) {
-      const errorsResponse = {
-        errorsMessages: [],
-      };
-      const responseBody: any = exception.getResponse();
-      responseBody.message.forEach((e) =>
-        errorsResponse.errorsMessages.push(e),
-      );
-      response.status(status).json(errorsResponse);
+      const errorsMessages = [];
+
+      const resp: any = exception.getResponse();
+      console.log(resp);
+
+      resp.message.forEach((item) => errorsMessages.push(item));
+      response.status(status).json({ errorsMessages: errorsMessages });
     } else {
       response.status(status).json({
         statusCode: status,

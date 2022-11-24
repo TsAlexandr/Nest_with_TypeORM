@@ -74,11 +74,7 @@ export class BloggersController {
     @Body() bloggersDto: BloggersDto,
   ): Promise<boolean> {
     const blog = await this.bloggersService.getBloggerById(id);
-    if (!blog)
-      throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'id' }] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!blog) throw new NotFoundException();
     const update = { ...bloggersDto };
     return await this.bloggersService.updateBlogger(id, update);
   }
@@ -88,12 +84,7 @@ export class BloggersController {
   @Delete(':id')
   async deleteBlogger(@Param('id') id: string): Promise<boolean> {
     const removeBlogger = await this.bloggersService.deleteBlogger(id);
-    if (!removeBlogger) {
-      throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'blog' }] },
-        HttpStatus.NOT_FOUND,
-      );
-    }
+    if (!removeBlogger) throw new NotFoundException();
     return removeBlogger;
   }
 
@@ -126,6 +117,7 @@ export class BloggersController {
     @Body() newPost: NewPost,
   ): Promise<PostsCon> {
     const blogger = await this.bloggersService.getBloggerById(blogId);
+    if (!blogger) throw new NotFoundException();
     const newPostForBlogger = await this.postsService.create(
       {
         ...newPost,

@@ -12,6 +12,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Actions } from '../../common/types/classes/classes';
@@ -64,11 +65,7 @@ export class PostsController {
   @Post()
   async create(@Body() newPost: CreatePostDto) {
     const blogger = await this.bloggersService.getBloggerById(newPost.blogId);
-    if (!blogger)
-      throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'likeStatus' }] },
-        HttpStatus.BAD_REQUEST,
-      );
+    if (!blogger) if (!blogger) throw new NotFoundException();
     return await this.postsService.create({ ...newPost }, blogger.name);
   }
 
@@ -76,10 +73,19 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async update(@Param('id') id: string, @Body() updPost: CreatePostDto) {
-    return await this.postsService.update({
+    const post = await this.postsService.findOne(id, null);
+    if (!post) throw new NotFoundException();
+    const updated = await this.postsService.update({
       id,
       ...updPost,
     });
+    if (!updated)
+      throw new NotFoundException({
+        message: "Blod doesn't exist",
+        field: 'blogId',
+      });
+
+    return true;
   }
 
   @UseGuards(BasicGuards)
@@ -87,11 +93,7 @@ export class PostsController {
   @Delete(':id')
   async remove(@Param('id') id: string) {
     const post = await this.postsService.findOne(id, null);
-    if (!post)
-      throw new HttpException(
-        { message: [{ message: 'invalid value', field: 'id' }] },
-        HttpStatus.NOT_FOUND,
-      );
+    if (!post) throw new NotFoundException();
     return this.postsService.remove(id);
   }
 
