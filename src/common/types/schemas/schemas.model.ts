@@ -122,7 +122,6 @@ export const InfoAboutUser = new mongoose.Schema<UserAccount>({
 export const EmailInfo = new mongoose.Schema<EmailConfirmType>({
   isConfirmed: Boolean,
   confirmationCode: String,
-  sentEmails: { type: [Date], required: false },
 });
 
 export const RecoveryData = new mongoose.Schema<RecoveryDataType>({
@@ -137,7 +136,7 @@ export const BanInfo = new mongoose.Schema<BanInfoType>({
   isBanned: Boolean,
 });
 
-export type UserDocument = User & Document;
+export type UserDocument = UserMongo & Document;
 
 @Schema({ versionKey: false })
 export class UserMongo {
@@ -166,7 +165,7 @@ export class UserMongo {
   banInfo: BanInfoType;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const UserSchema = SchemaFactory.createForClass(UserMongo);
 
 // export const LikesSchema = new mongoose.Schema<TotalActions>({
 //   action: String,

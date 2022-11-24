@@ -32,7 +32,6 @@ export class UsersRepository {
         },
         {
           passwordHash: false,
-          passwordSalt: false,
           emailConfirmation: false,
           recoveryData: false,
         },
@@ -72,11 +71,14 @@ export class UsersRepository {
     };
   }
 
-  async createUser(newUser: User): Promise<User> {
+  async createUser(newUser: UserMongo): Promise<UserMongo> {
     await this.usersModel.create(newUser);
-    const isCreated = await this.usersModel.findOne({
-      id: newUser.id,
-    });
+    const isCreated = await this.usersModel.findOne(
+      {
+        id: newUser.id,
+      },
+      { 'banInfo._id': 0 },
+    );
     return isCreated;
   }
 
@@ -101,7 +103,7 @@ export class UsersRepository {
     return result.deletedCount === 1;
   }
 
-  async findByEmail(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<UserMongo> {
     const user = await this.usersModel.findOne({
       email,
     });

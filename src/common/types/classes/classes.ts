@@ -77,9 +77,9 @@ export class User {
     public id: string,
     public login: string,
     public email: string,
-    public createdAt: Date,
+    public createdAt: any,
     public passwordHash: string,
-    public emailConfirm: EmailConfirmType,
+    public emailConfirmation: EmailConfirmType,
     public recoveryData: RecoveryDataType,
     public banInfo: BanInfoType,
   ) {}
@@ -108,7 +108,6 @@ export class LoginAttempts {
 export class EmailConfirmType {
   isConfirmed: boolean;
   confirmationCode: string;
-  sentEmails: SentConfirmEmailType[];
 }
 
 export class RecoveryDataType {

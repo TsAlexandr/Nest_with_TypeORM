@@ -53,34 +53,34 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     const passwordHash = await this.authService._generateHash(registr.password);
-    const user: User = {
+    const user = {
       id: v4(),
       login: registr.login,
       email: registr.email,
-      passwordHash: passwordHash,
-      createdAt: new Date(),
-
-      emailConfirm: {
-        sentEmails: [],
+      passwordHash,
+      createdAt: new Date().toISOString(),
+      emailConfirmation: {
         confirmationCode: v4(),
+        expirationDate: new Date(),
         isConfirmed: false,
       },
       recoveryData: {
         recoveryCode: '',
         isConfirmed: false,
-        expirationDate: '',
+        expirationDate: new Date(),
       },
       banInfo: {
+        isBanned: false,
         banDate: null,
         banReason: null,
-        isBanned: false,
       },
     };
 
     const createdUser = await this.usersRepository.createUser(user);
+    console.log(createdUser);
     if (createdUser) {
       const messageBody = this.emailService.getConfirmMessage(
-        user.emailConfirm.confirmationCode,
+        user.emailConfirmation.confirmationCode,
       );
       await this.emailService.sendEmail(
         user.email,

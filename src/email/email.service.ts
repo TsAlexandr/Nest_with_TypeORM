@@ -29,12 +29,12 @@ export class EmailService {
   async confirmEmail(code: string) {
     const user = await this.usersRepository.findByConfirmCode(code);
     if (!user) return false;
-    if (user.emailConfirm.isConfirmed)
+    if (user.emailConfirmation.isConfirmed)
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'code' }] },
         HttpStatus.BAD_REQUEST,
       );
-    const dbConfirmCode = user.emailConfirm.confirmationCode;
+    const dbConfirmCode = user.emailConfirmation.confirmationCode;
     if (dbConfirmCode === code) {
       const result = await this.usersRepository.updateConfirm(user.id);
       return result;
@@ -45,11 +45,11 @@ export class EmailService {
   async resendRegistrationCode(email: string) {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) return null;
-    if (user.emailConfirm.isConfirmed) return null;
+    if (user.emailConfirmation.isConfirmed) return null;
     const updUser = await this.usersRepository.updateConfirmationCode(user.id);
     if (updUser) {
       const message = this.getConfirmMessage(
-        updUser.emailConfirm.confirmationCode,
+        updUser.emailConfirmation.confirmationCode,
       );
       await this.sendEmail(updUser.email, 'Confirm your email', message);
       return true;
