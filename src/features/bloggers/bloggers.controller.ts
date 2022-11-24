@@ -14,6 +14,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   NotFoundException,
   Param,
@@ -72,6 +73,12 @@ export class BloggersController {
     @Param('id') id: string,
     @Body() bloggersDto: BloggersDto,
   ): Promise<boolean> {
+    const blog = await this.bloggersService.getBloggerById(id);
+    if (!blog)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'id' }] },
+        HttpStatus.NOT_FOUND,
+      );
     const update = { ...bloggersDto };
     return await this.bloggersService.updateBlogger(id, update);
   }
@@ -82,7 +89,10 @@ export class BloggersController {
   async deleteBlogger(@Param('id') id: string): Promise<boolean> {
     const removeBlogger = await this.bloggersService.deleteBlogger(id);
     if (!removeBlogger) {
-      throw new NotFoundException();
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'blog' }] },
+        HttpStatus.NOT_FOUND,
+      );
     }
     return removeBlogger;
   }

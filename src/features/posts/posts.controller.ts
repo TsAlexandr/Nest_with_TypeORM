@@ -86,7 +86,13 @@ export class PostsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async remove(@Param('id') id: string) {
-    return await this.postsService.remove(id);
+    const post = await this.postsService.findOne(id, null);
+    if (!post)
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'id' }] },
+        HttpStatus.NOT_FOUND,
+      );
+    return this.postsService.remove(id);
   }
 
   @UseGuards(JwtExtract)
