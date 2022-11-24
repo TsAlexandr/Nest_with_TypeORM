@@ -48,6 +48,7 @@ export class UsersRepository {
         id: obj.accountData.id,
         login: obj.accountData.login,
         createdAt: obj.accountData.createdAt,
+        email: obj.accountData.email,
         banInfo: {
           banDate: obj.banInfo.banDate,
           banReason: obj.banInfo.banReason,
