@@ -23,9 +23,9 @@ export class Pagination {
     const page = typeof query.pageNumber === 'string' ? +query.pageNumber : 1;
     const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10;
     const searchLoginTerm =
-      typeof query.searchNameTerm === 'string' ? query.searchNameTerm : '';
+      typeof query.searchLoginTerm === 'string' ? query.searchLoginTerm : '';
     const searchEmailTerm =
-      typeof query.searchNameTerm === 'string' ? query.searchNameTerm : '';
+      typeof query.searchEmailTerm === 'string' ? query.searchEmailTerm : '';
     const sortBy =
       typeof query.sortBy === 'string' ? query.sortBy : 'createdAt';
     const sortDirection = query.sortDirection === 'asc' ? 1 : -1;

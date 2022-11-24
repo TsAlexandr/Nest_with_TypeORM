@@ -40,7 +40,7 @@ export class UsersRepository {
       .limit(pageSize)
       // @ts-ignore
       .sort({ [sortBy]: sortDirection });
-    console.log(sortDirection, sortBy);
+    console.log(searchLoginTerm, searchEmailTerm);
     const total = await this.usersModel.count({
       $or: [
         { login: { $regex: searchLoginTerm, $options: 'i' } },

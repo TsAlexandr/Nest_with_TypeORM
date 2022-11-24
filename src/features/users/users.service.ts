@@ -77,7 +77,6 @@ export class UsersService {
     };
 
     const createdUser = await this.usersRepository.createUser(user);
-    console.log(createdUser);
     if (createdUser) {
       const messageBody = this.emailService.getConfirmMessage(
         user.emailConfirmation.confirmationCode,
