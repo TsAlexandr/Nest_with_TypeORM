@@ -15,6 +15,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { SkipThrottle } from '@nestjs/throttler';
 import { BasicGuards } from '../auth/guards/basic.guards';
+import { Pagination } from '../../common/types/classes/pagination';
 
 @Controller('users')
 export class UsersController {
@@ -22,11 +23,23 @@ export class UsersController {
 
   @UseGuards(BasicGuards)
   @Get()
-  async getAll(
-    @Query('page') page: number,
-    @Query('pageSize') pageSize: number,
-  ) {
-    return await this.usersService.getAllUsers(page, pageSize);
+  async getAll(@Query() query) {
+    const {
+      page,
+      pageSize,
+      searchLoginTerm,
+      searchEmailTerm,
+      sortBy,
+      sortDirection,
+    } = Pagination.getPaginationDataForUser(query);
+    return await this.usersService.getAllUsers(
+      page,
+      pageSize,
+      searchLoginTerm,
+      searchEmailTerm,
+      sortBy,
+      sortDirection,
+    );
   }
   @SkipThrottle()
   @UseGuards(BasicGuards)

@@ -8,13 +8,38 @@ import { EmailInputDto } from '../auth/dto/emailInput.dto';
 export class UsersRepository {
   constructor(@InjectModel('Users') private usersModel) {}
 
-  async getUsers(page: number, pageSize: number) {
+  async getUsers(
+    page: number,
+    pageSize: number,
+    searchLoginTerm: string,
+    searchEmailTerm: string,
+    sortBy: string,
+    sortDirection: number,
+  ) {
     const user = await this.usersModel
-      .find({}, { _id: 0, passwordHash: false, 'banInfo._id': 0, __v: 0 })
-      .limit(pageSize)
+      .find(
+        {
+          $or: [
+            { login: { $regex: searchLoginTerm, $options: 'i' } },
+            { email: { $regex: searchEmailTerm, $options: 'i' } },
+          ],
+        },
+        {
+          passwordHash: 0,
+          passwordSalt: 0,
+          emailConfirmation: 0,
+          recoveryData: 0,
+        },
+      )
       .skip((page - 1) * pageSize)
-      .lean();
-    const total = await this.usersModel.countDocuments({});
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection });
+    const total = await this.usersModel.count({
+      $or: [
+        { login: { $regex: searchLoginTerm, $options: 'i' } },
+        { email: { $regex: searchEmailTerm, $options: 'i' } },
+      ],
+    });
     const pages = Math.ceil(total / pageSize);
 
     const mappedUser = user.map((obj) => {

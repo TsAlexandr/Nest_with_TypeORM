@@ -21,8 +21,22 @@ export class UsersService {
     private emailService: EmailService,
   ) {}
 
-  async getAllUsers(page: number, pageSize: number) {
-    return await this.usersRepository.getUsers(page, pageSize);
+  async getAllUsers(
+    page: number,
+    pageSize: number,
+    searchLoginTerm: string,
+    searchEmailTerm: string,
+    sortBy: string,
+    sortDirection: number,
+  ) {
+    return await this.usersRepository.getUsers(
+      page,
+      pageSize,
+      searchLoginTerm,
+      searchEmailTerm,
+      sortBy,
+      sortDirection,
+    );
   }
 
   async createUser(registr: RegistrationDto) {
