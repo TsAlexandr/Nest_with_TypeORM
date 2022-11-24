@@ -6,6 +6,7 @@ import {
   HttpCode,
   HttpException,
   HttpStatus,
+  NotFoundException,
   Param,
   Put,
   Req,
@@ -37,6 +38,8 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
   async updateComment(@Param('id') id: string, @Body() content: string) {
+    const comment = await this.commentsService.findComment(id, null);
+    if (!comment) throw new NotFoundException();
     return await this.commentsService.updateComment(id, content);
   }
 
@@ -44,6 +47,8 @@ export class CommentsController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteComment(@Param('id') id: string) {
+    const comment = await this.commentsService.findComment(id, null);
+    if (!comment) throw new NotFoundException();
     return await this.commentsService.deleteComment(id);
   }
 

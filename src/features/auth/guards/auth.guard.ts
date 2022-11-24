@@ -16,12 +16,16 @@ export class AuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const req = context.switchToHttp().getRequest();
     if (!req.headers || !req.headers.authorization) {
-      throw new BadRequestException({ message: 'Where is your header?' });
+      throw new UnauthorizedException({
+        message: 'invalid log or pass',
+      });
     }
     const version = req.headers.authorization.split(' ')[0];
     const token = req.headers.authorization.split(' ')[1];
     if (version !== 'Bearer') {
-      throw new BadRequestException({ message: 'Invalid pass or login' });
+      throw new UnauthorizedException({
+        message: 'invalid log or pass',
+      });
     }
     try {
       const decode: any = jwt.verify(token, process.env.JWT_SECRET_KEY);
