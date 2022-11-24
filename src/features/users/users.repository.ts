@@ -10,7 +10,7 @@ export class UsersRepository {
 
   async getUsers(page: number, pageSize: number) {
     const user = await this.usersModel
-      .find({}, { _id: 0, passwordHash: false, __v: 0 })
+      .find({}, { _id: 0, passwordHash: false, 'banInfo._id': 0, __v: 0 })
       .limit(pageSize)
       .skip((page - 1) * pageSize)
       .lean();

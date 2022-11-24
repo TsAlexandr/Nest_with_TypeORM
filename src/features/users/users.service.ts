@@ -58,7 +58,7 @@ export class UsersService {
         expirationDate: '',
       },
       {
-        banDate: new Date(),
+        banDate: null,
         banReason: null,
         isBanned: false,
       },

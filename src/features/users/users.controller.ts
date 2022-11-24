@@ -39,7 +39,11 @@ export class UsersController {
       login: user.accountData.login,
       email: user.accountData.email,
       createdAt: user.accountData.createdAt,
-      banInfo: user.banInfo,
+      banInfo: {
+        banDate: user.banInfo.banDate,
+        banReason: user.banInfo.banReason,
+        isBanned: user.banInfo.isBanned,
+      },
     };
   }
   @UseGuards(BasicGuards)
