@@ -53,30 +53,29 @@ export class UsersService {
         HttpStatus.BAD_REQUEST,
       );
     const passwordHash = await this.authService._generateHash(registr.password);
-    const user: User = new User(
-      {
-        id: v4(),
-        login: registr.login,
-        email: registr.email,
-        passwordHash: passwordHash,
-        createdAt: new Date(),
-      },
-      {
+    const user: User = {
+      id: v4(),
+      login: registr.login,
+      email: registr.email,
+      passwordHash: passwordHash,
+      createdAt: new Date(),
+
+      emailConfirm: {
         sentEmails: [],
         confirmationCode: v4(),
         isConfirmed: false,
       },
-      {
+      recoveryData: {
         recoveryCode: '',
         isConfirmed: false,
         expirationDate: '',
       },
-      {
+      banInfo: {
         banDate: null,
         banReason: null,
         isBanned: false,
       },
-    );
+    };
 
     const createdUser = await this.usersRepository.createUser(user);
     if (createdUser) {
@@ -84,7 +83,7 @@ export class UsersService {
         user.emailConfirm.confirmationCode,
       );
       await this.emailService.sendEmail(
-        user.accountData.email,
+        user.email,
         'Confirm your email',
         messageBody,
       );
@@ -123,7 +122,7 @@ export class UsersService {
       newPasswordDto.newPassword,
     );
     const user = await this.usersRepository.confirmPassword(
-      userCode.accountData.id,
+      userCode.id,
       generatePassword,
     );
     if (!user) return false;
@@ -143,7 +142,7 @@ export class UsersService {
     };
 
     const updateUser = await this.usersRepository.updateUserWithRecoveryData(
-      user.accountData.id,
+      user.id,
       recoveryData,
     );
     console.log(
@@ -152,7 +151,7 @@ export class UsersService {
     );
     if (updateUser) {
       await this.emailService.sendEmail(
-        updateUser.accountData.email,
+        updateUser.email,
         'Your recovery code',
         formRecoveryCodeToMessage,
       );

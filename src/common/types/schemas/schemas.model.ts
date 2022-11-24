@@ -137,12 +137,36 @@ export const BanInfo = new mongoose.Schema<BanInfoType>({
   isBanned: Boolean,
 });
 
-export const UsersSchema = new mongoose.Schema<User>({
-  accountData: InfoAboutUser,
-  emailConfirm: EmailInfo,
-  recoveryData: RecoveryData,
-  banInfo: BanInfo,
-});
+export type UserDocument = User & Document;
+
+@Schema({ versionKey: false })
+export class UserMongo {
+  @Prop()
+  id: string;
+
+  @Prop()
+  login: string;
+
+  @Prop()
+  email: string;
+
+  @Prop()
+  createdAt: string;
+
+  @Prop()
+  passwordHash: string;
+
+  @Prop({ type: EmailInfo })
+  emailConfirmation: EmailConfirmType;
+
+  @Prop({ type: RecoveryData })
+  recoveryData: RecoveryDataType;
+
+  @Prop({ type: BanInfo })
+  banInfo: BanInfoType;
+}
+
+export const UserSchema = SchemaFactory.createForClass(User);
 
 // export const LikesSchema = new mongoose.Schema<TotalActions>({
 //   action: String,

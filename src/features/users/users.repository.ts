@@ -2,11 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { v4 } from 'uuid';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../common/types/classes/classes';
-import { EmailInputDto } from '../auth/dto/emailInput.dto';
+import { Model } from 'mongoose';
+import {
+  UserDocument,
+  UserMongo,
+} from '../../common/types/schemas/schemas.model';
 
 @Injectable()
 export class UsersRepository {
-  constructor(@InjectModel('Users') private usersModel) {}
+  constructor(
+    @InjectModel(UserMongo.name) private usersModel: Model<UserDocument>,
+  ) {}
 
   async getUsers(
     page: number,
@@ -33,6 +39,7 @@ export class UsersRepository {
       )
       .skip((page - 1) * pageSize)
       .limit(pageSize)
+      // @ts-ignore
       .sort({ [sortBy]: sortDirection });
     console.log(sortDirection, sortBy);
     const total = await this.usersModel.count({
@@ -45,10 +52,10 @@ export class UsersRepository {
 
     const mappedUser = user.map((obj) => {
       return {
-        id: obj.accountData.id,
-        login: obj.accountData.login,
-        createdAt: obj.accountData.createdAt,
-        email: obj.accountData.email,
+        id: obj.id,
+        login: obj.login,
+        createdAt: obj.createdAt,
+        email: obj.email,
         banInfo: {
           banDate: obj.banInfo.banDate,
           banReason: obj.banInfo.banReason,
@@ -68,7 +75,7 @@ export class UsersRepository {
   async createUser(newUser: User): Promise<User> {
     await this.usersModel.create(newUser);
     const isCreated = await this.usersModel.findOne({
-      'accountData.id': newUser.accountData.id,
+      id: newUser.id,
     });
     return isCreated;
   }
@@ -76,27 +83,27 @@ export class UsersRepository {
   async findByLogin(login: string) {
     const user = await this.usersModel
       .findOne({
-        'accountData.login': login,
+        login,
       })
       .lean();
     return user;
   }
 
   async findById(id: string) {
-    const user = await this.usersModel.findOne({ 'accountData.id': id }).lean();
+    const user = await this.usersModel.findOne({ id }).lean();
     return user;
   }
 
   async delUser(id: string) {
     const result = await this.usersModel.deleteOne({
-      'accountData.id': id,
+      id,
     });
     return result.deletedCount === 1;
   }
 
   async findByEmail(email: string): Promise<User> {
     const user = await this.usersModel.findOne({
-      'accountData.email': email,
+      email,
     });
     return user;
   }
@@ -118,7 +125,7 @@ export class UsersRepository {
 
   async updateConfirmationCode(id: string) {
     const updatedUser = await this.usersModel.findOneAndUpdate(
-      { 'accountData.id': id },
+      { id },
       {
         $set: {
           'emailConfirm.confirmationCode': v4(),
@@ -131,7 +138,7 @@ export class UsersRepository {
 
   async addToken(id: string, token: string) {
     const updatedUser = await this.usersModel.findOneAndUpdate(
-      { 'accountData.id': id },
+      { id },
       {
         $push: { 'accountData.unused': token.toString() },
       },
@@ -149,10 +156,10 @@ export class UsersRepository {
     },
   ) {
     await this.usersModel.updateOne(
-      { 'accountData.id': id },
+      { id },
       { $set: { recoveryData: recoveryData } },
     );
-    return this.usersModel.findOne({ 'accountData.id': id });
+    return this.usersModel.findOne({ id });
   }
 
   async findUserByCode(recoveryCode: string) {
@@ -164,14 +171,14 @@ export class UsersRepository {
 
   async confirmPassword(id: string, generatePassword: string) {
     await this.usersModel.updateOne(
-      { 'accountData.id': id },
+      { id },
       {
         $set: {
           'recoveryData.isConfirmed': true,
-          'accountData.passwordHash': generatePassword,
+          passwordHash: generatePassword,
         },
       },
     );
-    return this.usersModel.findOne({ 'accountData.id': id });
+    return this.usersModel.findOne({ id });
   }
 }

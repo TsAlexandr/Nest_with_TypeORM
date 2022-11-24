@@ -16,7 +16,8 @@ import {
   DeviceSchema,
   Posts,
   PostsSchema,
-  UsersSchema,
+  UserMongo,
+  UserSchema,
 } from './common/types/schemas/schemas.model';
 import { PostsController } from './features/posts/posts.controller';
 import { BloggersController } from './features/bloggers/bloggers.controller';
@@ -72,7 +73,7 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
       { name: Posts.name, schema: PostsSchema },
       { name: BloggersMongo.name, schema: BloggerSchema },
       { name: Comments.name, schema: CommentsSchema },
-      { name: 'Users', schema: UsersSchema },
+      { name: UserMongo.name, schema: UserSchema },
       { name: Device.name, schema: DeviceSchema },
     ]),
     // TypeOrmModule.forRoot({

@@ -47,10 +47,10 @@ export class UsersController {
   async create(@Body() createUser: CreateUserDto) {
     const user = await this.usersService.createUser(createUser);
     return {
-      id: user.accountData.id,
-      login: user.accountData.login,
-      email: user.accountData.email,
-      createdAt: user.accountData.createdAt,
+      id: user.id,
+      login: user.login,
+      email: user.email,
+      createdAt: user.createdAt,
       banInfo: {
         banDate: user.banInfo.banDate,
         banReason: user.banInfo.banReason,

@@ -5,6 +5,7 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
+import { Prop } from '@nestjs/mongoose';
 
 export class Blogger {
   @IsString()
@@ -73,7 +74,11 @@ export class BanInfoType {
 
 export class User {
   constructor(
-    public accountData: UserAccount,
+    public id: string,
+    public login: string,
+    public email: string,
+    public createdAt: Date,
+    public passwordHash: string,
     public emailConfirm: EmailConfirmType,
     public recoveryData: RecoveryDataType,
     public banInfo: BanInfoType,

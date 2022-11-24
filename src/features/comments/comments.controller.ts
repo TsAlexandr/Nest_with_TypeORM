@@ -63,7 +63,7 @@ export class CommentsController {
         commentId,
         status,
         userId,
-        user.accountData.login,
+        user.login,
       );
     }
     throw new HttpException(

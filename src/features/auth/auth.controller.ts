@@ -137,9 +137,9 @@ export class AuthController {
   async infoAboutMe(@CurrentUserId() currentUserId: string) {
     const user = await this.userService.findUserById(currentUserId);
     return {
-      userId: user.accountData.id,
-      email: user.accountData.email,
-      login: user.accountData.login,
+      userId: user.id,
+      email: user.email,
+      login: user.login,
     };
   }
 

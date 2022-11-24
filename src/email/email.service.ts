@@ -36,9 +36,7 @@ export class EmailService {
       );
     const dbConfirmCode = user.emailConfirm.confirmationCode;
     if (dbConfirmCode === code) {
-      const result = await this.usersRepository.updateConfirm(
-        user.accountData.id,
-      );
+      const result = await this.usersRepository.updateConfirm(user.id);
       return result;
     }
     return false;
@@ -48,18 +46,12 @@ export class EmailService {
     const user = await this.usersRepository.findByEmail(email);
     if (!user) return null;
     if (user.emailConfirm.isConfirmed) return null;
-    const updUser = await this.usersRepository.updateConfirmationCode(
-      user.accountData.id,
-    );
+    const updUser = await this.usersRepository.updateConfirmationCode(user.id);
     if (updUser) {
       const message = this.getConfirmMessage(
         updUser.emailConfirm.confirmationCode,
       );
-      await this.sendEmail(
-        updUser.accountData.email,
-        'Confirm your email',
-        message,
-      );
+      await this.sendEmail(updUser.email, 'Confirm your email', message);
       return true;
     }
     return null;

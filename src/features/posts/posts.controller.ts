@@ -143,7 +143,7 @@ export class PostsController {
         postId,
         likeStatus,
         userId,
-        user.accountData.login,
+        user.login,
       );
     }
 

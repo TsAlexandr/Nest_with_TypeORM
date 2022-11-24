@@ -6,17 +6,18 @@ import {
   Comments,
   Posts,
   PostsDocument,
+  UserDocument,
+  UserMongo,
 } from '../../common/types/schemas/schemas.model';
 import { Model } from 'mongoose';
 import mongoose from 'mongoose';
-import { User } from '../../common/types/classes/classes';
 
 export class TestRepo {
   constructor(
     @InjectModel(BloggersMongo.name)
     private bloggersModel: Model<BloggersDocument>,
     @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
-    @InjectModel('Users') private usersModel: mongoose.Model<User>,
+    @InjectModel(UserMongo.name) private usersModel: Model<UserDocument>,
     @InjectModel(Comments.name) private commentsModel: mongoose.Model<Comment>,
   ) {}
 
