@@ -17,12 +17,24 @@ export class UsersRepository {
     const total = await this.usersModel.countDocuments({});
     const pages = Math.ceil(total / pageSize);
 
+    const mappedUser = user.map((obj) => {
+      return {
+        id: obj.accountData.id,
+        login: obj.accountData.login,
+        createdAt: obj.accountData.createdAt,
+        banInfo: {
+          banDate: obj.banInfo.banDate,
+          banReason: obj.banInfo.banReason,
+          isBanned: obj.banInfo.isBanned,
+        },
+      };
+    });
     return {
       pagesCount: pages,
       page: page,
       pageSize: pageSize,
       totalCount: total,
-      items: user,
+      items: mappedUser,
     };
   }
 
