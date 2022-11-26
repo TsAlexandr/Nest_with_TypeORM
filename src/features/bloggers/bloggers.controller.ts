@@ -98,6 +98,8 @@ export class BloggersController {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
+    const blogger = await this.bloggersService.getBloggerById(blogId);
+    if (!blogger) throw new NotFoundException();
     const pages = await this.postsService.findAll(
       page,
       pageSize,

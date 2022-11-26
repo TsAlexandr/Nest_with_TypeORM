@@ -58,6 +58,7 @@ export class PostsController {
   async findOne(@Param('id') id: string, @Req() req) {
     const userId: string = req.user.userId || null;
     const post = await this.postsService.findOne(id, userId);
+    if (!post) throw new NotFoundException();
     return post;
   }
 
@@ -106,6 +107,8 @@ export class PostsController {
   ) {
     const { page, pageSize, sortBy, sortDirection } = Pagination.getData(query);
     const userId = req.user.userId || null;
+    const post = await this.postsService.findOne(postId, null);
+    if (!post) throw new NotFoundException();
     return await this.commentsService.getCommentWithPage(
       postId,
       page,
@@ -125,6 +128,8 @@ export class PostsController {
   ) {
     const userLogin = req.user.login;
     const userId = req.user.userId;
+    const isPost = await this.postsService.findOne(postId, null);
+    if (!isPost) throw new NotFoundException();
     const post = await this.commentsService.createComment(
       postId,
       content,
