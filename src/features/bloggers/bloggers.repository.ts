@@ -51,10 +51,7 @@ export class BloggersRepository implements IBlogsRepository {
   }
 
   async getBloggersById(id: string): Promise<BloggersMongo> {
-    const blogger = await this.bloggersModel
-      .findOne({ id }, { _id: 0, __v: 0 })
-      .lean();
-    return blogger;
+    return this.bloggersModel.findOne({ id }, { _id: 0, __v: 0 }).lean();
   }
 
   async deleteBloggerById(id: string): Promise<boolean> {

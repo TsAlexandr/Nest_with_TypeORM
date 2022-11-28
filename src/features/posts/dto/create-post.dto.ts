@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, Length, Validate } from 'class-validator';
+import { IsNotEmpty, Length, Validate } from 'class-validator';
 import { Transform } from 'class-transformer';
 import { BlogIdValidation } from '../../../common/exceptions/validationBlog';
 
