@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CommentsRepository } from './comments.repository';
 import { v4 } from 'uuid';
+import { SortOrder } from 'mongoose';
 
 @Injectable()
 export class CommentsService {
@@ -38,8 +39,7 @@ export class CommentsService {
       },
       totalActions: [],
     };
-    const comment = await this.commentsRepository.createComment(newComments);
-    return comment;
+    return this.commentsRepository.createComment(newComments);
   }
 
   async getCommentWithPage(
@@ -48,7 +48,7 @@ export class CommentsService {
     pageSize: number,
     userId: string,
     sortBy: string,
-    sortDirection: number,
+    sortDirection: SortOrder,
   ) {
     return await this.commentsRepository.getCommentWithPage(
       postId,
@@ -67,13 +67,12 @@ export class CommentsService {
     login: string,
   ) {
     const date = new Date();
-    const update = await this.commentsRepository.updateLikes(
+    return this.commentsRepository.updateLikes(
       commentId,
       status,
       userId,
       login,
       date,
     );
-    return update;
   }
 }

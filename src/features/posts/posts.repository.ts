@@ -1,7 +1,7 @@
 import { InjectModel } from '@nestjs/mongoose';
 import { PostsDocument } from '../../common/types/schemas/schemas.model';
 import { Paginator, PostsCon } from '../../common/types/classes/classes';
-import { Model } from 'mongoose';
+import { Model, SortOrder } from 'mongoose';
 
 export class PostsRepository {
   constructor(@InjectModel('Posts') private postsModel: Model<PostsDocument>) {}
@@ -13,7 +13,7 @@ export class PostsRepository {
     blogId: string | null,
     searchNameTerm: string,
     sortBy: string,
-    sortDirection: any,
+    sortDirection: SortOrder,
   ): Promise<Paginator<PostsCon[]>> {
     const filter = blogId
       ? { title: { $regex: searchNameTerm ? searchNameTerm : '' }, blogId }
@@ -171,7 +171,7 @@ export class PostsRepository {
       );
     }
     if (likeStatus === 'Like' || 'Dislike') {
-      const updateLike = await this.postsModel.findOneAndUpdate(
+      await this.postsModel.findOneAndUpdate(
         { id: postId },
         {
           $push: {

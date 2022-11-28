@@ -3,6 +3,7 @@ import { PostsRepository } from './posts.repository';
 import { PostsCon } from '../../common/types/classes/classes';
 import { v4 } from 'uuid';
 import { PostsRepositoryRAW } from '../../library/rawDb/postsRepositoryRAW';
+import { SortOrder } from 'mongoose';
 
 @Injectable()
 export class PostsService {
@@ -15,7 +16,7 @@ export class PostsService {
     blogId: string | null,
     searchNameTerm: string,
     sortBy: string,
-    sortDirection: number,
+    sortDirection: SortOrder,
   ) {
     return await this.postsRepository.getPosts(
       page,
@@ -29,8 +30,7 @@ export class PostsService {
   }
 
   async findOne(id: string, userId: string) {
-    const post = await this.postsRepository.getPostById(id, userId);
-    return post;
+    return this.postsRepository.getPostById(id, userId);
   }
 
   async create(newPost: any, blogName: string): Promise<PostsCon> {

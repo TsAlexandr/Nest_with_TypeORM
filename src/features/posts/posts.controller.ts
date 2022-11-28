@@ -25,6 +25,7 @@ import { CreatePostDto } from './dto/create-post.dto';
 import { UsersService } from '../users/users.service';
 import { Pagination } from '../../common/types/classes/pagination';
 import { BloggersService } from '../bloggers/bloggers.service';
+import { UpdateCommentDto } from '../comments/dto/update-comment.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -41,7 +42,7 @@ export class PostsController {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
-    const posts = await this.postsService.findAll(
+    return this.postsService.findAll(
       page,
       pageSize,
       userId,
@@ -50,7 +51,6 @@ export class PostsController {
       sortBy,
       sortDirection,
     );
-    return posts;
   }
 
   @UseGuards(JwtExtract)
@@ -119,28 +119,26 @@ export class PostsController {
     );
   }
 
-  @UseGuards(JwtExtract)
+  @UseGuards(JwtAuthGuards, JwtExtract)
   @Post(':postId/comments')
   async createCommentForPost(
     @Param('postId') postId: string,
-    @Body('content') content: string,
+    @Body() updateCommentDto: UpdateCommentDto,
     @Req() req,
   ) {
     const userLogin = req.user.login;
     const userId = req.user.userId;
     const isPost = await this.postsService.findOne(postId, null);
     if (!isPost) throw new NotFoundException();
-    const post = await this.commentsService.createComment(
+    return this.commentsService.createComment(
       postId,
-      content,
+      updateCommentDto.content,
       userId,
       userLogin,
     );
-    return post;
   }
 
-  @UseGuards(JwtAuthGuards)
-  @UseGuards(ExistingPostGuard)
+  @UseGuards(JwtAuthGuards, ExistingPostGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':postId/like-status')
   async updateActions(

@@ -1,3 +1,5 @@
+import { SortOrder } from 'mongoose';
+
 export class Pagination {
   static getPaginationData(query) {
     const page = typeof query.pageNumber === 'string' ? +query.pageNumber : 1;
@@ -6,7 +8,7 @@ export class Pagination {
       typeof query.searchNameTerm === 'string' ? query.searchNameTerm : '';
     const sortBy =
       typeof query.sortBy === 'string' ? query.sortBy : 'createdAt';
-    const sortDirection = query.sortDirection === 'asc' ? 1 : -1;
+    const sortDirection: SortOrder = query.sortDirection === 'asc' ? 1 : -1;
     return { page, pageSize, searchNameTerm, sortBy, sortDirection };
   }
 
@@ -15,7 +17,7 @@ export class Pagination {
     const pageSize = typeof query.PageSize === 'string' ? +query.PageSize : 10;
     const sortBy =
       typeof query.sortBy === 'string' ? query.sortBy : 'createdAt';
-    const sortDirection = query.sortDirection === 'asc' ? 1 : -1;
+    const sortDirection: SortOrder = query.sortDirection === 'asc' ? 1 : -1;
     return { page, pageSize, sortBy, sortDirection };
   }
 
@@ -28,7 +30,7 @@ export class Pagination {
       typeof query.searchEmailTerm === 'string' ? query.searchEmailTerm : '';
     const sortBy =
       typeof query.sortBy === 'string' ? query.sortBy : 'createdAt';
-    const sortDirection = query.sortDirection === 'asc' ? 1 : -1;
+    const sortDirection: SortOrder = query.sortDirection === 'asc' ? 1 : -1;
     return {
       page,
       pageSize,

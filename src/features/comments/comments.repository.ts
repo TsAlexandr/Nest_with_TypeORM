@@ -3,7 +3,7 @@ import {
   Comments,
   CommentsDocument,
 } from '../../common/types/schemas/schemas.model';
-import { Model } from 'mongoose';
+import { Model, SortOrder } from 'mongoose';
 
 export class CommentsRepository {
   constructor(
@@ -51,7 +51,7 @@ export class CommentsRepository {
     pageSize: number,
     userId: string,
     sortBy: string,
-    sortDirection: any,
+    sortDirection: SortOrder,
   ) {
     const filter = { postId };
     const commentsForPosts = await this.commentsModel
@@ -97,16 +97,14 @@ export class CommentsRepository {
 
   async createComment(newComment: Comments) {
     await this.commentsModel.create(newComment);
-    const comment = await this.findComment(newComment.id, newComment.userId);
-    return comment;
+    return this.findComment(newComment.id, newComment.userId);
   }
 
   async updateComment(id: string, content: string) {
-    const updComment = await this.commentsModel.findOneAndUpdate(
+    return this.commentsModel.findOneAndUpdate(
       { id },
       { $set: { content: content } },
     );
-    return updComment;
   }
 
   async deleteComment(id: string) {
@@ -128,7 +126,7 @@ export class CommentsRepository {
       );
     }
     if (status === 'Like' || status === 'Dislike') {
-      const updateLike = await this.commentsModel.updateOne(
+      return this.commentsModel.updateOne(
         { id: commentId },
         {
           $push: {
@@ -141,7 +139,6 @@ export class CommentsRepository {
           },
         },
       );
-      return updateLike;
     }
   }
 }

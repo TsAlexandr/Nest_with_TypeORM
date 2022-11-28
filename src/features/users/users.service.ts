@@ -1,17 +1,11 @@
-import {
-  BadRequestException,
-  HttpException,
-  HttpStatus,
-  Injectable,
-} from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersRepository } from './users.repository';
 import { AuthService } from '../auth/auth.service';
-import { User } from '../../common/types/classes/classes';
 import { v4 } from 'uuid';
 import { EmailService } from '../../email/email.service';
-import * as jwt from 'jsonwebtoken';
 import { RegistrationDto } from '../auth/dto/registration.dto';
 import { NewPasswordDto } from '../auth/dto/newPassword.dto';
+import { SortOrder } from 'mongoose';
 
 @Injectable()
 export class UsersService {
@@ -27,7 +21,7 @@ export class UsersService {
     searchLoginTerm: string,
     searchEmailTerm: string,
     sortBy: string,
-    sortDirection: number,
+    sortDirection: SortOrder,
   ) {
     return await this.usersRepository.getUsers(
       page,
@@ -94,16 +88,6 @@ export class UsersService {
 
   async deleteUser(id: string) {
     return await this.usersRepository.delUser(id);
-  }
-
-  async addToken(token: string) {
-    try {
-      const decode: any = jwt.verify(token, process.env.JWT_SECRET_KEY!);
-      const userToUpdate = this.usersRepository.addToken(decode.userId, token);
-      return userToUpdate;
-    } catch (e) {
-      console.log(e);
-    }
   }
 
   async findUserById(currentUserId: string) {

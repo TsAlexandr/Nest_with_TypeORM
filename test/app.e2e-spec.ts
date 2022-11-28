@@ -57,7 +57,7 @@ SELECT truncate_tables('postgres');`,
   describe('Bloggers', () => {
     it('/bloggers all methods', async () => {
       const createBlogger = await request(app.getHttpServer())
-        .post('/bloggers')
+        .post('/blogs')
         .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
         .send(bloggerCreate)
         .expect(HttpStatus.CREATED);

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpException,
@@ -19,6 +20,8 @@ import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentBelongsGuard } from '../auth/guards/commentBelongsGuard';
 import { UsersService } from '../users/users.service';
 import { Actions } from '../../common/types/classes/classes';
+import { CurrentUserId } from '../../common/custom-decorator/current.user.decorator';
+import { UpdateCommentDto } from './dto/update-comment.dto';
 
 @Controller('comments')
 export class CommentsController {
@@ -34,21 +37,33 @@ export class CommentsController {
     return await this.commentsService.findComment(id, userId);
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, JwtAuthGuards)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id')
-  async updateComment(@Param('id') id: string, @Body() content: string) {
+  async updateComment(
+    @Param('id') id: string,
+    @Body() updateCommentDto: UpdateCommentDto,
+    @CurrentUserId() userId: string,
+  ) {
     const comment = await this.commentsService.findComment(id, null);
     if (!comment) throw new NotFoundException();
-    return await this.commentsService.updateComment(id, content);
+    if (userId !== comment.userId) throw new ForbiddenException();
+    return await this.commentsService.updateComment(
+      id,
+      updateCommentDto.content,
+    );
   }
 
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, JwtAuthGuards)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async deleteComment(@Param('id') id: string) {
+  async deleteComment(
+    @Param('id') id: string,
+    @CurrentUserId() userId: string,
+  ) {
     const comment = await this.commentsService.findComment(id, null);
     if (!comment) throw new NotFoundException();
+    if (userId !== comment.userId) throw new ForbiddenException();
     return await this.commentsService.deleteComment(id);
   }
 
