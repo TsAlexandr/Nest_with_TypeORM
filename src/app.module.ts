@@ -57,6 +57,7 @@ import { CqrsModule } from '@nestjs/cqrs';
 import { GetCommentsHandler } from './features/usecase/handlers/getComments.handler';
 import { CreateCommentHandler } from './features/usecase/handlers/createComment.handler';
 import { BloggersRepositoryORM } from './library/typeORM/bloggers.typeORM';
+import { BlogIdValidation } from './common/exceptions/validationBlog';
 
 export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
 
@@ -142,6 +143,7 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     DeviceService,
     DeviceRepository,
     ...CommandHandlers,
+    BlogIdValidation,
   ],
 })
 export class AppModule {}
