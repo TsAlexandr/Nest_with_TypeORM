@@ -2,24 +2,27 @@ import {
   CanActivate,
   ExecutionContext,
   Injectable,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { Request } from 'express';
-import { UsersService } from '../../users/users.service';
+import * as jwt from 'jsonwebtoken';
+import { UsersRepository } from '../../users/users.repository';
 
 @Injectable()
-export class UserExistGuard implements CanActivate {
-  constructor(private userService: UsersService) {}
+export class BearerAuthGuard implements CanActivate {
+  constructor(private usersRepository: UsersRepository) {}
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const req = context.switchToHttp().getRequest();
 
-  async canActivate(context: ExecutionContext): Promise<boolean> | null {
-    const request: Request = context.switchToHttp().getRequest();
-    const id = request.params.userId;
-    const comment = await this.userService.findUserById(id);
-    if (!comment)
-      throw new NotFoundException({
-        message: 'user not found',
-        field: 'userId',
-      });
+    if (!req.headers.authorization) {
+      throw new UnauthorizedException();
+    }
+    const token = req.headers.authorization.split(' ')[1];
+    const decode: any = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+    if (!decode) {
+      throw new UnauthorizedException();
+    }
+
+    req.user = await this.usersRepository.findById(decode.userId);
     return true;
   }
 }

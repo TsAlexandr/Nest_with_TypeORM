@@ -41,7 +41,6 @@ import { CommentsService } from './features/comments/comments.service';
 import { PostsRepository } from './features/posts/posts.repository';
 import { AuthService } from './features/auth/auth.service';
 import { EmailService } from './email/email.service';
-import { UserExistGuard } from './features/auth/guards/userExistGuard';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BloggersRepositoryRAW } from './library/rawDb/bloggersRepositoryRAW';
 import { BloggersEntity } from './features/bloggers/entities/bloggers.entity';
@@ -139,7 +138,6 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     BasicGuards,
     TestRepo,
     ExistingPostGuard,
-    UserExistGuard,
     JwtExtract,
     DeviceService,
     DeviceRepository,

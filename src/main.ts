@@ -10,8 +10,9 @@ async function bootstrap() {
   app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
-      stopAtFirstError: false,
+      whitelist: true,
       transform: true,
+      stopAtFirstError: true,
       exceptionFactory: (errors) => {
         const customErrors = errors.map((e) => {
           const firstError = JSON.stringify(e.constraints);
