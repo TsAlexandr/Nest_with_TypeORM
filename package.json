@@ -28,7 +28,7 @@
     "@nestjs/jwt": "^9.0.0",
     "@nestjs/mapped-types": "*",
     "@nestjs/passport": "^9.0.0",
-    "@nestjs/platform-express": "^8.0.0",
+    "@nestjs/platform-express": "^9.2.0",
     "@nestjs/throttler": "^3.0.0",
     "@nestjs/typeorm": "^9.0.1",
     "@types/cookie-parser": "^1.4.3",

@@ -65,8 +65,8 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
   imports: [
     ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
     ThrottlerModule.forRoot({
-      ttl: 700,
-      limit: 700,
+      ttl: 10,
+      limit: 5,
     }),
     MongooseModule.forRoot(process.env.MONGO_URI),
     MongooseModule.forFeature([
