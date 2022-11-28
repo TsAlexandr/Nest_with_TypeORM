@@ -41,10 +41,9 @@ export class DeviceRepository {
   }
 
   async findDeviceById(userId: string, deviceId: string, date: Date) {
-    const device = await this.deviceModel
+    return this.deviceModel
       .find({ userId: userId, deviceId: deviceId, lastActiveDate: date })
       .lean();
-    return device;
   }
 
   async updateDevices(

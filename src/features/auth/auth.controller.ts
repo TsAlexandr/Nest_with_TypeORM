@@ -11,6 +11,7 @@ import {
   Headers,
   HttpException,
   BadRequestException,
+  Get,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
@@ -86,6 +87,7 @@ export class AuthController {
     @Ip() ip: string,
     @Headers('user-agent') title: string,
   ) {
+    console.log(ip, 'ip is static or not');
     const result = await this.authService.checkCredentials(
       loginBody,
       ip,
@@ -120,6 +122,7 @@ export class AuthController {
     return { accessToken: tokens.accessToken };
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/logout')
   async logout(@Res({ passthrough: true }) res: Response, @Cookies() cookies) {
     if (!cookies) {
@@ -133,9 +136,9 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuards)
-  @Post('/me')
-  async infoAboutMe(@CurrentUserId() currentUserId: string) {
-    const user = await this.userService.findUserById(currentUserId);
+  @Get('/me')
+  async infoAboutMe(@CurrentUserId() id: string) {
+    const user = await this.userService.findUserById(id);
     return {
       userId: user.id,
       email: user.email,
