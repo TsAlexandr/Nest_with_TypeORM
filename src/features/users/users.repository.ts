@@ -172,4 +172,8 @@ export class UsersRepository {
     );
     return this.usersModel.findOne({ id });
   }
+
+  findUserByToken(refreshToken: string) {
+    return this.usersModel.findOne({ unused: refreshToken });
+  }
 }

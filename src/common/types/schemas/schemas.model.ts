@@ -155,6 +155,9 @@ export class UserMongo {
   @Prop()
   passwordHash: string;
 
+  @Prop({ required: false })
+  unused?: string;
+
   @Prop({ type: EmailInfo })
   emailConfirmation: EmailConfirmType;
 

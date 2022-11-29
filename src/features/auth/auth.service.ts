@@ -97,6 +97,10 @@ export class AuthService {
       iat,
     );
     if (!session) return null;
+    const invokedToken = await this.usersRepository.addToken(
+      payload.userId,
+      refreshToken,
+    );
     const tokens = await this.createTokens(payload.userId, payload.deviceId);
     const newPayloadInfo: any = this._extractPayload(tokens.refreshToken);
     const newIat = new Date(newPayloadInfo.iat * 1000);
@@ -117,10 +121,8 @@ export class AuthService {
   async removeSession(token: string) {
     const payload: any = this._extractPayload(token);
     if (!payload) return null;
-    const remove = await this.deviceRepository.removeSession(
-      payload.userId,
-      payload.deviceId,
-    );
+    await this.usersRepository.addToken(payload.userId, token);
+    await this.deviceRepository.removeSession(payload.userId, payload.deviceId);
   }
 
   _extractPayload(refreshToken: string) {

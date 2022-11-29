@@ -141,4 +141,8 @@ export class UsersService {
       return;
     }
   }
+
+  async findUserByToken(refreshToken: string) {
+    return this.usersRepository.findUserByToken(refreshToken);
+  }
 }

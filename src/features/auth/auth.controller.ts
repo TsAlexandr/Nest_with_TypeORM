@@ -28,6 +28,7 @@ import { Throttle, ThrottlerGuard } from '@nestjs/throttler';
 import { NewPasswordDto } from './dto/newPassword.dto';
 import { Request, Response } from 'express';
 import { EmailInputDto } from './dto/emailInput.dto';
+import { AuthGuard } from './guards/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -53,9 +54,7 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/registration-confirmation')
   async confirmClient(@Body('code') code: string) {
-    console.log(code, 'code');
     const confirm = await this.emailService.confirmEmail(code);
-    console.log(confirm, 'confirm');
     if (!confirm)
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'code' }] },
@@ -88,7 +87,6 @@ export class AuthController {
     @Ip() ip: string,
     @Headers('user-agent') title: string,
   ) {
-    console.log(ip, 'ip is static or not');
     const result = await this.authService.checkCredentials(
       loginBody,
       ip,
@@ -108,6 +106,15 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     if (!req.cookies.refreshToken) {
+      throw new HttpException(
+        { message: [{ message: 'invalid value', field: 'refreshToken' }] },
+        HttpStatus.UNAUTHORIZED,
+      );
+    }
+    const revokedToken = await this.userService.findUserByToken(
+      req.cookies.refreshToken,
+    );
+    if (revokedToken) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
         HttpStatus.UNAUTHORIZED,
@@ -141,13 +148,9 @@ export class AuthController {
     res.clearCookie('refreshToken');
   }
 
-  @UseGuards(JwtAuthGuards)
+  @UseGuards(AuthGuard, JwtAuthGuards)
   @Get('/me')
-  async infoAboutMe(@CurrentUserId() id: string, @Req() req: Request) {
-    const token = await this.authService._extractPayload(
-      req.cookies.refreshToken,
-    );
-    if (!token) throw new UnauthorizedException();
+  async infoAboutMe(@CurrentUserId() id: string) {
     const user = await this.userService.findUserById(id);
     return {
       userId: user.id,
