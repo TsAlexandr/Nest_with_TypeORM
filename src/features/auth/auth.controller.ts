@@ -12,6 +12,7 @@ import {
   HttpException,
   BadRequestException,
   Get,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { AuthService } from './auth.service';
@@ -115,6 +116,7 @@ export class AuthController {
     const tokens = await this.authService.updateDevice(
       req.cookies.refreshToken,
     );
+    if (!tokens) throw new UnauthorizedException();
     res.cookie('refreshToken', tokens.refreshToken, {
       httpOnly: true,
       secure: true,
@@ -124,20 +126,28 @@ export class AuthController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/logout')
-  async logout(@Res({ passthrough: true }) res: Response, @Cookies() cookies) {
-    if (!cookies) {
+  async logout(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
+    if (!req.cookies.refreshToken) {
       throw new HttpException(
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
         HttpStatus.UNAUTHORIZED,
       );
     }
-    await this.authService.removeSession(cookies);
+    const token = await this.authService._extractPayload(
+      req.cookies.refreshToken,
+    );
+    if (!token) throw new UnauthorizedException();
+    await this.authService.removeSession(req.cookies.refreshToken);
     res.clearCookie('refreshToken');
   }
 
   @UseGuards(JwtAuthGuards)
   @Get('/me')
-  async infoAboutMe(@CurrentUserId() id: string) {
+  async infoAboutMe(@CurrentUserId() id: string, @Req() req: Request) {
+    const token = await this.authService._extractPayload(
+      req.cookies.refreshToken,
+    );
+    if (!token) throw new UnauthorizedException();
     const user = await this.userService.findUserById(id);
     return {
       userId: user.id,
@@ -158,7 +168,6 @@ export class AuthController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Post('/new-password')
   async getNewPass(@Body() newPasswordDto: NewPasswordDto) {
-    console.log(newPasswordDto, 'new password');
     const newPassword = await this.userService.confirmPassword(newPasswordDto);
     if (!newPassword)
       throw new HttpException(
