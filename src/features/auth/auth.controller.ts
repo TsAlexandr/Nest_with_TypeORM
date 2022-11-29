@@ -140,6 +140,10 @@ export class AuthController {
         HttpStatus.UNAUTHORIZED,
       );
     }
+    const tokens = await this.authService._extractPayload(
+      req.cookies.refreshToken,
+    );
+    if (!tokens) throw new UnauthorizedException();
     const token = await this.userService.findUserByToken(
       req.cookies.refreshToken,
     );
