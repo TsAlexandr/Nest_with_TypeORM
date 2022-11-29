@@ -52,11 +52,11 @@ export class UsersRepository {
         login: obj.login,
         createdAt: obj.createdAt,
         email: obj.email,
-        banInfo: {
-          banDate: obj.banInfo.banDate,
-          banReason: obj.banInfo.banReason,
-          isBanned: obj.banInfo.isBanned,
-        },
+        // banInfo: {
+        //   banDate: obj.banInfo.banDate,
+        //   banReason: obj.banInfo.banReason,
+        //   isBanned: obj.banInfo.isBanned,
+        // },
       };
     });
     return {
