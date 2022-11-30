@@ -58,6 +58,8 @@ import { GetCommentsHandler } from './features/usecase/handlers/getComments.hand
 import { CreateCommentHandler } from './features/usecase/handlers/createComment.handler';
 import { BloggersRepositoryORM } from './library/typeORM/bloggers.typeORM';
 import { BlogIdValidation } from './common/exceptions/validationBlog';
+import { TelegramController } from './telegram/telegram.controller';
+import { TelegramService } from 'nestjs-telegram';
 
 export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
 
@@ -108,6 +110,7 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     CqrsModule,
   ],
   controllers: [
+    TelegramController,
     AppController,
     PostsController,
     CommentsController,
