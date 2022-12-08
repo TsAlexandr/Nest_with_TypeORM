@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Blogger, Paginator } from '../../common/types/classes/classes';
-import { BloggersDto } from '../../features/bloggers/dto/bloggers.dto';
+import { BloggersDto } from '../../features/public/blogs/dto/bloggers.dto';
 
 @Injectable()
 export class BloggersRepositoryRAW {

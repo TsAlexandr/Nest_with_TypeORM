@@ -1,5 +1,5 @@
 import { HttpStatus, INestApplication } from '@nestjs/common';
-import * as request from 'supertest';
+import request from 'supertest';
 import { getTestsApp } from './test.utility';
 import {
   authUserLogin,
@@ -35,18 +35,17 @@ describe('App (e2e)', () => {
     const dataSource = await app.resolve(DataSource);
     await dataSource.query(
       `CREATE OR REPLACE FUNCTION truncate_tables(username IN VARCHAR) RETURNS void AS $$
-DECLARE
-    statements CURSOR FOR
-        SELECT tablename FROM pg_tables
-        WHERE tableowner = username AND schemaname = 'public';
-BEGIN
-    FOR stmt IN statements LOOP
-        EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
-    END LOOP;
-END;
-$$ LANGUAGE plpgsql;
-
-SELECT truncate_tables('postgres');`,
+             DECLARE
+              statements CURSOR FOR
+               SELECT tablename FROM pg_tables
+                WHERE tableowner = username AND schemaname = 'public';
+                 BEGIN
+                  FOR stmt IN statements LOOP
+                   EXECUTE 'TRUNCATE TABLE ' || quote_ident(stmt.tablename) || ' CASCADE;';
+                    END LOOP;
+                     END;
+                      $$ LANGUAGE plpgsql;
+                       SELECT truncate_tables('postgres');`,
     );
   }),
     afterAll(async () => {
@@ -55,7 +54,7 @@ SELECT truncate_tables('postgres');`,
   //TODO move methods for each entity into their directory,
   // because this version unreadable, doesn't work without setTimeout
   describe('Bloggers', () => {
-    it('/bloggers all methods', async () => {
+    it('/blogs all methods', async () => {
       const createBlogger = await request(app.getHttpServer())
         .post('/blogs')
         .set('Authorization', 'Basic YWRtaW46cXdlcnR5')
@@ -94,7 +93,7 @@ SELECT truncate_tables('postgres');`,
       expect(getBloggerAfterUpdate.body).toEqual({
         id: id,
         name: updateTestBlogger.name,
-        youtubeUrl: updateTestBlogger.youtubeUrl,
+        websiteUrl: updateTestBlogger.youtubeUrl,
       });
 
       const getAll = await request(app.getHttpServer())

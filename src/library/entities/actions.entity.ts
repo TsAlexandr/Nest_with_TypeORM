@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryColumn } from 'typeorm';
-import { PostEntity } from '../../features/posts/entities/post.entity';
-import { CommentEntity } from '../../features/comments/entities/comment.entity';
+import { PostEntity } from '../../features/public/posts/entities/post.entity';
+import { CommentEntity } from '../../features/public/comments/entities/comment.entity';
 
 @Entity('totalActions')
 export class TotalActionsEntity {

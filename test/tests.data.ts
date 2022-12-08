@@ -1,9 +1,9 @@
-import { BloggersDto } from '../src/features/bloggers/dto/bloggers.dto';
+import { BloggersDto } from '../src/features/public/blogs/dto/bloggers.dto';
 import { NewPost } from '../src/common/types/classes/classes';
 
 export const bloggerCreate: BloggersDto = {
   name: 'hello blogger',
-  youtubeUrl: 'https://youtubadsfadsg.com',
+  websiteUrl: 'https://youtubadsfadsg.com',
 };
 
 export const expectBlogger = {

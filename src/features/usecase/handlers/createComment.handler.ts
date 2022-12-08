@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { CreateCommentCommand } from '../commands/createComment.command';
-import { CommentsRepository } from '../../comments/comments.repository';
+import { CommentsRepository } from '../../public/comments/comments.repository';
 import { v4 } from 'uuid';
 
 @CommandHandler(CreateCommentCommand)
@@ -25,7 +25,6 @@ export class CreateCommentHandler
       },
       totalActions: [],
     };
-    const comment = await this.commentsRepository.createComment(newComment);
-    return comment;
+    return this.commentsRepository.createComment(newComment);
   }
 }

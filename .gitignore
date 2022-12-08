@@ -1,6 +1,6 @@
 .idea
 dist
 yarn-error.log
-src/features/auth/constants.ts
+src/features/public/auth/constants.ts
 node_modules
 .env

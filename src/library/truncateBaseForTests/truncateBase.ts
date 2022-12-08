@@ -4,6 +4,9 @@ import {
   BloggersDocument,
   BloggersMongo,
   Comments,
+  CommentsDocument,
+  Device,
+  DeviceDocument,
   Posts,
   PostsDocument,
   UserDocument,
@@ -18,7 +21,10 @@ export class TestRepo {
     private bloggersModel: Model<BloggersDocument>,
     @InjectModel(Posts.name) private postsModel: Model<PostsDocument>,
     @InjectModel(UserMongo.name) private usersModel: Model<UserDocument>,
-    @InjectModel(Comments.name) private commentsModel: mongoose.Model<Comment>,
+    @InjectModel(Comments.name)
+    private commentsModel: mongoose.Model<CommentsDocument>,
+    @InjectModel(Device.name)
+    private deviceModel: mongoose.Model<DeviceDocument>,
   ) {}
 
   async removeAllData() {
@@ -27,6 +33,7 @@ export class TestRepo {
     await this.postsModel.deleteMany();
     await this.usersModel.deleteMany();
     await this.commentsModel.deleteMany();
+    await this.deviceModel.deleteMany();
   }
 }
 

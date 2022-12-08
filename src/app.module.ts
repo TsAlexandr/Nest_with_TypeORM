@@ -19,49 +19,56 @@ import {
   UserMongo,
   UserSchema,
 } from './common/types/schemas/schemas.model';
-import { PostsController } from './features/posts/posts.controller';
-import { BloggersController } from './features/bloggers/bloggers.controller';
-import { UsersController } from './features/users/users.controller';
-import { AuthController } from './features/auth/auth.controller';
-import { CommentsController } from './features/comments/comments.controller';
-import { BloggersRepository } from './features/bloggers/bloggers.repository';
-import { CommentsRepository } from './features/comments/comments.repository';
-import { UsersService } from './features/users/users.service';
-import { ExistingPostGuard } from './features/auth/guards/existingPostGuard';
-import { JwtExtractStrategy } from './features/auth/strategies/jwt.extract.strategy';
-import { JwtExtract } from './features/auth/guards/jwt.extract';
-import { JwtAuthGuards } from './features/auth/guards/jwt-auth.guards';
-import { LocalAuthGuards } from './features/auth/guards/local-auth.guards';
-import { UsersRepository } from './features/users/users.repository';
-import { BasicGuards } from './features/auth/guards/basic.guards';
-import { JwtStrategy } from './features/auth/strategies/jwt.strategy';
-import { BloggersService } from './features/bloggers/bloggers.service';
-import { PostsService } from './features/posts/posts.service';
-import { CommentsService } from './features/comments/comments.service';
-import { PostsRepository } from './features/posts/posts.repository';
-import { AuthService } from './features/auth/auth.service';
-import { EmailService } from './email/email.service';
+import { PostsController } from './features/public/posts/posts.controller';
+import { BlogsController } from './features/public/blogs/blogs.controller';
+import { UsersController } from './features/sa/users/users.controller';
+import { AuthController } from './features/public/auth/auth.controller';
+import { CommentsController } from './features/public/comments/comments.controller';
+import { BlogsRepository } from './features/public/blogs/blogs.repository';
+import { CommentsRepository } from './features/public/comments/comments.repository';
+import { UsersService } from './features/sa/users/users.service';
+import { ExistingPostGuard } from './features/public/auth/guards/existingPostGuard';
+import { JwtExtractStrategy } from './features/public/auth/strategies/jwt.extract.strategy';
+import { JwtExtract } from './features/public/auth/guards/jwt.extract';
+import { JwtAuthGuards } from './features/public/auth/guards/jwt-auth.guards';
+import { UsersRepository } from './features/sa/users/users.repository';
+import { BasicGuards } from './features/public/auth/guards/basic.guards';
+import { JwtStrategy } from './features/public/auth/strategies/jwt.strategy';
+import { BlogsService } from './features/public/blogs/blogs.service';
+import { PostsService } from './features/public/posts/posts.service';
+import { CommentsService } from './features/public/comments/comments.service';
+import { PostsRepository } from './features/public/posts/posts.repository';
+import { AuthService } from './features/public/auth/auth.service';
+import { EmailService } from './adapters/email.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BloggersRepositoryRAW } from './library/rawDb/bloggersRepositoryRAW';
-import { BloggersEntity } from './features/bloggers/entities/bloggers.entity';
-import { PostEntity } from './features/posts/entities/post.entity';
-import { CommentEntity } from './features/comments/entities/comment.entity';
-import { UserEntity } from './features/users/entities/user.entity';
+import { BloggersEntity } from './features/public/blogs/entities/bloggers.entity';
+import { PostEntity } from './features/public/posts/entities/post.entity';
+import { CommentEntity } from './features/public/comments/entities/comment.entity';
+import { UserEntity } from './features/sa/users/entities/user.entity';
 import { PostsRepositoryRAW } from './library/rawDb/postsRepositoryRAW';
 import { TotalActionsEntity } from './library/entities/actions.entity';
-import { DeviceController } from './features/devices/device.controller';
-import { DeviceService } from './features/devices/device.service';
+import { DeviceController } from './features/public/devices/device.controller';
+import { DeviceService } from './features/public/devices/device.service';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { DeviceRepository } from './features/devices/device.repository';
+import { DeviceRepository } from './features/public/devices/device.repository';
 import { CqrsModule } from '@nestjs/cqrs';
 import { GetCommentsHandler } from './features/usecase/handlers/getComments.handler';
 import { CreateCommentHandler } from './features/usecase/handlers/createComment.handler';
 import { BloggersRepositoryORM } from './library/typeORM/bloggers.typeORM';
 import { BlogIdValidation } from './common/exceptions/validationBlog';
 import { TelegramController } from './telegram/telegram.controller';
-import { TelegramService } from 'nestjs-telegram';
+import { TelegramAdapter } from './adapters/telegram.adapter';
+import { FilesController } from './files/files.controller';
+import { SaveFilesHandler } from './features/usecase/handlers/save-files.handler';
+import { SuperBlogsController } from './features/sa/bloggersSA/bloggers.controller_sa';
+import { BloggerController } from './features/blogger/blogger.controller';
 
-export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
+export const CommandHandlers = [
+  GetCommentsHandler,
+  CreateCommentHandler,
+  SaveFilesHandler,
+];
 
 @Module({
   imports: [
@@ -118,14 +125,17 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     AuthController,
     TruncateBase,
     DeviceController,
-    BloggersController,
+    BlogsController,
+    FilesController,
+    SuperBlogsController,
+    BloggerController,
   ],
   providers: [
-    BloggersService,
-    BloggersRepository,
+    BlogsService,
+    BlogsRepository,
     {
       provide: 'IBlogsRepository',
-      useClass: BloggersRepository,
+      useClass: BlogsRepository,
     },
     PostsService,
     CommentsService,
@@ -147,6 +157,7 @@ export const CommandHandlers = [GetCommentsHandler, CreateCommentHandler];
     DeviceRepository,
     ...CommandHandlers,
     BlogIdValidation,
+    TelegramAdapter,
   ],
 })
 export class AppModule {}

@@ -4,13 +4,12 @@ import {
   ValidatorConstraintInterface,
 } from 'class-validator';
 import { Injectable } from '@nestjs/common';
-import { IBlogsRepository } from '../interfaces/IBlogsRepository';
-import { BloggersRepository } from '../../features/bloggers/bloggers.repository';
+import { BlogsRepository } from '../../features/public/blogs/blogs.repository';
 
 @ValidatorConstraint({ name: 'blogId', async: true })
 @Injectable()
 export class BlogIdValidation implements ValidatorConstraintInterface {
-  constructor(private blogsRepository: BloggersRepository) {}
+  constructor(private blogsRepository: BlogsRepository) {}
 
   async validate(
     value: any,

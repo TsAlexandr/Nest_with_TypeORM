@@ -5,15 +5,7 @@ import { BadRequestException, ValidationPipe } from '@nestjs/common';
 import { ValidationException } from './common/exceptions/validation.exception';
 import { useContainer } from 'class-validator';
 import { NestExpressApplication } from '@nestjs/platform-express';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const axios = require('axios');
-
-async function sendHook(url: string) {
-  const token = `5921370285:AAEI1trd_DvwALxyoMBOGZjqdWmOcsWHEwg`;
-  await axios.post(`https://api.telegram.org/bot${token}/setWebHook`, {
-    url: url,
-  });
-}
+import { TelegramAdapter } from './adapters/telegram.adapter';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
@@ -38,9 +30,9 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalFilters(new ValidationException());
   await app.listen(PORT, () => console.log('Server started on port ' + PORT));
-
+  const telegramAdapter = await app.resolve(TelegramAdapter);
   const baseUrl = 'https://4c92-88-204-48-37.eu.ngrok.io';
-  await sendHook(baseUrl + '/notification/telegram');
+  await telegramAdapter.sendHook(baseUrl + '/notification/telegram');
 }
 
 try {

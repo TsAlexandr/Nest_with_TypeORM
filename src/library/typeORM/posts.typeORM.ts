@@ -2,7 +2,7 @@ import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { NewPost } from '../../common/types/classes/classes';
 import { Posts } from '../../common/types/schemas/schemas.model';
-import { PostEntity } from '../../features/posts/entities/post.entity';
+import { PostEntity } from '../../features/public/posts/entities/post.entity';
 
 export class PostsTypeORM {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
@@ -24,11 +24,10 @@ export class PostsTypeORM {
         },
       ])
       .execute();
-    const post = await this.dataSource
+    return this.dataSource
       .getRepository(PostEntity)
       .createQueryBuilder()
       .where('id = :id', { id: createPost.id });
-    return post;
   }
 
   async getPosts(page: number, pageSize: number, searchNameTerm: string) {
@@ -56,11 +55,10 @@ export class PostsTypeORM {
   }
 
   async getPostById(id: string) {
-    const post = await this.dataSource
+    return this.dataSource
       .getRepository(PostEntity)
       .createQueryBuilder()
       .where('id = :id', { id });
-    return post;
   }
 
   async updatePost(

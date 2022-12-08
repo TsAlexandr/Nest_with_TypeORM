@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { UserAccount } from '../../common/types/classes/classes';
-import { UserEntity } from '../../features/users/entities/user.entity';
+import { UserEntity } from '../../features/sa/users/entities/user.entity';
 
 @Injectable()
 export class UsersRepositoryORM {
@@ -46,21 +46,19 @@ export class UsersRepositoryORM {
   }
 
   async findByLogin(login: string) {
-    const user = await this.dataSource
+    return this.dataSource
       .getRepository(UserEntity)
       .createQueryBuilder()
       .where('login like :login', { login: `%${login}%` })
       .getOne();
-    return user;
   }
 
   async findById(id: string) {
-    const user = await this.dataSource
+    return this.dataSource
       .getRepository(UserEntity)
       .createQueryBuilder()
       .where('id = :id', { id })
       .getOne();
-    return user;
   }
 
   async delUser(id: string) {
@@ -73,21 +71,19 @@ export class UsersRepositoryORM {
   }
 
   async findByEmail(email: string) {
-    const user = await this.dataSource
+    return this.dataSource
       .getRepository(UserEntity)
       .createQueryBuilder()
       .where('email like :email', { email: `%${email}%` })
       .getOne();
-    return user;
   }
 
   async findByConfirmCode(code: string) {
-    const user = await this.dataSource
+    return this.dataSource
       .getRepository(UserEntity)
       .createQueryBuilder()
       .where('code like :code', { code: `%${code}%` })
       .getOne();
-    return user;
   }
 
   async updateConfirm(id: string) {

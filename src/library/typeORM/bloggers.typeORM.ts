@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { Blogger, Paginator } from '../../common/types/classes/classes';
-import { BloggersEntity } from '../../features/bloggers/entities/bloggers.entity';
+import { BloggersEntity } from '../../features/public/blogs/entities/bloggers.entity';
 import { IBlogsRepository } from '../../common/interfaces/IBlogsRepository';
-import { BloggersDto } from '../../features/bloggers/dto/bloggers.dto';
+import { BloggersDto } from '../../features/public/blogs/dto/bloggers.dto';
 
 @Injectable()
 export class BloggersRepositoryORM implements IBlogsRepository {

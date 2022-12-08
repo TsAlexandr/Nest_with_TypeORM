@@ -1,6 +1,6 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { GetCommentsCommand } from '../commands/getComments.command';
-import { CommentsRepository } from '../../comments/comments.repository';
+import { CommentsRepository } from '../../public/comments/comments.repository';
 
 @CommandHandler(GetCommentsCommand)
 export class GetCommentsHandler implements ICommandHandler<GetCommentsCommand> {
@@ -8,7 +8,7 @@ export class GetCommentsHandler implements ICommandHandler<GetCommentsCommand> {
 
   async execute(command: GetCommentsCommand) {
     const { postId, page, pageSize, userId, sortBy, sortDirection } = command;
-    const comments = await this.commentsRepository.getCommentWithPage(
+    return this.commentsRepository.getCommentWithPage(
       postId,
       page,
       pageSize,
@@ -16,6 +16,5 @@ export class GetCommentsHandler implements ICommandHandler<GetCommentsCommand> {
       sortBy,
       sortDirection,
     );
-    return comments;
   }
 }
