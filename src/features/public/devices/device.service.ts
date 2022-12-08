@@ -12,10 +12,7 @@ export class DeviceService {
 
   async getDevices(refreshToken: string) {
     const payload: any = this._extractPayload(refreshToken);
-    const deviceForUser = await this.deviceRepository.findAllDevice(
-      payload.userId,
-    );
-    return deviceForUser;
+    return this.deviceRepository.findAllDevice(payload.userId);
   }
 
   async deleteDevices(refreshToken: string) {
@@ -25,11 +22,10 @@ export class DeviceService {
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
         HttpStatus.UNAUTHORIZED,
       );
-    const remove = await this.deviceRepository.deleteAllDevice(
+    return this.deviceRepository.deleteAllDevice(
       payload.userId,
       payload.deviceId,
     );
-    return remove;
   }
 
   async deleteById(refreshToken: string, deviceId: string) {
@@ -50,18 +46,13 @@ export class DeviceService {
         { message: [{ message: 'invalid value', field: 'refreshToken' }] },
         HttpStatus.FORBIDDEN,
       );
-    const deleteDevice = await this.deviceRepository.deleteById(
-      payload.userId,
-      deviceId,
-    );
-    return deleteDevice;
+    return this.deviceRepository.deleteById(payload.userId, deviceId);
   }
 
   _extractPayload(refreshToken: string) {
     try {
       const secret = this.configService.get('JWT_SECRET_KEY');
-      const payload = jwt.verify(refreshToken, secret);
-      return payload;
+      return jwt.verify(refreshToken, secret);
     } catch (e) {
       console.log(e);
     }

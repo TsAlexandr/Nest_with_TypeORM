@@ -4,22 +4,23 @@ import { NewPost } from '../src/common/types/classes/classes';
 export const bloggerCreate: BloggersDto = {
   name: 'hello blogger',
   websiteUrl: 'https://youtubadsfadsg.com',
+  description: 'bla-bla',
 };
 
 export const expectBlogger = {
   id: expect.any(String),
   name: bloggerCreate.name,
-  youtubeUrl: bloggerCreate.youtubeUrl,
+  websiteUrl: bloggerCreate.websiteUrl,
 };
 
 export const wrongBlogger = {
   name: 1234,
-  youtubeUrl: 'blablablabla',
+  websiteUrl: 'blablablabla',
 };
 
 export const updateTestBlogger = {
   name: 'hello',
-  youtubeUrl: 'https://youtube.com',
+  websiteUrl: 'https://youtube.com',
 };
 
 export const postWithInvalidBloggerId = {

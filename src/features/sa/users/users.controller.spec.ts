@@ -5,7 +5,7 @@ import { UsersRepository } from './users.repository';
 import { AuthService } from '../../public/auth/auth.service';
 import { EmailService } from '../../../adapters/email.service';
 import { MongooseModule } from '@nestjs/mongoose';
-import { UsersSchema } from '../../../common/types/schemas/schemas.model';
+import { UserSchema } from '../../../common/types/schemas/schemas.model';
 
 describe('UsersController', () => {
   let controller: UsersController;
@@ -16,7 +16,7 @@ describe('UsersController', () => {
         MongooseModule.forRoot(
           'mongodb+srv://hello:rerere@cluster0.rxylv.mongodb.net/Cluster0?retryWrites=true&w=majority',
         ),
-        MongooseModule.forFeature([{ name: 'Users', schema: UsersSchema }]),
+        MongooseModule.forFeature([{ name: 'Users', schema: UserSchema }]),
       ],
       controllers: [UsersController],
       providers: [UsersService, UsersRepository, AuthService, EmailService],
