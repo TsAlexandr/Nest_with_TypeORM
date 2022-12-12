@@ -185,6 +185,7 @@ export class UsersRepository {
         $set: {
           'banInfo.isBanned': banInfo.isBanned,
           'banInfo.banReason': banInfo.banReason,
+          'banInfo.banDate': new Date(),
         },
       },
     );
