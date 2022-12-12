@@ -5,7 +5,6 @@ import {
   Matches,
   MaxLength,
 } from 'class-validator';
-import { Prop } from '@nestjs/mongoose';
 import { Transform } from 'class-transformer';
 
 export class Blogger {
@@ -23,7 +22,9 @@ export class Blogger {
   @IsString()
   description: string;
   @IsString()
-  createdAt: Date;
+  createdAt: string;
+
+  blogOwnerInfo: any;
 }
 
 export class PostsCon {
@@ -104,11 +105,6 @@ export class UserAccount {
   unused?: string;
 }
 
-export class LoginAttempts {
-  attemptDate: Date;
-  ip: string;
-}
-
 export class EmailConfirmType {
   isConfirmed: boolean;
   confirmationCode: string;
@@ -118,28 +114,6 @@ export class RecoveryDataType {
   recoveryCode: string;
   isConfirmed: boolean;
   expirationDate: any;
-}
-
-export class SentConfirmEmailType {
-  sentDate: Date;
-}
-
-export class EmailClass {
-  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
-  @IsNotEmpty()
-  email: string;
-  @IsString()
-  @IsNotEmpty()
-  message: string;
-  subject: string;
-  isSent: boolean;
-  createdAt: Date;
-}
-
-export class AttemptsClass {
-  userIp: string;
-  url: string;
-  time: Date;
 }
 
 export type Paginator<T> = {
