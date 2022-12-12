@@ -51,10 +51,7 @@ export class PostsController {
   @UseGuards(JwtExtract)
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
-    const userId: string = req.user.userId;
-    const user = await this.usersService.findUserById(userId);
-    if (!user) throw new NotFoundException();
-    if (user.banInfo.isBanned === true) throw new NotFoundException();
+    const userId: string = req.user.userId || null;
     const post = await this.postsService.findOne(id, userId);
     if (!post) throw new NotFoundException();
     return post;

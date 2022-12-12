@@ -105,9 +105,14 @@ export class BloggerController {
     @Param('blogId') blogId: string,
     @Param('postId') postId: string,
     @Body() posts: NewPost,
+    @Req() req,
   ) {
     const blog = await this.bloggersService.getBloggerById(blogId);
     if (!blog) throw new NotFoundException();
+    const post = await this.postsService.findOne(postId, null);
+    if (!post) throw new NotFoundException();
+    const userId = req.user.payload.userId;
+    if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.postsService.update({ postId, ...posts });
   }
 
@@ -134,9 +139,14 @@ export class BloggerController {
   async deletePostForExistingBlogger(
     @Param('blogId') blogId: string,
     @Param('postId') postId: string,
+    @Req() req,
   ): Promise<boolean> {
     const blogger = await this.bloggersService.getBloggerById(blogId);
     if (!blogger) throw new NotFoundException();
+    const userId = req.user.payload.userId;
+    if (blogger.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
+    const post = await this.postsService.findOne(postId, null);
+    if (!post) throw new NotFoundException();
     return this.postsService.remove(postId);
   }
 }
