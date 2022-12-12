@@ -9,7 +9,7 @@ import { TelegramAdapter } from './adapters/telegram.adapter';
 
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
-  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app = await NestFactory.create(AppModule);
   //app.set('trust proxy', true);
   app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
@@ -30,9 +30,9 @@ async function bootstrap() {
   app.enableCors();
   app.useGlobalFilters(new ValidationException());
   await app.listen(PORT, () => console.log('Server started on port ' + PORT));
-  const telegramAdapter = await app.resolve(TelegramAdapter);
-  const baseUrl = 'https://4c92-88-204-48-37.eu.ngrok.io';
-  await telegramAdapter.sendHook(baseUrl + '/notification/telegram');
+  // const telegramAdapter = await app.resolve(TelegramAdapter);
+  // const baseUrl = 'https://4c92-88-204-48-37.eu.ngrok.io';
+  // await telegramAdapter.sendHook(baseUrl + '/notification/telegram');
 }
 
 try {
