@@ -55,6 +55,7 @@ export class UsersController {
     };
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id/ban')
   async banUser(@Param('id') userId: string, @Body() banInfo: BanUserDto) {
     await this.usersService.banUser(userId, banInfo);
