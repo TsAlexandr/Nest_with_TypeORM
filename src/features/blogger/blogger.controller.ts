@@ -80,7 +80,7 @@ export class BloggerController {
     if (!blog) throw new NotFoundException();
     return this.bloggersService.updateBlogger(id, { ...bloggersDto });
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':blogId/posts/:postId')
   async updatePostById(
     @Param('blogId') blogId: string,
