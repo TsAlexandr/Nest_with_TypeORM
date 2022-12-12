@@ -74,6 +74,13 @@ export class PostsRepository {
     const post = await this.postsModel.findOne({ id: id }).lean();
     if (!post) return null;
     if (!userId) {
+      const likesCount = post.totalActions.filter(
+        (el) => el.action === 'Like',
+      ).length;
+      const dislikesCount = post.totalActions.filter(
+        (el) => el.action === 'Dislike',
+      ).length;
+      const actions = post.totalActions;
       return {
         createdAt: post.createdAt,
         id: post.id,
@@ -83,10 +90,17 @@ export class PostsRepository {
         blogId: post.blogId,
         blogName: post.blogName,
         extendedLikesInfo: {
-          dislikesCount: 0,
-          likesCount: 0,
+          dislikesCount: dislikesCount,
+          likesCount: likesCount,
           myStatus: 'None',
-          newestLikes: [],
+          newestLikes: actions
+            .filter((el) => el.action === 'Like')
+            .reverse()
+            .slice(0, 3)
+            .map((el) => {
+              delete el.action;
+              return el;
+            }),
         },
       };
     } else {
