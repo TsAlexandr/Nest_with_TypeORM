@@ -4,11 +4,11 @@ import * as mongoose from 'mongoose';
 import {
   Action,
   BanInfoType,
+  BlogOwnerInfo,
   EmailConfirmType,
   LikesInfo,
   RecoveryDataType,
   TotalActions,
-  User,
   UserAccount,
 } from '../classes/classes';
 
@@ -30,6 +30,12 @@ export class BloggersMongo {
 
   @Prop({ type: Date, required: true })
   createdAt: Date;
+
+  @Prop({ type: BlogOwnerInfo, required: false })
+  blogOwnerInfo: {
+    userId: string;
+    userLogin: string;
+  };
 }
 
 export const BloggerSchema = SchemaFactory.createForClass(BloggersMongo);
