@@ -1,14 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { BloggersDto } from './dto/bloggers.dto';
-import { IBlogsRepository } from '../../../common/interfaces/IBlogsRepository';
+import { BlogsRepository } from './blogs.repository';
 
 @Injectable()
 export class BlogsService {
-  constructor(
-    @Inject('IBlogsRepository')
-    private bloggersRepository: IBlogsRepository,
-  ) {}
+  constructor(private bloggersRepository: BlogsRepository) {}
 
   async getBloggers(
     page: number,
@@ -30,11 +27,15 @@ export class BlogsService {
     return await this.bloggersRepository.getBloggersById(id);
   }
 
-  async createBlogger(bloggersDto: BloggersDto) {
+  async createBlogger(bloggersDto: BloggersDto, id: any, login: any) {
     const newBlogger = {
       id: uuidv4(),
       ...bloggersDto,
       createdAt: new Date().toISOString(),
+      blogOwnerInfo: {
+        userId: id,
+        userLogin: login,
+      },
     };
     return await this.bloggersRepository.createBlogger(newBlogger);
   }

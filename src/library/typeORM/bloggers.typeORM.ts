@@ -7,7 +7,7 @@ import { IBlogsRepository } from '../../common/interfaces/IBlogsRepository';
 import { BloggersDto } from '../../features/public/blogs/dto/bloggers.dto';
 
 @Injectable()
-export class BloggersRepositoryORM implements IBlogsRepository {
+export class BloggersRepositoryORM {
   constructor(@InjectDataSource() private dataSource: DataSource) {}
 
   async getBloggers(

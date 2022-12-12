@@ -12,7 +12,7 @@ import { BloggersDto } from './dto/bloggers.dto';
 import { IBlogsRepository } from '../../../common/interfaces/IBlogsRepository';
 
 @Injectable()
-export class BlogsRepository implements IBlogsRepository {
+export class BlogsRepository {
   constructor(
     @InjectModel(BloggersMongo.name)
     private bloggersModel: Model<BloggersDocument>,
@@ -25,7 +25,7 @@ export class BlogsRepository implements IBlogsRepository {
     searchNameTerm: string,
     sortBy: string,
     sortDirection: any,
-  ): Promise<Paginator<Blogger[]>> {
+  ): Promise<Paginator<BloggersMongo[]>> {
     const bloggers = await this.bloggersModel
       .find(
         { name: { $regex: searchNameTerm, $options: 'i' } },
