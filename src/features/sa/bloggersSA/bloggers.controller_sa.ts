@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import { BlogsService } from '../../public/blogs/blogs.service';
 import { BasicGuards } from '../../public/auth/guards/basic.guards';
+import { BloggersMongo } from '../../../common/types/schemas/schemas.model';
 
 @UseGuards(BasicGuards)
 @Controller('sa/blogs')
@@ -18,7 +19,7 @@ export class SuperBlogsController {
   constructor(private bloggersService: BlogsService) {}
 
   @Get()
-  async getAllBloggers(@Query() query): Promise<Paginator<Blogger[]>> {
+  async getAllBloggers(@Query() query): Promise<Paginator<BloggersMongo[]>> {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
     const bloggers = await this.bloggersService.getBloggers(
