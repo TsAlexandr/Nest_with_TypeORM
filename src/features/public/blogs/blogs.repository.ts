@@ -50,6 +50,10 @@ export class BlogsRepository {
   }
 
   async getBloggersById(id: string): Promise<BloggersMongo> {
+    return this.bloggersModel.findOne({ id }, { _id: 0, __v: 0 }).lean();
+  }
+
+  async getBlogsById(id: string): Promise<BloggersMongo> {
     return this.bloggersModel
       .findOne({ id }, { _id: 0, __v: 0, blogOwnerInfo: 0 })
       .lean();

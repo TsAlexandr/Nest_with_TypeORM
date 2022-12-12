@@ -88,4 +88,8 @@ export class BlogsService {
       login,
     );
   }
+
+  async getBlogsById(id: string) {
+    return await this.bloggersRepository.getBlogsById(id);
+  }
 }
