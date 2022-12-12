@@ -29,7 +29,7 @@ export class BlogsRepository {
     const bloggers = await this.bloggersModel
       .find(
         { name: { $regex: searchNameTerm, $options: 'i' } },
-        { _id: 0, __v: 0 },
+        { _id: 0, __v: 0, blogOwnerInfo: 0 },
       )
       .skip((page - 1) * pageSize)
       .limit(pageSize)
@@ -51,7 +51,9 @@ export class BlogsRepository {
   }
 
   async getBloggersById(id: string): Promise<BloggersMongo> {
-    return this.bloggersModel.findOne({ id }, { _id: 0, __v: 0 }).lean();
+    return this.bloggersModel
+      .findOne({ id }, { _id: 0, __v: 0, blogOwnerInfo: 0 })
+      .lean();
   }
 
   async deleteBloggerById(id: string): Promise<boolean> {
