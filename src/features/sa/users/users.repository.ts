@@ -179,15 +179,28 @@ export class UsersRepository {
   }
 
   banUser(userId: string, banInfo: BanUserDto) {
-    return this.usersModel.updateOne(
-      { id: userId },
-      {
-        $set: {
-          'banInfo.isBanned': banInfo.isBanned,
-          'banInfo.banReason': banInfo.banReason,
-          'banInfo.banDate': new Date(),
+    if (banInfo.isBanned == true) {
+      return this.usersModel.updateOne(
+        { id: userId },
+        {
+          $set: {
+            'banInfo.isBanned': banInfo.isBanned,
+            'banInfo.banReason': banInfo.banReason,
+            'banInfo.banDate': new Date(),
+          },
         },
-      },
-    );
+      );
+    } else {
+      return this.usersModel.updateOne(
+        { id: userId },
+        {
+          $set: {
+            'banInfo.isBanned': banInfo.isBanned,
+            'banInfo.banReason': null,
+            'banInfo.banDate': null,
+          },
+        },
+      );
+    }
   }
 }
