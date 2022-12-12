@@ -175,3 +175,8 @@ export enum Actions {
   Dislike = 'Dislike',
   None = 'None',
 }
+
+export class BlogOwnerInfo {
+  userId: string;
+  userLogin: string;
+}

@@ -39,6 +39,6 @@ export class SuperBlogsController {
     @Param('id') blogId: string,
     @Param('userId') userId: string,
   ) {
-    return;
+    return this.bloggersService.bindWithUser(blogId, userId);
   }
 }

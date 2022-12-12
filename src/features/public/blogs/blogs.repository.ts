@@ -81,4 +81,12 @@ export class BlogsRepository implements IBlogsRepository {
     await this.bloggersModel.create(newBlogger);
     return this.getBloggersById(newBlogger.id);
   }
+
+  async bindWithUser(id: string, userId: string) {
+    await this.bloggersModel.findByIdAndUpdate(
+      { id },
+      { $set: { 'blogOwnerInfo.userId': userId } },
+    );
+    return;
+  }
 }

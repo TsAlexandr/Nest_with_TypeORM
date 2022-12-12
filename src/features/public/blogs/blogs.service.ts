@@ -46,4 +46,8 @@ export class BlogsService {
   async deleteBlogger(id: string): Promise<boolean> {
     return await this.bloggersRepository.deleteBloggerById(id);
   }
+
+  bindWithUser(blogId: string, userId: string) {
+    return this.bloggersRepository.bindWithUser(blogId, userId);
+  }
 }

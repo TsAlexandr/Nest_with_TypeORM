@@ -92,4 +92,7 @@ export class BloggersRepositoryORM implements IBlogsRepository {
       .where('name = :name', { name: newBlogger.name });
     return blogger[0];
   }
+  async bindWithUser(id: string, userId: string) {
+    return;
+  }
 }
