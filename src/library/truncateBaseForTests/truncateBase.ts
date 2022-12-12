@@ -28,7 +28,6 @@ export class TestRepo {
   ) {}
 
   async removeAllData() {
-    await this.bloggersModel.collection.dropIndexes();
     await this.bloggersModel.deleteMany();
     await this.postsModel.deleteMany();
     await this.usersModel.deleteMany();
