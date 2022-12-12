@@ -63,7 +63,6 @@ export class BloggerController {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const userId = req.user.payload.userId;
-    console.log(userId);
     const user = await this.usersService.findUserById(userId);
     return this.bloggersService.createBlogger(bloggersDto, user.id, user.login);
   }
