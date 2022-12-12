@@ -10,7 +10,7 @@ import { TelegramAdapter } from './adapters/telegram.adapter';
 async function bootstrap() {
   const PORT = process.env.PORT || 5000;
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  app.set('trust proxy', true);
+  //app.set('trust proxy', true);
   app.use(cookieParser());
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
   app.useGlobalPipes(
