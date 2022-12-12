@@ -21,4 +21,6 @@ export interface IBlogsRepository {
   updateBloggerById(id: string, update: BloggersDto): Promise<boolean>;
 
   deleteBloggerById(id: string): Promise<boolean>;
+
+  bindWithUser(blogId: string, userId: string): any;
 }
