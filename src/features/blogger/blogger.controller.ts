@@ -89,6 +89,7 @@ export class BloggerController {
   async updateBlogger(
     @Param('id') id: string,
     @Body() bloggersDto: BloggersDto,
+    @Req() req: Request,
   ): Promise<boolean> {
     const blog = await this.bloggersService.getBloggerById(id);
     if (!blog) throw new NotFoundException();
@@ -113,7 +114,10 @@ export class BloggerController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async deleteBlogger(@Param('id') id: string): Promise<boolean> {
+  async deleteBlogger(
+    @Param('id') id: string,
+    @Req() req: Request,
+  ): Promise<boolean> {
     const blogger = await this.bloggersService.getBloggerById(id);
     if (!blogger) throw new NotFoundException();
     //TODO solve this problem

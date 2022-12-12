@@ -36,6 +36,7 @@ export class CommentsController {
   async findComment(@Param('commentId') id: string, @Req() req) {
     const userId = req.user.userId;
     const user = await this.usersService.findUserById(userId);
+    if (!user) throw new NotFoundException();
     if (user.banInfo.isBanned === true) throw new NotFoundException();
     return await this.commentsService.findComment(id, userId);
   }
