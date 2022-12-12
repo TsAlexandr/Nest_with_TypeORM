@@ -84,7 +84,7 @@ export class BlogsRepository {
 
   async createBlogger(newBlogger: BloggersMongo): Promise<BloggersMongo> {
     await this.bloggersModel.create(newBlogger);
-    return this.getBloggersById(newBlogger.id);
+    return this.getBlogsById(newBlogger.id);
   }
 
   async bindWithUser(id: string, userId: string) {
