@@ -25,7 +25,6 @@ import { BloggersDto } from '../public/blogs/dto/bloggers.dto';
 import { BlogsService } from '../public/blogs/blogs.service';
 import { PostsService } from '../public/posts/posts.service';
 import { Pagination } from '../../common/types/classes/pagination';
-import { Request } from 'express';
 import { UsersService } from '../sa/users/users.service';
 
 @UseGuards(JwtAuthGuards)
@@ -57,11 +56,8 @@ export class BloggerController {
   @Post()
   async createBlogger(
     @Body() bloggersDto: BloggersDto,
-    @Req() req: Request,
+    @Req() req,
   ): Promise<Blogger> {
-    //TODO solve this problem
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const userId = req.user.payload.userId;
     const user = await this.usersService.findUserById(userId);
     return this.bloggersService.createBlogger(bloggersDto, user.id, user.login);
@@ -71,9 +67,12 @@ export class BloggerController {
   async createNewPostForBlogger(
     @Param('blogId') blogId: string,
     @Body() newPost: NewPost,
+    @Req() req,
   ): Promise<PostsCon> {
     const blogger = await this.bloggersService.getBloggerById(blogId);
     if (!blogger) throw new NotFoundException();
+    const userId = req.user.payload.userId;
+    if (blogger.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.postsService.create(
       {
         ...newPost,
@@ -88,13 +87,10 @@ export class BloggerController {
   async updateBlogger(
     @Param('id') id: string,
     @Body() bloggersDto: BloggersDto,
-    @Req() req: Request,
+    @Req() req,
   ): Promise<boolean> {
     const blog = await this.bloggersService.getBloggerById(id);
     if (!blog) throw new NotFoundException();
-    //TODO solve this problem
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const userId = req.user.payload.userId;
     if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.bloggersService.updateBlogger(id, { ...bloggersDto });
@@ -118,15 +114,9 @@ export class BloggerController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async deleteBlogger(
-    @Param('id') id: string,
-    @Req() req: Request,
-  ): Promise<boolean> {
+  async deleteBlogger(@Param('id') id: string, @Req() req): Promise<boolean> {
     const blogger = await this.bloggersService.getBloggerById(id);
     if (!blogger) throw new NotFoundException();
-    //TODO solve this problem
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
     const userId = req.user.payload.userId;
     if (blogger.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     const removeBlogger = await this.bloggersService.deleteBlogger(id);
