@@ -146,8 +146,14 @@ export class PostsRepository {
 
   async updatePost(updPost: any) {
     const post = await this.postsModel.updateOne(
-      { id: updPost.id },
-      { $set: { ...updPost } },
+      { id: updPost.postId },
+      {
+        $set: {
+          content: updPost.content,
+          shortDescription: updPost.shortDescription,
+          title: updPost.title,
+        },
+      },
       { upsert: true },
     );
     return post.modifiedCount === 1;
