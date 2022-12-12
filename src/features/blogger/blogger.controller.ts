@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   HttpCode,
   HttpStatus,
@@ -59,6 +60,7 @@ export class BloggerController {
     @Req() req: Request,
   ): Promise<Blogger> {
     //TODO solve this problem
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     const userId = req.user.payload.userId;
     console.log(userId);
@@ -90,6 +92,11 @@ export class BloggerController {
   ): Promise<boolean> {
     const blog = await this.bloggersService.getBloggerById(id);
     if (!blog) throw new NotFoundException();
+    //TODO solve this problem
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const userId = req.user.payload.userId;
+    if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.bloggersService.updateBlogger(id, { ...bloggersDto });
   }
   @HttpCode(HttpStatus.NO_CONTENT)
@@ -107,6 +114,13 @@ export class BloggerController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
   async deleteBlogger(@Param('id') id: string): Promise<boolean> {
+    const blogger = await this.bloggersService.getBloggerById(id);
+    if (!blogger) throw new NotFoundException();
+    //TODO solve this problem
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const userId = req.user.payload.userId;
+    if (blogger.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     const removeBlogger = await this.bloggersService.deleteBlogger(id);
     if (!removeBlogger) throw new NotFoundException();
     return removeBlogger;
