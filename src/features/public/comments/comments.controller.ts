@@ -30,12 +30,12 @@ export class CommentsController {
     private usersService: UsersService,
   ) {}
 
-  @UseGuards(JwtExtract)
-  @UseGuards(CommentBelongsGuard)
+  @UseGuards(JwtExtract, CommentBelongsGuard)
   @Get(':commentId')
   async findComment(@Param('commentId') id: string, @Req() req) {
     const userId = req.user.userId;
     const user = await this.usersService.findUserById(userId);
+    console.log(user);
     if (!user) throw new NotFoundException();
     if (user.banInfo.isBanned === true) throw new NotFoundException();
     return await this.commentsService.findComment(id, userId);
@@ -58,8 +58,7 @@ export class CommentsController {
     );
   }
 
-  @UseGuards(JwtAuthGuards)
-  @UseGuards(CommentBelongsGuard)
+  @UseGuards(JwtAuthGuards, CommentBelongsGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':commentId/like-status')
   async updateActions(
