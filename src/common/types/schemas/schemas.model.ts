@@ -28,8 +28,8 @@ export class BloggersMongo {
   @Prop({ type: String, required: true })
   description: string;
 
-  @Prop({ type: Date, required: true })
-  createdAt: Date;
+  @Prop({ type: String, required: true })
+  createdAt: string;
 
   @Prop({ type: BlogOwnerInfo, required: false })
   blogOwnerInfo: {
