@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, SortOrder } from 'mongoose';
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import {
@@ -7,9 +7,8 @@ import {
   Posts,
   PostsDocument,
 } from '../../../common/types/schemas/schemas.model';
-import { Blogger, Paginator } from '../../../common/types/classes/classes';
+import { Paginator } from '../../../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
-import { IBlogsRepository } from '../../../common/interfaces/IBlogsRepository';
 
 @Injectable()
 export class BlogsRepository {
@@ -51,7 +50,9 @@ export class BlogsRepository {
   }
 
   async getBloggersById(id: string): Promise<BloggersMongo> {
-    return this.bloggersModel.findOne({ id }, { _id: 0, __v: 0 }).lean();
+    return this.bloggersModel
+      .findOne({ id }, { _id: 0, __v: 0, blogOwnerInfo: 0 })
+      .lean();
   }
 
   async deleteBloggerById(id: string): Promise<boolean> {
@@ -88,5 +89,80 @@ export class BlogsRepository {
       { $set: { 'blogOwnerInfo.userId': userId } },
     );
     return;
+  }
+
+  async getBlogsWithOwner(
+    page: number,
+    pageSize: number,
+    searchNameTerm: string,
+    sortBy: string,
+    sortDirection: SortOrder,
+  ): Promise<Paginator<BloggersMongo[]>> {
+    const blogsWithUser = await this.bloggersModel
+      .find(
+        { name: { $regex: searchNameTerm, $options: 'i' } },
+        { _id: 0, __v: 0 },
+      )
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection })
+      .lean();
+
+    const count = await this.bloggersModel.countDocuments({
+      name: { $regex: searchNameTerm, $options: 'i' },
+    });
+    const total = Math.ceil(count / pageSize);
+
+    return {
+      pagesCount: total,
+      page: page,
+      pageSize: pageSize,
+      totalCount: count,
+      items: blogsWithUser,
+    };
+  }
+
+  async getBlogsByBlogger(
+    page: number,
+    pageSize: number,
+    searchNameTerm: string,
+    sortBy: string,
+    sortDirection: SortOrder,
+    userId: string,
+    login: string,
+  ) {
+    console.log(userId, login);
+    const blogsByBlogger = await this.bloggersModel
+      .find(
+        {
+          $and: [
+            { name: { $regex: searchNameTerm, $options: 'i' } },
+            { 'blogOwnerInfo.userId': { $regex: userId, $options: 'i' } },
+            { 'blogOwnerInfo.userLogin': { $regex: login, $options: 'i' } },
+          ],
+        },
+        { _id: 0, __v: 0, blogOwnerInfo: 0 },
+      )
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection })
+      .lean();
+
+    const count = await this.bloggersModel.countDocuments({
+      $and: [
+        { name: { $regex: searchNameTerm, $options: 'i' } },
+        { 'blogOwnerInfo.userId': { $regex: userId, $options: 'i' } },
+        { 'blogOwnerInfo.userLogin': { $regex: login, $options: 'i' } },
+      ],
+    });
+    const total = Math.ceil(count / pageSize);
+
+    return {
+      pagesCount: total,
+      page: page,
+      pageSize: pageSize,
+      totalCount: count,
+      items: blogsByBlogger,
+    };
   }
 }

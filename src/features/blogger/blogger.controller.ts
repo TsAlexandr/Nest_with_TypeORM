@@ -37,15 +37,23 @@ export class BloggerController {
   ) {}
 
   @Get()
-  async getAllBloggers(@Query() query): Promise<Paginator<Blogger[]>> {
+  async getAllBloggers(
+    @Query() query,
+    @Req() req,
+  ): Promise<Paginator<Blogger[]>> {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
-    const bloggers = await this.bloggersService.getBloggers(
+    const userId = req.user.payload.userId;
+    const user = await this.usersService.findUserById(userId);
+    const login = user.login;
+    const bloggers = await this.bloggersService.getBlogsByBlogger(
       page,
       pageSize,
       searchNameTerm,
       sortBy,
       sortDirection,
+      userId,
+      login,
     );
     if (!bloggers) {
       throw new NotFoundException();

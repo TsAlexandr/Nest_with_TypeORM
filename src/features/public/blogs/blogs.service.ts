@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { v4 as uuidv4 } from 'uuid';
 import { BloggersDto } from './dto/bloggers.dto';
 import { BlogsRepository } from './blogs.repository';
+import { SortOrder } from 'mongoose';
 
 @Injectable()
 export class BlogsService {
@@ -50,5 +51,41 @@ export class BlogsService {
 
   bindWithUser(blogId: string, userId: string) {
     return this.bloggersRepository.bindWithUser(blogId, userId);
+  }
+
+  async getBlogsWithOwner(
+    page: number,
+    pageSize: number,
+    searchNameTerm: string,
+    sortBy: string,
+    sortDirection: SortOrder,
+  ) {
+    return this.bloggersRepository.getBlogsWithOwner(
+      page,
+      pageSize,
+      searchNameTerm,
+      sortBy,
+      sortDirection,
+    );
+  }
+
+  async getBlogsByBlogger(
+    page: number,
+    pageSize: number,
+    searchNameTerm: string,
+    sortBy: string,
+    sortDirection: SortOrder,
+    userId: string,
+    login: string,
+  ) {
+    return this.bloggersRepository.getBlogsByBlogger(
+      page,
+      pageSize,
+      searchNameTerm,
+      sortBy,
+      sortDirection,
+      userId,
+      login,
+    );
   }
 }

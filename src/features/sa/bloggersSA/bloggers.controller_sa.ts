@@ -22,7 +22,7 @@ export class SuperBlogsController {
   async getAllBloggers(@Query() query): Promise<Paginator<BloggersMongo[]>> {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
-    const bloggers = await this.bloggersService.getBloggers(
+    const bloggers = await this.bloggersService.getBlogsWithOwner(
       page,
       pageSize,
       searchNameTerm,
