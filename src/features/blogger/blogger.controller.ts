@@ -10,6 +10,7 @@ import {
   Post,
   Put,
   Query,
+  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuards } from '../public/auth/guards/jwt-auth.guards';
@@ -23,6 +24,8 @@ import { BloggersDto } from '../public/blogs/dto/bloggers.dto';
 import { BlogsService } from '../public/blogs/blogs.service';
 import { PostsService } from '../public/posts/posts.service';
 import { Pagination } from '../../common/types/classes/pagination';
+import { Request } from 'express';
+import { UsersService } from '../sa/users/users.service';
 
 @UseGuards(JwtAuthGuards)
 @Controller('blogger/blogs')
@@ -30,6 +33,7 @@ export class BloggerController {
   constructor(
     private bloggersService: BlogsService,
     private postsService: PostsService,
+    private usersService: UsersService,
   ) {}
 
   @Get()
@@ -50,8 +54,16 @@ export class BloggerController {
   }
 
   @Post()
-  async createBlogger(@Body() bloggersDto: BloggersDto): Promise<Blogger> {
-    return this.bloggersService.createBlogger(bloggersDto);
+  async createBlogger(
+    @Body() bloggersDto: BloggersDto,
+    @Req() req: Request,
+  ): Promise<Blogger> {
+    //TODO solve this problem
+    // @ts-ignore
+    const userId = req.user.payload.userId;
+    console.log(userId);
+    const user = await this.usersService.findUserById(userId);
+    return this.bloggersService.createBlogger(bloggersDto, user.id, user.login);
   }
 
   @Post(':blogId/posts')
