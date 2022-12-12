@@ -180,7 +180,7 @@ export class UsersRepository {
 
   banUser(userId: string, banInfo: BanUserDto) {
     return this.usersModel.updateOne(
-      { userId },
+      { id: userId },
       {
         $set: {
           'banInfo.isBanned': banInfo.isBanned,
