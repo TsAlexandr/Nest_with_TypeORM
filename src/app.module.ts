@@ -63,11 +63,15 @@ import { FilesController } from './files/files.controller';
 import { SaveFilesHandler } from './features/usecase/handlers/save-files.handler';
 import { SuperBlogsController } from './features/sa/bloggersSA/bloggers.controller_sa';
 import { BloggerController } from './features/blogger/blogger.controller';
+import { GetCommentByIdHandler } from './features/usecase/handlers/getCommentById.handler';
+import { GetPostByIdHandler } from './features/usecase/handlers/getPostById.handler';
 
 export const CommandHandlers = [
   GetCommentsHandler,
   CreateCommentHandler,
   SaveFilesHandler,
+  GetCommentByIdHandler,
+  GetPostByIdHandler,
 ];
 
 @Module({
