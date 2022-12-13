@@ -22,6 +22,8 @@ import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
 import { UsersService } from '../../sa/users/users.service';
 import { Pagination } from '../../../common/types/classes/pagination';
 import { UpdateCommentDto } from '../comments/dto/update-comment.dto';
+import { QueryBus } from '@nestjs/cqrs';
+import { GetPostByIdCommand } from '../../usecase/commands/getPostById.command';
 
 @Controller('posts')
 export class PostsController {
@@ -29,6 +31,7 @@ export class PostsController {
     private postsService: PostsService,
     private commentsService: CommentsService,
     private usersService: UsersService,
+    private queryBus: QueryBus,
   ) {}
 
   @UseGuards(JwtExtract)
@@ -48,11 +51,9 @@ export class PostsController {
     );
   }
 
-  @UseGuards(JwtExtract)
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
-    const userId: string = req.user.userId || null;
-    const post = await this.postsService.findOne(id, userId);
+    const post = await this.queryBus.execute(new GetPostByIdCommand(id));
     if (!post) throw new NotFoundException();
     return post;
   }

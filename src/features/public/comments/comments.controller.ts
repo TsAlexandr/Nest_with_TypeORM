@@ -22,23 +22,20 @@ import { UsersService } from '../../sa/users/users.service';
 import { Actions } from '../../../common/types/classes/classes';
 import { CurrentUserId } from '../../../common/custom-decorator/current.user.decorator';
 import { UpdateCommentDto } from './dto/update-comment.dto';
+import { QueryBus } from '@nestjs/cqrs';
+import { GetCommentByIdCommmand } from '../../usecase/commands/getCommentById.commmand';
 
 @Controller('comments')
 export class CommentsController {
   constructor(
     private readonly commentsService: CommentsService,
     private usersService: UsersService,
+    private queryBus: QueryBus,
   ) {}
 
-  @UseGuards(JwtExtract, CommentBelongsGuard)
   @Get(':commentId')
-  async findComment(@Param('commentId') id: string, @Req() req) {
-    const userId = req.user.userId;
-    const user = await this.usersService.findUserById(userId);
-    console.log(user);
-    if (!user) throw new NotFoundException();
-    if (user.banInfo.isBanned === true) throw new NotFoundException();
-    return await this.commentsService.findComment(id, userId);
+  async findComment(@Param('commentId') id: string) {
+    return await this.queryBus.execute(new GetCommentByIdCommmand(id));
   }
 
   @UseGuards(AuthGuard, JwtAuthGuards)
@@ -49,7 +46,7 @@ export class CommentsController {
     @Body() updateCommentDto: UpdateCommentDto,
     @CurrentUserId() userId: string,
   ) {
-    const comment = await this.commentsService.findComment(id, null);
+    const comment = await this.commentsService.findComment(id);
     if (!comment) throw new NotFoundException();
     if (userId !== comment.userId) throw new ForbiddenException();
     return await this.commentsService.updateComment(
@@ -89,7 +86,7 @@ export class CommentsController {
     @Param('id') id: string,
     @CurrentUserId() userId: string,
   ) {
-    const comment = await this.commentsService.findComment(id, null);
+    const comment = await this.commentsService.findComment(id);
     if (!comment) throw new NotFoundException();
     if (userId !== comment.userId) throw new ForbiddenException();
     return await this.commentsService.deleteComment(id);
