@@ -18,6 +18,7 @@ export class GetCommentByIdHandler
     const comment = await this.commentsRepository.findComment(id);
     if (!comment) throw new NotFoundException();
     const user = await this.usersRepository.findById(comment.userId);
+    console.log(user.id);
     if (user.banInfo.isBanned === false) {
       const currentUserStatus = comment.totalActions.find(
         (el) => el.userId === user.id,
