@@ -20,6 +20,17 @@ export class CommentsRepository {
       },
     );
   }
+  async findCommentForPost(commentId: string) {
+    return this.commentsModel.findOne(
+      { id: commentId },
+      {
+        _id: 0,
+        postId: 0,
+        __v: 0,
+        totalActions: 0,
+      },
+    );
+  }
 
   async getCommentWithPage(
     postId: string,
@@ -73,7 +84,7 @@ export class CommentsRepository {
 
   async createComment(newComment: Comments) {
     await this.commentsModel.create(newComment);
-    return this.findComment(newComment.id);
+    return this.findCommentForPost(newComment.id);
   }
 
   async updateComment(id: string, content: string) {

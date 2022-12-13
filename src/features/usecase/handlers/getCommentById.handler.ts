@@ -16,6 +16,7 @@ export class GetCommentByIdHandler
   async execute(command: GetCommentByIdCommmand) {
     const { id } = command;
     const comment = await this.commentsRepository.findComment(id);
+    console.log(comment);
     if (!comment) throw new NotFoundException();
     const user = await this.usersRepository.findById(comment.userId);
     if (user.banInfo.isBanned === false) {
@@ -43,18 +44,7 @@ export class GetCommentByIdHandler
         },
       };
     } else {
-      return {
-        createdAt: comment.createdAt,
-        content: comment.content,
-        id: comment.id,
-        userId: comment.userId,
-        userLogin: comment.userLogin,
-        likesInfo: {
-          dislikesCount: 0,
-          likesCount: 0,
-          myStatus: 'None',
-        },
-      };
+      throw new NotFoundException();
     }
   }
 }
