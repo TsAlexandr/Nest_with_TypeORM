@@ -16,13 +16,11 @@ export class GetPostByIdHandler implements IQueryHandler<GetPostByIdCommand> {
   async execute(command: GetPostByIdCommand) {
     const { id } = command;
     const post = await this.postsRepository.findPostById(id);
-    console.log(post);
     if (!post) throw new NotFoundException();
     const blogger = await this.blogsRepository.getBloggersById(post.blogId);
     const user = await this.usersRepository.findById(
       blogger.blogOwnerInfo.userId,
     );
-    console.log(user);
     if (user.banInfo.isBanned === false) {
       const currentUserStatus = post.totalActions.find(
         (el: { userId: string }) => el.userId === user.id,
@@ -57,7 +55,6 @@ export class GetPostByIdHandler implements IQueryHandler<GetPostByIdCommand> {
         },
       };
     } else {
-      const actions = post.totalActions;
       return {
         createdAt: post.createdAt,
         id: post.id,
@@ -70,14 +67,7 @@ export class GetPostByIdHandler implements IQueryHandler<GetPostByIdCommand> {
           likesCount: 0,
           dislikesCount: 0,
           myStatus: 'None',
-          newestLikes: actions
-            .filter((el) => el.action === 'Like')
-            .reverse()
-            .slice(0, 3)
-            .map((el) => {
-              delete el.action;
-              return el;
-            }),
+          newestLikes: [],
         },
       };
     }
