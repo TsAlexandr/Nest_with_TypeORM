@@ -7,8 +7,8 @@ import { SortOrder } from 'mongoose';
 export class CommentsService {
   constructor(private commentsRepository: CommentsRepository) {}
 
-  async findComment(commentId: string, userId: string) {
-    return await this.commentsRepository.findComment(commentId, userId);
+  async findComment(commentId: string) {
+    return await this.commentsRepository.findComment(commentId);
   }
 
   async updateComment(id: string, content: string) {

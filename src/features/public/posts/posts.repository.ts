@@ -74,12 +74,6 @@ export class PostsRepository {
     const post = await this.postsModel.findOne({ id: id }).lean();
     if (!post) return null;
     if (!userId) {
-      const likesCount = post.totalActions.filter(
-        (el) => el.action === 'Like',
-      ).length;
-      const dislikesCount = post.totalActions.filter(
-        (el) => el.action === 'Dislike',
-      ).length;
       const actions = post.totalActions;
       return {
         createdAt: post.createdAt,
@@ -90,8 +84,8 @@ export class PostsRepository {
         blogId: post.blogId,
         blogName: post.blogName,
         extendedLikesInfo: {
-          dislikesCount: dislikesCount,
-          likesCount: likesCount,
+          dislikesCount: 0,
+          likesCount: 0,
           myStatus: 'None',
           newestLikes: actions
             .filter((el) => el.action === 'Like')
@@ -206,5 +200,9 @@ export class PostsRepository {
       );
       return null;
     }
+  }
+
+  async findPostById(id: string) {
+    return this.postsModel.findOne({ id });
   }
 }

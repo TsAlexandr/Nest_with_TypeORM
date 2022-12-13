@@ -10,8 +10,8 @@ export class CommentsRepository {
     @InjectModel(Comments.name) private commentsModel: Model<CommentsDocument>,
   ) {}
 
-  async findComment(commentId: string, userId: string) {
-    const comment = await this.commentsModel.findOne(
+  async findComment(commentId: string) {
+    return this.commentsModel.findOne(
       { id: commentId },
       {
         _id: 0,
@@ -19,30 +19,6 @@ export class CommentsRepository {
         __v: 0,
       },
     );
-    if (!comment) return null;
-    const currentUserStatus = comment.totalActions.find(
-      (el) => el.userId === userId,
-    );
-    const likesCount = comment.totalActions.filter(
-      (el) => el.action === 'Like',
-    ).length;
-    const dislikesCount = comment.totalActions.filter(
-      (el) => el.action === 'Dislike',
-    ).length;
-    return {
-      createdAt: comment.createdAt,
-      content: comment.content,
-      id: comment.id,
-      userId: comment.userId,
-      userLogin: comment.userLogin,
-      likesInfo: {
-        dislikesCount: dislikesCount
-          ? dislikesCount
-          : comment.likesInfo.dislikesCount,
-        likesCount: likesCount ? likesCount : comment.likesInfo.likesCount,
-        myStatus: currentUserStatus ? currentUserStatus.action : 'None',
-      },
-    };
   }
 
   async getCommentWithPage(
@@ -97,7 +73,7 @@ export class CommentsRepository {
 
   async createComment(newComment: Comments) {
     await this.commentsModel.create(newComment);
-    return this.findComment(newComment.id, newComment.userId);
+    return this.findComment(newComment.id);
   }
 
   async updateComment(id: string, content: string) {
