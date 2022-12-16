@@ -166,6 +166,7 @@ export class PostsRepository {
               action: likeStatus,
               userId: userId,
               login: login,
+              isBanned: false,
             },
           },
         },
