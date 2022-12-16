@@ -17,6 +17,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (payload) {
       return { payload };
     }
-    return null;
+    return true;
   }
 }

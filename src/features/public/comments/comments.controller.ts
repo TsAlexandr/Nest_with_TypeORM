@@ -33,13 +33,14 @@ export class CommentsController {
     private queryBus: QueryBus,
   ) {}
 
-  @UseGuards(JwtExtract)
+  @UseGuards(JwtAuthGuards)
   @Get(':commentId')
-  async findComment(@Param('commentId') id: string, @Req() req) {
-    console.log(req.user.userId);
-    return await this.queryBus.execute(
-      new GetCommentByIdCommmand(id, req.user.userId),
-    );
+  async findComment(
+    @Param('commentId') id: string,
+    @CurrentUserId() userId: string,
+  ) {
+    console.log(userId);
+    return await this.queryBus.execute(new GetCommentByIdCommmand(id, userId));
   }
 
   @UseGuards(AuthGuard, JwtAuthGuards)

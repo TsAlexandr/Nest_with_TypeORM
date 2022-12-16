@@ -2,23 +2,26 @@ import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetCommentByIdCommmand } from '../commands/getCommentById.commmand';
 import { CommentsRepository } from '../../public/comments/comments.repository';
 import { NotFoundException } from '@nestjs/common';
+import { UsersRepository } from '../../sa/users/users.repository';
 
 @QueryHandler(GetCommentByIdCommmand)
 export class GetCommentByIdHandler
   implements IQueryHandler<GetCommentByIdCommmand>
 {
-  constructor(private commentsRepository: CommentsRepository) {}
+  constructor(
+    private commentsRepository: CommentsRepository,
+    private usersRepository: UsersRepository,
+  ) {}
 
   async execute(command: GetCommentByIdCommmand) {
     const { id, userId } = command;
     const comment = await this.commentsRepository.findComment(id);
-    if (!comment) throw new NotFoundException();
-    const actionsSize = comment.totalActions.filter(
-      (el) => el.action === 'Like' && el.isBanned === false,
-    ).length;
-    if (actionsSize > 0) {
+    const user = await this.usersRepository.findById(userId);
+    if (!comment || user.banInfo.isBanned === true) {
+      throw new NotFoundException();
+    } else {
       const currentUserStatus = comment.totalActions.find(
-        (el) => el.userId === userId,
+        (el) => el.userId === userId && el.isBanned === false,
       );
       const likesCount = comment.totalActions.filter(
         (el) => el.action === 'Like' && el.isBanned === false,
@@ -38,8 +41,6 @@ export class GetCommentByIdHandler
           myStatus: currentUserStatus ? currentUserStatus.action : 'None',
         },
       };
-    } else {
-      throw new NotFoundException();
     }
   }
 }
