@@ -37,6 +37,7 @@ export class AuthService {
       );
     } else {
       const tokens = await this.createTokens(user.id, user.login, deviceId);
+
       const payloadInfo: any = this._extractPayload(tokens.refreshToken);
 
       const iat = new Date(payloadInfo.iat * 1000);
