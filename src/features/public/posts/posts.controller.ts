@@ -88,8 +88,8 @@ export class PostsController {
     @Body() updateCommentDto: UpdateCommentDto,
     @Req() req,
   ) {
-    const userLogin = req.user.login;
-    const userId = req.user.userId;
+    const userLogin = req.user.payload.userLogin;
+    const userId = req.user.payload.userId;
     const isPost = await this.postsService.findOne(postId, null);
     if (!isPost) throw new NotFoundException();
     return this.commentsService.createComment(

@@ -36,7 +36,7 @@ export class AuthService {
         HttpStatus.UNAUTHORIZED,
       );
     } else {
-      const tokens = await this.createTokens(user.id, deviceId);
+      const tokens = await this.createTokens(user.id, user.login, deviceId);
       const payloadInfo: any = this._extractPayload(tokens.refreshToken);
 
       const iat = new Date(payloadInfo.iat * 1000);
@@ -68,13 +68,17 @@ export class AuthService {
     return bcrypt.compare(password, hash);
   }
 
-  async createTokens(userId: string, deviceId) {
+  async createTokens(userId, userLogin, deviceId) {
     const secret = this.configService.get('JWT_SECRET_KEY');
-    const accessToken = jwt.sign({ userId: userId }, secret, {
-      expiresIn: '4h',
-    });
+    const accessToken = jwt.sign(
+      { userId: userId, userLogin: userLogin },
+      secret,
+      {
+        expiresIn: '4h',
+      },
+    );
     const refreshToken = jwt.sign(
-      { userId: userId, deviceId: deviceId },
+      { userId: userId, userLogin: userLogin, deviceId: deviceId },
       secret,
       { expiresIn: '5h' },
     );
@@ -96,7 +100,11 @@ export class AuthService {
     );
     if (!session) return null;
     await this.usersRepository.addToken(payload.userId, refreshToken);
-    const tokens = await this.createTokens(payload.userId, payload.deviceId);
+    const tokens = await this.createTokens(
+      payload.userId,
+      payload.userLogin,
+      payload.deviceId,
+    );
     const newPayloadInfo: any = this._extractPayload(tokens.refreshToken);
     const newIat = new Date(newPayloadInfo.iat * 1000);
     const newExp = new Date(newPayloadInfo.exp * 1000);
