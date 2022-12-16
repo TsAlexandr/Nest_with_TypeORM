@@ -28,7 +28,6 @@ import { BlogsRepository } from './features/public/blogs/blogs.repository';
 import { CommentsRepository } from './features/public/comments/comments.repository';
 import { UsersService } from './features/sa/users/users.service';
 import { ExistingPostGuard } from './features/public/auth/guards/existingPostGuard';
-import { JwtExtractStrategy } from './features/public/auth/strategies/jwt.extract.strategy';
 import { JwtExtract } from './features/public/auth/guards/jwt.extract';
 import { JwtAuthGuards } from './features/public/auth/guards/jwt-auth.guards';
 import { UsersRepository } from './features/sa/users/users.repository';
@@ -152,7 +151,6 @@ export const CommandHandlers = [
     AuthService,
     EmailService,
     AppService,
-    JwtExtractStrategy,
     JwtStrategy,
     JwtAuthGuards,
     BasicGuards,
