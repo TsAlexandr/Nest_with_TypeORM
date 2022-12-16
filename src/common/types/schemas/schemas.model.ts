@@ -74,6 +74,7 @@ export class Posts {
   };
   @Prop({ type: TotalActions })
   totalActions: {
+    isBanned: boolean;
     addedAt: Date;
     action: string;
     userId: string;
@@ -111,6 +112,7 @@ export class Comments {
     action: string;
     userId: string;
     login: string;
+    isBanned: boolean;
   }[];
 }
 

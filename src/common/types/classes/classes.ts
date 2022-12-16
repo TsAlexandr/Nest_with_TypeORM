@@ -142,6 +142,7 @@ export class TotalActions {
   action: string;
   userId: string;
   login: string;
+  isBanned: boolean;
 }
 
 export enum Actions {
