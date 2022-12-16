@@ -36,7 +36,6 @@ export class CommentsController {
   @UseGuards(JwtExtract)
   @Get(':commentId')
   async findComment(@Param('commentId') id: string, @Req() req) {
-    console.log(req.user.userId, 'from comments controller');
     return await this.queryBus.execute(
       new GetCommentByIdCommand(id, req.user?.userId),
     );
