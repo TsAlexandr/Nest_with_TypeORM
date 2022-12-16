@@ -52,7 +52,7 @@ import { DeviceService } from './features/public/devices/device.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DeviceRepository } from './features/public/devices/device.repository';
 import { CqrsModule } from '@nestjs/cqrs';
-import { GetCommentsHandler } from './features/usecase/handlers/getComments.handler';
+import { GetCommentsHandler } from './features/usecase/queryHandlers/getComments.handler';
 import { CreateCommentHandler } from './features/usecase/handlers/createComment.handler';
 import { BloggersRepositoryORM } from './library/typeORM/bloggers.typeORM';
 import { BlogIdValidation } from './common/exceptions/validationBlog';
@@ -62,17 +62,25 @@ import { FilesController } from './files/files.controller';
 import { SaveFilesHandler } from './features/usecase/handlers/save-files.handler';
 import { SuperBlogsController } from './features/sa/bloggersSA/bloggers.controller_sa';
 import { BloggerController } from './features/blogger/blogger.controller';
-import { GetCommentByIdHandler } from './features/usecase/handlers/getCommentById.handler';
-import { GetPostByIdHandler } from './features/usecase/handlers/getPostById.handler';
+import { GetCommentByIdHandler } from './features/usecase/queryHandlers/getCommentById.handler';
+import { GetPostByIdHandler } from './features/usecase/queryHandlers/getPostById.handler';
 import { BanUserHandler } from './features/usecase/handlers/banUser.handler';
+import { GetAllBlogsHandler } from './features/usecase/queryHandlers/getAllBlogs.handler';
+import { GetBannedUserForBloggerHandler } from './features/usecase/queryHandlers/getBannedUserForBlogger.handler';
+import { GetBlogsByIdHandler } from './features/usecase/queryHandlers/getBlogsById.handler';
+import { BanUserForBlogHandler } from './features/usecase/handlers/banUserForBlog.handler';
 
 export const CommandHandlers = [
+  GetAllBlogsHandler,
+  GetBannedUserForBloggerHandler,
+  GetBlogsByIdHandler,
   GetCommentsHandler,
-  CreateCommentHandler,
-  SaveFilesHandler,
   GetCommentByIdHandler,
   GetPostByIdHandler,
+  CreateCommentHandler,
+  SaveFilesHandler,
   BanUserHandler,
+  BanUserForBlogHandler,
 ];
 
 @Module({
