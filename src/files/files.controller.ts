@@ -15,6 +15,7 @@ import { SaveFilesHandler } from '../features/usecase/handlers/save-files.handle
 @Controller('files')
 export class FilesController {
   constructor(private saveFilesHandler: SaveFilesHandler) {}
+
   @Get('change-avatar')
   async changeAvatar() {
     return await fileReader(

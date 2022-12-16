@@ -103,6 +103,7 @@ export class BloggerController {
     if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.bloggersService.updateBlogger(id, { ...bloggersDto });
   }
+
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':blogId/posts/:postId')
   async updatePostById(
