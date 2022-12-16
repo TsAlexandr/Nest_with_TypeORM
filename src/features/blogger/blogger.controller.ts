@@ -26,6 +26,9 @@ import { BlogsService } from '../public/blogs/blogs.service';
 import { PostsService } from '../public/posts/posts.service';
 import { Pagination } from '../../common/types/classes/pagination';
 import { UsersService } from '../sa/users/users.service';
+import { CurrentUserId } from '../../common/custom-decorator/current.user.decorator';
+import { QueryBus } from '@nestjs/cqrs';
+import { GetAllBloggerCommentsCommand } from '../usecase/queryCommands/getAllBloggerComments.command';
 
 @UseGuards(JwtAuthGuards)
 @Controller('blogger/blogs')
@@ -34,16 +37,17 @@ export class BloggerController {
     private bloggersService: BlogsService,
     private postsService: PostsService,
     private usersService: UsersService,
+
+    private queryBus: QueryBus,
   ) {}
 
   @Get()
   async getAllBloggers(
     @Query() query,
-    @Req() req,
+    @CurrentUserId() userId: string,
   ): Promise<Paginator<Blogger[]>> {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
-    const userId = req.user.payload.userId;
     const user = await this.usersService.findUserById(userId);
     const login = user.login;
     const bloggers = await this.bloggersService.getBlogsByBlogger(
@@ -61,12 +65,28 @@ export class BloggerController {
     return bloggers;
   }
 
+  @Get()
+  async getAllBloggerComments(
+    @Query() query,
+    @CurrentUserId() ownerId: string,
+  ) {
+    const { page, pageSize, sortBy, sortDirection } = Pagination.getData(query);
+    return this.queryBus.execute(
+      new GetAllBloggerCommentsCommand(
+        page,
+        pageSize,
+        sortBy,
+        sortDirection,
+        ownerId,
+      ),
+    );
+  }
+
   @Post()
   async createBlogger(
     @Body() bloggersDto: BloggersDto,
-    @Req() req,
+    @CurrentUserId() userId: string,
   ): Promise<Blogger> {
-    const userId = req.user.payload.userId;
     const user = await this.usersService.findUserById(userId);
     return this.bloggersService.createBlogger(bloggersDto, user.id, user.login);
   }
@@ -75,11 +95,10 @@ export class BloggerController {
   async createNewPostForBlogger(
     @Param('blogId') blogId: string,
     @Body() newPost: NewPost,
-    @Req() req,
+    @CurrentUserId() userId: string,
   ): Promise<PostsCon> {
     const blogger = await this.bloggersService.getBloggerById(blogId);
     if (!blogger) throw new NotFoundException();
-    const userId = req.user.payload.userId;
     if (blogger.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.postsService.create(
       {
@@ -95,11 +114,10 @@ export class BloggerController {
   async updateBlogger(
     @Param('id') id: string,
     @Body() bloggersDto: BloggersDto,
-    @Req() req,
+    @CurrentUserId() userId: string,
   ): Promise<boolean> {
     const blog = await this.bloggersService.getBloggerById(id);
     if (!blog) throw new NotFoundException();
-    const userId = req.user.payload.userId;
     if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.bloggersService.updateBlogger(id, { ...bloggersDto });
   }
@@ -110,23 +128,24 @@ export class BloggerController {
     @Param('blogId') blogId: string,
     @Param('postId') postId: string,
     @Body() posts: NewPost,
-    @Req() req,
+    @CurrentUserId() userId: string,
   ) {
     const blog = await this.bloggersService.getBloggerById(blogId);
     if (!blog) throw new NotFoundException();
     const post = await this.postsService.findOne(postId, null);
     if (!post) throw new NotFoundException();
-    const userId = req.user.payload.userId;
     if (blog.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     return this.postsService.update({ postId, ...posts });
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async deleteBlogger(@Param('id') id: string, @Req() req): Promise<boolean> {
+  async deleteBlogger(
+    @Param('id') id: string,
+    @CurrentUserId() userId: string,
+  ): Promise<boolean> {
     const blogger = await this.bloggersService.getBloggerById(id);
     if (!blogger) throw new NotFoundException();
-    const userId = req.user.payload.userId;
     if (blogger.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     const removeBlogger = await this.bloggersService.deleteBlogger(id);
     if (!removeBlogger) throw new NotFoundException();
@@ -138,11 +157,10 @@ export class BloggerController {
   async deletePostForExistingBlogger(
     @Param('blogId') blogId: string,
     @Param('postId') postId: string,
-    @Req() req,
+    @CurrentUserId() userId: string,
   ): Promise<boolean> {
     const blogger = await this.bloggersService.getBloggerById(blogId);
     if (!blogger) throw new NotFoundException();
-    const userId = req.user.payload.userId;
     if (blogger.blogOwnerInfo.userId !== userId) throw new ForbiddenException();
     const post = await this.postsService.findOne(postId, null);
     if (!post) throw new NotFoundException();
