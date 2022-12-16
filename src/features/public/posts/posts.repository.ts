@@ -2,6 +2,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { PostsDocument } from '../../../common/types/schemas/schemas.model';
 import { Paginator, PostsCon } from '../../../common/types/classes/classes';
 import { Model, SortOrder } from 'mongoose';
+import { postMapper } from '../../../common/helpers/helpers';
 
 export class PostsRepository {
   constructor(@InjectModel('Posts') private postsModel: Model<PostsDocument>) {}
@@ -56,6 +57,7 @@ export class PostsRepository {
             .slice(0, 3)
             .map((el) => {
               delete el.action;
+              delete el.isBanned;
               return el;
             }),
         },
@@ -93,43 +95,13 @@ export class PostsRepository {
             .slice(0, 3)
             .map((el) => {
               delete el.action;
+              delete el.isBanned;
               return el;
             }),
         },
       };
     } else {
-      const currentUserStatus = post.totalActions.find(
-        (el: { userId: string }) => el.userId === userId,
-      );
-      const likesCount = post.totalActions.filter(
-        (el) => el.action === 'Like',
-      ).length;
-      const dislikesCount = post.totalActions.filter(
-        (el) => el.action === 'Dislike',
-      ).length;
-      const actions = post.totalActions;
-      return {
-        createdAt: post.createdAt,
-        id: post.id,
-        title: post.title,
-        shortDescription: post.shortDescription,
-        content: post.content,
-        blogId: post.blogId,
-        blogName: post.blogName,
-        extendedLikesInfo: {
-          likesCount: likesCount,
-          dislikesCount: dislikesCount,
-          myStatus: currentUserStatus ? currentUserStatus.action : 'None',
-          newestLikes: actions
-            .filter((el) => el.action === 'Like')
-            .reverse()
-            .slice(0, 3)
-            .map((el) => {
-              delete el.action;
-              return el;
-            }),
-        },
-      };
+      return postMapper(userId, post);
     }
   }
 
@@ -204,5 +176,14 @@ export class PostsRepository {
 
   async findPostById(id: string) {
     return this.postsModel.findOne({ id });
+  }
+
+  async updatePostWithBanInfo(userId: string, isBanned: boolean) {
+    await this.postsModel.updateOne(
+      { 'totalActions.userId': userId },
+      {
+        $set: { 'totalActions.$.isBanned': isBanned },
+      },
+    );
   }
 }

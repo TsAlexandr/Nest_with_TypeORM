@@ -20,6 +20,7 @@ export class CommentsRepository {
       },
     );
   }
+
   async findCommentForPost(commentId: string) {
     return this.commentsModel.findOne(
       { id: commentId },
@@ -122,10 +123,20 @@ export class CommentsRepository {
               action: status,
               userId: userId,
               login: login,
+              isBanned: false,
             },
           },
         },
       );
     }
+  }
+
+  async updateCommentWithBanInfo(userId: string, isBanned: boolean) {
+    await this.commentsModel.updateOne(
+      { 'totalActions.userId': userId },
+      {
+        $set: { 'totalActions.$.isBanned': isBanned },
+      },
+    );
   }
 }
