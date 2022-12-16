@@ -1,6 +1,7 @@
-import { Blogger, Paginator } from '../../../common/types/classes/classes';
+import { Paginator } from '../../../common/types/classes/classes';
 import { Pagination } from '../../../common/types/classes/pagination';
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
@@ -22,7 +23,7 @@ export class SuperBlogsController {
   async getAllBloggers(@Query() query): Promise<Paginator<BloggersMongo[]>> {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
-    const bloggers = await this.bloggersService.getBlogsWithOwner(
+    const bloggers = await this.bloggersService.getBlogsWithOwnerInfo(
       page,
       pageSize,
       searchNameTerm,
@@ -41,5 +42,10 @@ export class SuperBlogsController {
     @Param('userId') userId: string,
   ) {
     return this.bloggersService.bindWithUser(blogId, userId);
+  }
+
+  @Put(':id/ban')
+  async banBlog(@Param('id') id: string, @Body('isBanned') isBanned: boolean) {
+    return;
   }
 }
