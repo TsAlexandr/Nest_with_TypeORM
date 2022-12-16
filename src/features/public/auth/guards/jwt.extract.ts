@@ -18,6 +18,7 @@ export class JwtExtract implements CanActivate {
       if (user) {
         request.user = { userId: user.userId, userLogin: user.login };
       }
+      return true;
     } catch {
       return true;
     }
