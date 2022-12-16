@@ -81,7 +81,7 @@ export class PostsController {
     );
   }
 
-  @UseGuards(JwtAuthGuards, JwtExtract)
+  @UseGuards(JwtAuthGuards)
   @Post(':postId/comments')
   async createCommentForPost(
     @Param('postId') postId: string,
