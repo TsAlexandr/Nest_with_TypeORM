@@ -50,10 +50,12 @@ export class PostsController {
       sortDirection,
     );
   }
-
+  @UseGuards(JwtExtract)
   @Get(':id')
   async findOne(@Param('id') id: string, @Req() req) {
-    const post = await this.queryBus.execute(new GetPostByIdCommand(id));
+    const post = await this.queryBus.execute(
+      new GetPostByIdCommand(id, req.user.userId),
+    );
     if (!post) throw new NotFoundException();
     return post;
   }
