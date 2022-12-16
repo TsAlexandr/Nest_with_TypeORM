@@ -17,11 +17,16 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { BasicGuards } from '../../public/auth/guards/basic.guards';
 import { Pagination } from '../../../common/types/classes/pagination';
 import { BanUserDto } from './dto/banUser.dto';
+import { CommandBus } from '@nestjs/cqrs';
+import { BanUserCommand } from '../../usecase/commands/banUser.command';
 
 @UseGuards(BasicGuards)
 @Controller('sa/users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(
+    private usersService: UsersService,
+    private commandBus: CommandBus,
+  ) {}
 
   @Get()
   async getAll(@Query() query) {
@@ -58,7 +63,7 @@ export class UsersController {
   @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id/ban')
   async banUser(@Param('id') userId: string, @Body() banInfo: BanUserDto) {
-    await this.usersService.banUser(userId, banInfo);
+    await this.commandBus.execute(new BanUserCommand(userId, banInfo));
     return true;
   }
 
