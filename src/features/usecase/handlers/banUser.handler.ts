@@ -16,24 +16,13 @@ export class BanUserHandler implements ICommandHandler<BanUserCommand> {
     const { userId, banUserInfo } = command;
 
     await this.usersRepository.banUser(userId, banUserInfo);
-    if (banUserInfo.isBanned === true) {
-      await this.commentsRepository.updateCommentWithBanInfo(
-        userId,
-        banUserInfo.isBanned,
-      );
-      await this.postsRepository.updatePostWithBanInfo(
-        userId,
-        banUserInfo.isBanned,
-      );
-    } else {
-      await this.commentsRepository.updateCommentWithBanInfo(
-        userId,
-        banUserInfo.isBanned,
-      );
-      await this.postsRepository.updatePostWithBanInfo(
-        userId,
-        banUserInfo.isBanned,
-      );
-    }
+    await this.commentsRepository.updateCommentWithBanInfo(
+      userId,
+      banUserInfo.isBanned,
+    );
+    await this.postsRepository.updatePostWithBanInfo(
+      userId,
+      banUserInfo.isBanned,
+    );
   }
 }
