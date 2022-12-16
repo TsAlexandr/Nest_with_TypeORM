@@ -203,4 +203,8 @@ export class UsersRepository {
       );
     }
   }
+
+  async getAllUsers() {
+    return this.usersModel.find();
+  }
 }
