@@ -15,7 +15,6 @@ import {
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { Actions } from '../../../common/types/classes/classes';
-import { JwtExtract } from '../auth/guards/jwt.extract';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentsService } from '../comments/comments.service';
 import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
@@ -24,6 +23,7 @@ import { Pagination } from '../../../common/types/classes/pagination';
 import { UpdateCommentDto } from '../comments/dto/update-comment.dto';
 import { QueryBus } from '@nestjs/cqrs';
 import { GetPostByIdCommand } from '../../usecase/commands/getPostById.command';
+import { JwtExtract } from '../auth/guards/jwt.extract';
 
 @Controller('posts')
 export class PostsController {
