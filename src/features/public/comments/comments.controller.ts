@@ -14,7 +14,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
-import { JwtExtract } from '../auth/guards/jwt.extract';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
 import { CommentBelongsGuard } from '../auth/guards/commentBelongsGuard';
@@ -23,7 +22,8 @@ import { Actions } from '../../../common/types/classes/classes';
 import { CurrentUserId } from '../../../common/custom-decorator/current.user.decorator';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetCommentByIdCommmand } from '../../usecase/commands/getCommentById.commmand';
+import { GetCommentByIdCommand } from '../../usecase/commands/getCommentById.commmand';
+import { JwtExtract } from '../auth/guards/jwt.extract';
 
 @Controller('comments')
 export class CommentsController {
@@ -33,14 +33,13 @@ export class CommentsController {
     private queryBus: QueryBus,
   ) {}
 
-  @UseGuards(JwtAuthGuards)
+  @UseGuards(JwtExtract)
   @Get(':commentId')
-  async findComment(
-    @Param('commentId') id: string,
-    @CurrentUserId() userId: string,
-  ) {
-    console.log(userId);
-    return await this.queryBus.execute(new GetCommentByIdCommmand(id, userId));
+  async findComment(@Param('commentId') id: string, @Req() req) {
+    console.log(req.user);
+    return await this.queryBus.execute(
+      new GetCommentByIdCommand(id, req.user?.userId),
+    );
   }
 
   @UseGuards(AuthGuard, JwtAuthGuards)

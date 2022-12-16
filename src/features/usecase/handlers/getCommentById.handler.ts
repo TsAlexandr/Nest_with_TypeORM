@@ -1,19 +1,19 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetCommentByIdCommmand } from '../commands/getCommentById.commmand';
+import { GetCommentByIdCommand } from '../commands/getCommentById.commmand';
 import { CommentsRepository } from '../../public/comments/comments.repository';
 import { NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../sa/users/users.repository';
 
-@QueryHandler(GetCommentByIdCommmand)
+@QueryHandler(GetCommentByIdCommand)
 export class GetCommentByIdHandler
-  implements IQueryHandler<GetCommentByIdCommmand>
+  implements IQueryHandler<GetCommentByIdCommand>
 {
   constructor(
     private commentsRepository: CommentsRepository,
     private usersRepository: UsersRepository,
   ) {}
 
-  async execute(command: GetCommentByIdCommmand) {
+  async execute(command: GetCommentByIdCommand) {
     const { id, userId } = command;
     const comment = await this.commentsRepository.findComment(id);
     const user = await this.usersRepository.findById(userId);
