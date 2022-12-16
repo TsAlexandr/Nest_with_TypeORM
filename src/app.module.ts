@@ -65,6 +65,7 @@ import { SuperBlogsController } from './features/sa/bloggersSA/bloggers.controll
 import { BloggerController } from './features/blogger/blogger.controller';
 import { GetCommentByIdHandler } from './features/usecase/handlers/getCommentById.handler';
 import { GetPostByIdHandler } from './features/usecase/handlers/getPostById.handler';
+import { BanUserHandler } from './features/usecase/handlers/banUser.handler';
 
 export const CommandHandlers = [
   GetCommentsHandler,
@@ -72,6 +73,7 @@ export const CommandHandlers = [
   SaveFilesHandler,
   GetCommentByIdHandler,
   GetPostByIdHandler,
+  BanUserHandler,
 ];
 
 @Module({
