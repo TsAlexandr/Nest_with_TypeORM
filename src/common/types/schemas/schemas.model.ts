@@ -31,6 +31,8 @@ export class BloggersMongo {
 
   @Prop({ type: String, required: true })
   createdAt: string;
+  @Prop({ type: Boolean, default: false })
+  isBanned?: boolean;
 
   @Prop({ type: BlogOwnerInfo, required: false })
   blogOwnerInfo: BlogOwnerInfo;
