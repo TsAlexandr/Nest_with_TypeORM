@@ -1,7 +1,7 @@
 import { CommandHandler, ICommandHandler } from '@nestjs/cqrs';
 import { BanUserForBlogCommand } from '../commands/banUserForBlog.command';
 import { UsersRepository } from '../../sa/users/users.repository';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 import { BlogsRepository } from '../../public/blogs/blogs.repository';
 @CommandHandler(BanUserForBlogCommand)
 export class BanUserForBlogHandler
@@ -12,9 +12,14 @@ export class BanUserForBlogHandler
     private blogsRepository: BlogsRepository,
   ) {}
   async execute(command: BanUserForBlogCommand) {
-    const { id, banBlogDto } = command;
+    const { id, banBlogDto, ownerId } = command;
     const user = await this.usersRepository.findById(id);
     if (!user) throw new NotFoundException();
+    const blogger = await this.blogsRepository.getBloggersById(
+      banBlogDto.blogId,
+    );
+    if (blogger.blogOwnerInfo.userId !== ownerId)
+      throw new ForbiddenException();
     await this.blogsRepository.banUserForBlog(banBlogDto, user.id, user.login);
     return true;
   }

@@ -45,8 +45,10 @@ export class BloggerUsersController {
   async banUserForBlog(
     @Param('id') id: string,
     @Body() banBlogDto: BanBlogDto,
-    @CurrentUserId() ownerId: string,
+    @CurrentUserId() userId: string,
   ) {
-    return this.commandBus.execute(new BanUserForBlogCommand(id, banBlogDto));
+    return this.commandBus.execute(
+      new BanUserForBlogCommand(id, banBlogDto, userId),
+    );
   }
 }

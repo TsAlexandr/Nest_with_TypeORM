@@ -4,5 +4,6 @@ export class BanUserForBlogCommand {
   constructor(
     public readonly id: string,
     public readonly banBlogDto: BanBlogDto,
+    public readonly ownerId: string,
   ) {}
 }
