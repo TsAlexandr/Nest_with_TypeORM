@@ -71,6 +71,7 @@ import { GetBlogsByIdHandler } from './features/usecases/queryHandlers/getBlogsB
 import { BanUserForBlogHandler } from './features/usecases/handlers/banUserForBlog.handler';
 import { BanBlogByIdHandler } from './features/usecases/handlers/banBlogById.handler';
 import { GetAllBloggerCommentsHandler } from './features/usecases/queryHandlers/getAllBloggerComments.handler';
+import { BloggerUsersController } from './features/blogger/blogger-users.controller';
 
 export const CommandHandlers = [
   GetAllBlogsHandler,
@@ -146,6 +147,7 @@ export const CommandHandlers = [
     FilesController,
     SuperBlogsController,
     BloggerController,
+    BloggerUsersController,
   ],
   providers: [
     BlogsService,
