@@ -74,7 +74,7 @@ export class AuthController {
     return null;
   }
 
-  @UseGuards(ThrottlerGuard)
+  // @UseGuards(ThrottlerGuard)
   @HttpCode(HttpStatus.OK)
   @Post('/login')
   async login(
