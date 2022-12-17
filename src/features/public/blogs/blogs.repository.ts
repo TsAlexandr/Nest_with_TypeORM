@@ -105,7 +105,10 @@ export class BlogsRepository {
   ): Promise<Paginator<BloggersMongo[]>> {
     const blogsWithUser = await this.bloggersModel
       .find(
-        { name: { $regex: searchNameTerm, $options: 'i' } },
+        {
+          name: { $regex: searchNameTerm, $options: 'i' },
+          'banInfo.isBanned': true,
+        },
         { _id: 0, __v: 0, blackList: 0 },
       )
       .skip((page - 1) * pageSize)
@@ -115,6 +118,7 @@ export class BlogsRepository {
 
     const count = await this.bloggersModel.countDocuments({
       name: { $regex: searchNameTerm, $options: 'i' },
+      'banInfo.isBanned': true,
     });
     const total = Math.ceil(count / pageSize);
 

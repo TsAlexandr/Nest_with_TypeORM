@@ -21,6 +21,10 @@ export class BlogsService {
         userId: id,
         userLogin: login,
       },
+      banInfo: {
+        isBanned: false,
+        banDate: null,
+      },
     };
     return await this.bloggersRepository.createBlogger(newBlogger);
   }
