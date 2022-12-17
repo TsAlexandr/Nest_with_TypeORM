@@ -28,8 +28,13 @@ export class BlogsRepository {
   ): Promise<Paginator<BloggersMongo[]>> {
     const bloggers = await this.bloggersModel
       .find(
-        { name: { $regex: searchNameTerm, $options: 'i' } },
-        { _id: 0, __v: 0, blogOwnerInfo: 0 },
+        {
+          $and: [
+            { name: { $regex: searchNameTerm, $options: 'i' } },
+            { 'banInfo.isBanned': false },
+          ],
+        },
+        { _id: 0, __v: 0, blogOwnerInfo: 0, blackList: 0 },
       )
       .skip((page - 1) * pageSize)
       .limit(pageSize)
@@ -37,7 +42,10 @@ export class BlogsRepository {
       .lean();
 
     const count = await this.bloggersModel.countDocuments({
-      name: { $regex: searchNameTerm, $options: 'i' },
+      $and: [
+        { name: { $regex: searchNameTerm, $options: 'i' } },
+        { 'banInfo.isBanned': false },
+      ],
     });
     const total = Math.ceil(count / pageSize);
 
@@ -106,10 +114,7 @@ export class BlogsRepository {
     const blogsWithUser = await this.bloggersModel
       .find(
         {
-          $and: [
-            { name: { $regex: searchNameTerm, $options: 'i' } },
-            { 'banInfo.isBanned': false },
-          ],
+          name: { $regex: searchNameTerm, $options: 'i' },
         },
         { _id: 0, __v: 0, blackList: 0 },
       )
@@ -119,10 +124,7 @@ export class BlogsRepository {
       .lean();
 
     const count = await this.bloggersModel.countDocuments({
-      $and: [
-        { name: { $regex: searchNameTerm, $options: 'i' } },
-        { 'banInfo.isBanned': false },
-      ],
+      name: { $regex: searchNameTerm, $options: 'i' },
     });
     const total = Math.ceil(count / pageSize);
 
