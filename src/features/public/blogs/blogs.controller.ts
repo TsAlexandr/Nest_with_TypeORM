@@ -1,4 +1,3 @@
-import { BlogsService } from './blogs.service';
 import { PostsService } from '../posts/posts.service';
 import {
   Blogger,
@@ -14,24 +13,26 @@ import {
   Query,
   Req,
 } from '@nestjs/common';
+import { QueryBus } from '@nestjs/cqrs';
+import { GetAllBlogsCommand } from '../../usecase/queryCommands/getAllBlogs.command';
+import { GetBlogsByIdCommand } from '../../usecase/queryCommands/getBlogsById.command';
 
 @Controller('blogs')
 export class BlogsController {
-  constructor(
-    private bloggersService: BlogsService,
-    private postsService: PostsService,
-  ) {}
+  constructor(private queryBus: QueryBus, private postsService: PostsService) {}
 
   @Get()
-  async getAllBloggers(@Query() query): Promise<Paginator<Blogger[]>> {
+  async getAllBlogs(@Query() query): Promise<Paginator<Blogger[]>> {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
-    const bloggers = await this.bloggersService.getBloggers(
-      page,
-      pageSize,
-      searchNameTerm,
-      sortBy,
-      sortDirection,
+    const bloggers = await this.queryBus.execute(
+      new GetAllBlogsCommand(
+        page,
+        pageSize,
+        searchNameTerm,
+        sortBy,
+        sortDirection,
+      ),
     );
     if (!bloggers) {
       throw new NotFoundException();
@@ -41,7 +42,7 @@ export class BlogsController {
 
   @Get(':id')
   async getBlogger(@Param('id') id: string): Promise<Blogger> {
-    const blogger = await this.bloggersService.getBlogsById(id);
+    const blogger = await this.queryBus.execute(new GetBlogsByIdCommand(id));
     if (!blogger) {
       throw new NotFoundException();
     }
@@ -57,7 +58,9 @@ export class BlogsController {
     const { page, pageSize, searchNameTerm, sortBy, sortDirection } =
       Pagination.getPaginationData(query);
     const userId = req.user.userId || null;
-    const blogger = await this.bloggersService.getBloggerById(blogId);
+    const blogger = await this.queryBus.execute(
+      new GetBlogsByIdCommand(blogId),
+    );
     if (!blogger) throw new NotFoundException();
     return this.postsService.findAll(
       page,
