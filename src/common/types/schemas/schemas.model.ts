@@ -4,6 +4,7 @@ import * as mongoose from 'mongoose';
 import {
   Action,
   BanInfoType,
+  BannedUserForBlog,
   BlogOwnerInfo,
   EmailConfirmType,
   LikesInfo,
@@ -32,10 +33,10 @@ export class BloggersMongo {
   createdAt: string;
 
   @Prop({ type: BlogOwnerInfo, required: false })
-  blogOwnerInfo: {
-    userId: string;
-    userLogin: string;
-  };
+  blogOwnerInfo: BlogOwnerInfo;
+
+  @Prop({ type: BannedUserForBlog, required: false })
+  banInfo?: BannedUserForBlog;
 }
 
 export const BloggerSchema = SchemaFactory.createForClass(BloggersMongo);
