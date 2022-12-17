@@ -13,13 +13,13 @@ export class BanUserForBlogHandler
   ) {}
   async execute(command: BanUserForBlogCommand) {
     const { id, banBlogDto, ownerId } = command;
-    const user = await this.usersRepository.findById(id);
-    if (!user) throw new NotFoundException();
     const blogger = await this.blogsRepository.getBloggersById(
       banBlogDto.blogId,
     );
     if (blogger.blogOwnerInfo.userId !== ownerId)
       throw new ForbiddenException();
+    const user = await this.usersRepository.findById(id);
+    if (!user) throw new NotFoundException();
     await this.blogsRepository.banUserForBlog(banBlogDto, user.id, user.login);
     return true;
   }
