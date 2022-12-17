@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   Put,
   Query,
@@ -40,7 +42,7 @@ export class BloggerUsersController {
       ),
     );
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id/ban')
   async banUserForBlog(
     @Param('id') id: string,

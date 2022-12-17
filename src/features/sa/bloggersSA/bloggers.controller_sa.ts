@@ -4,6 +4,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Put,
@@ -40,7 +42,7 @@ export class SuperBlogsController {
     }
     return bloggers;
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id/bind-with-user/:userId')
   async bindBlogWithUser(
     @Param('id') blogId: string,
@@ -48,7 +50,7 @@ export class SuperBlogsController {
   ) {
     return this.bloggersService.bindWithUser(blogId, userId);
   }
-
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Put(':id/ban')
   async banBlog(@Param('id') id: string, @Body('isBanned') isBanned: boolean) {
     return this.commandBus.execute(new BanBlogByIdCommand(id, isBanned));
