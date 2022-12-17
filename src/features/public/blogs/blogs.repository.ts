@@ -106,8 +106,10 @@ export class BlogsRepository {
     const blogsWithUser = await this.bloggersModel
       .find(
         {
-          name: { $regex: searchNameTerm, $options: 'i' },
-          'banInfo.isBanned': true,
+          $and: [
+            { name: { $regex: searchNameTerm, $options: 'i' } },
+            { 'banInfo.isBanned': false },
+          ],
         },
         { _id: 0, __v: 0, blackList: 0 },
       )
@@ -117,8 +119,10 @@ export class BlogsRepository {
       .lean();
 
     const count = await this.bloggersModel.countDocuments({
-      name: { $regex: searchNameTerm, $options: 'i' },
-      'banInfo.isBanned': true,
+      $and: [
+        { name: { $regex: searchNameTerm, $options: 'i' } },
+        { 'banInfo.isBanned': false },
+      ],
     });
     const total = Math.ceil(count / pageSize);
 
