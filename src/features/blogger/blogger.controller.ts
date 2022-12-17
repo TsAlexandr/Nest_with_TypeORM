@@ -64,7 +64,7 @@ export class BloggerController {
     return bloggers;
   }
 
-  @Get()
+  @Get('comments')
   async getAllBloggerComments(
     @Query() query,
     @CurrentUserId() ownerId: string,
