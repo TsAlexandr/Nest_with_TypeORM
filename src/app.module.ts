@@ -70,6 +70,7 @@ import { GetBannedUserForBloggerHandler } from './features/usecases/queryHandler
 import { GetBlogsByIdHandler } from './features/usecases/queryHandlers/getBlogsById.handler';
 import { BanUserForBlogHandler } from './features/usecases/handlers/banUserForBlog.handler';
 import { BanBlogByIdHandler } from './features/usecases/handlers/banBlogById.handler';
+import { GetAllBloggerCommentsHandler } from './features/usecases/queryHandlers/getAllBloggerComments.handler';
 
 export const CommandHandlers = [
   GetAllBlogsHandler,
@@ -78,6 +79,7 @@ export const CommandHandlers = [
   GetCommentsHandler,
   GetCommentByIdHandler,
   GetPostByIdHandler,
+  GetAllBloggerCommentsHandler,
   CreateCommentHandler,
   SaveFilesHandler,
   BanUserHandler,
