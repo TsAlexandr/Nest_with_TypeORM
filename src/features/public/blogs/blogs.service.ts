@@ -25,6 +25,7 @@ export class BlogsService {
         isBanned: false,
         banDate: null,
       },
+      blackList: [],
     };
     return await this.bloggersRepository.createBlogger(newBlogger);
   }

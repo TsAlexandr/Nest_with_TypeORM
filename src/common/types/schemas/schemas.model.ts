@@ -41,7 +41,7 @@ export class BloggersMongo {
   blogOwnerInfo: BlogOwnerInfo;
 
   @Prop({ type: BannedUserForBlog, required: false })
-  blackList?: BannedUserForBlog;
+  blackList?: BannedUserForBlog[];
 }
 
 export const BloggerSchema = SchemaFactory.createForClass(BloggersMongo);

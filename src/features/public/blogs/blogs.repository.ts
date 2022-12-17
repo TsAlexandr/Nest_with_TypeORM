@@ -64,7 +64,7 @@ export class BlogsRepository {
 
   async getBlogsById(id: string): Promise<BloggersMongo> {
     return this.bloggersModel
-      .findOne({ id }, { _id: 0, __v: 0, blogOwnerInfo: 0 })
+      .findOne({ id }, { _id: 0, __v: 0, blogOwnerInfo: 0, blackList: 0 })
       .lean();
   }
 
@@ -191,23 +191,17 @@ export class BlogsRepository {
     ownerId: string,
   ) {
     const bannedUsers = await this.bloggersModel
-      .find({
-        $and: [
-          { id },
-          { 'blogOwnerInfo.userId': ownerId },
-          { 'blackList.$.login': { $regex: searchLoginTerm, $options: 'i' } },
-        ],
+      .findOne({
+        id,
+        'blackList.login': { $regex: searchLoginTerm, $options: 'i' },
       })
       .skip((page - 1) * pageSize)
       .limit(pageSize)
       .sort({ [sortBy]: sortDirection })
       .lean();
     const count = await this.bloggersModel.countDocuments({
-      $and: [
-        { id },
-        { 'blogOwnerInfo.userId': ownerId },
-        { 'blackList.$.login': { $regex: searchLoginTerm, $options: 'i' } },
-      ],
+      id,
+      'blackList.login': { $regex: searchLoginTerm, $options: 'i' },
     });
 
     return {
@@ -217,25 +211,27 @@ export class BlogsRepository {
   }
 
   async banUserForBlog(banBlogDto: BanBlogDto, id: string, login: string) {
-    if (banBlogDto.isBanned === false) {
-      await this.bloggersModel.updateOne(
+    if (banBlogDto.isBanned === true) {
+      return this.bloggersModel.updateOne(
         { id: banBlogDto.blogId },
         {
-          $pull: {
-            blackList: { id: id },
+          $push: {
+            blackList: {
+              id: id,
+              login: login,
+              isBanned: banBlogDto.isBanned,
+              banDate: new Date().toISOString(),
+              banReason: banBlogDto.banReason,
+            },
           },
         },
       );
     } else {
-      await this.bloggersModel.updateOne(
+      return this.bloggersModel.updateOne(
         { id: banBlogDto.blogId },
         {
-          $set: {
-            'blackList.id': id,
-            'blackList.login': login,
-            'blackList.isBanned': banBlogDto.isBanned,
-            'blackList.banDate': new Date().toISOString(),
-            'blackList.banReason': banBlogDto.banReason,
+          $pull: {
+            blackList: { id: id },
           },
         },
       );
