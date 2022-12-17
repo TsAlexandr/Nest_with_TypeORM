@@ -22,7 +22,7 @@ import { Actions } from '../../../common/types/classes/classes';
 import { CurrentUserId } from '../../../common/custom-decorator/current.user.decorator';
 import { UpdateCommentDto } from './dto/update-comment.dto';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetCommentByIdCommand } from '../../usecase/commands/getCommentById.commmand';
+import { GetCommentByIdCommand } from '../../usecase/queryCommands/getCommentById.commmand';
 import { JwtExtract } from '../auth/guards/jwt.extract';
 
 @Controller('comments')

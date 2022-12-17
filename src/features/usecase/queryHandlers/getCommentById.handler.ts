@@ -1,5 +1,5 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
-import { GetCommentByIdCommand } from '../commands/getCommentById.commmand';
+import { GetCommentByIdCommand } from '../queryCommands/getCommentById.commmand';
 import { CommentsRepository } from '../../public/comments/comments.repository';
 import { NotFoundException } from '@nestjs/common';
 import { UsersRepository } from '../../sa/users/users.repository';
@@ -13,10 +13,9 @@ export class GetCommentByIdHandler
     private usersRepository: UsersRepository,
   ) {}
 
-  async execute(command: GetCommentByIdCommand) {
-    const { id, userId } = command;
+  async execute(query: GetCommentByIdCommand) {
+    const { id, userId } = query;
     const comment = await this.commentsRepository.findComment(id);
-    const allUsers = await this.usersRepository.getAllUsers();
     const user = await this.usersRepository.findById(comment.userId.toString());
     if (!comment || user.banInfo.isBanned === true) {
       throw new NotFoundException();

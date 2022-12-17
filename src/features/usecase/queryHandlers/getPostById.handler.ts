@@ -1,6 +1,6 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { NotFoundException } from '@nestjs/common';
-import { GetPostByIdCommand } from '../commands/getPostById.command';
+import { GetPostByIdCommand } from '../queryCommands/getPostById.command';
 import { PostsRepository } from '../../public/posts/posts.repository';
 import { postMapper } from '../../../common/helpers/helpers';
 
