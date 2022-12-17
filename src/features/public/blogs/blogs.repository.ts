@@ -193,9 +193,9 @@ export class BlogsRepository {
     const bannedUsers = await this.bloggersModel
       .find({
         $and: [
+          { id },
           { 'blogOwnerInfo.userId': ownerId },
           { 'blackList.$.login': { $regex: searchLoginTerm, $options: 'i' } },
-          { 'blackList.$.id': { $regex: id, $options: 'i' } },
         ],
       })
       .skip((page - 1) * pageSize)
@@ -204,9 +204,9 @@ export class BlogsRepository {
       .lean();
     const count = await this.bloggersModel.countDocuments({
       $and: [
+        { id },
         { 'blogOwnerInfo.userId': ownerId },
         { 'blackList.$.login': { $regex: searchLoginTerm, $options: 'i' } },
-        { 'blackList.$.id': { $regex: id, $options: 'i' } },
       ],
     });
 
