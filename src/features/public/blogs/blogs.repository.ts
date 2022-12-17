@@ -9,6 +9,7 @@ import {
 } from '../../../common/types/schemas/schemas.model';
 import { Paginator } from '../../../common/types/classes/classes';
 import { BloggersDto } from './dto/bloggers.dto';
+import { BanBlogDto } from '../../blogger/dto/banBlog.dto';
 
 @Injectable()
 export class BlogsRepository {
@@ -95,7 +96,7 @@ export class BlogsRepository {
     return;
   }
 
-  async getBlogsWithOwner(
+  async getBlogsWithOwnerInfo(
     page: number,
     pageSize: number,
     searchNameTerm: string,
@@ -168,5 +169,70 @@ export class BlogsRepository {
       totalCount: count,
       items: blogsByBlogger,
     };
+  }
+
+  async getBannedUsers(
+    page: number,
+    pageSize: number,
+    sortBy: string,
+    sortDirection: SortOrder,
+    searchLoginTerm: string,
+    id: string,
+    ownerId: string,
+  ) {
+    const bannedUsers = await this.bloggersModel
+      .find({
+        $and: [
+          { 'blogOwnerInfo.userId': ownerId },
+          { 'banInfo.$.login': { $regex: searchLoginTerm, $options: 'i' } },
+          { 'banInfo.$.id': { $regex: id, $options: 'i' } },
+        ],
+      })
+      .skip((page - 1) * pageSize)
+      .limit(pageSize)
+      .sort({ [sortBy]: sortDirection })
+      .lean();
+    const count = await this.bloggersModel.countDocuments({
+      $and: [
+        { 'blogOwnerInfo.userId': ownerId },
+        { 'banInfo.$.login': { $regex: searchLoginTerm, $options: 'i' } },
+        { 'banInfo.$.id': { $regex: id, $options: 'i' } },
+      ],
+    });
+
+    return {
+      bannedUsers,
+      count,
+    };
+  }
+
+  async banUserForBlog(banBlogDto: BanBlogDto, id: string, login: string) {
+    if (banBlogDto.isBanned === false) {
+      await this.bloggersModel.updateOne(
+        { id: banBlogDto.blogId },
+        {
+          $pull: {
+            banInfo: { id: id },
+          },
+        },
+      );
+    } else {
+      await this.bloggersModel.updateOne(
+        { id: banBlogDto.blogId },
+        {
+          $set: {
+            'banInfo.id': id,
+            'banInfo.login': login,
+            'banInfo.isBanned': banBlogDto.isBanned,
+            'banInfo.banDate': new Date().toISOString(),
+            'banInfo.banReason': banBlogDto.banReason,
+          },
+        },
+      );
+    }
+  }
+
+  async getBlogsWithOwnerId(ownerId: string) {
+    return;
   }
 }

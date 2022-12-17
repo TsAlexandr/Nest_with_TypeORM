@@ -16,22 +16,23 @@ import {
 import { PostsService } from './posts.service';
 import { Actions } from '../../../common/types/classes/classes';
 import { JwtAuthGuards } from '../auth/guards/jwt-auth.guards';
-import { CommentsService } from '../comments/comments.service';
 import { ExistingPostGuard } from '../auth/guards/existingPostGuard';
 import { UsersService } from '../../sa/users/users.service';
 import { Pagination } from '../../../common/types/classes/pagination';
 import { UpdateCommentDto } from '../comments/dto/update-comment.dto';
-import { QueryBus } from '@nestjs/cqrs';
-import { GetPostByIdCommand } from '../../usecase/commands/getPostById.command';
+import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { GetPostByIdCommand } from '../../usecase/queryCommands/getPostById.command';
 import { JwtExtract } from '../auth/guards/jwt.extract';
+import { GetCommentsCommand } from '../../usecase/queryCommands/getComments.command';
+import { CreateCommentCommand } from '../../usecase/commands/createComment.command';
 
 @Controller('posts')
 export class PostsController {
   constructor(
     private postsService: PostsService,
-    private commentsService: CommentsService,
     private usersService: UsersService,
     private queryBus: QueryBus,
+    private commandBus: CommandBus,
   ) {}
 
   @UseGuards(JwtExtract)
@@ -71,13 +72,15 @@ export class PostsController {
     const userId = req.user.userId || null;
     const post = await this.postsService.findOne(postId, null);
     if (!post) throw new NotFoundException();
-    return await this.commentsService.getCommentWithPage(
-      postId,
-      page,
-      pageSize,
-      userId,
-      sortBy,
-      sortDirection,
+    return await this.queryBus.execute(
+      new GetCommentsCommand(
+        postId,
+        page,
+        pageSize,
+        userId,
+        sortBy,
+        sortDirection,
+      ),
     );
   }
 
@@ -92,11 +95,13 @@ export class PostsController {
     const userId = req.user.payload.userId;
     const isPost = await this.postsService.findOne(postId, null);
     if (!isPost) throw new NotFoundException();
-    return this.commentsService.createComment(
-      postId,
-      updateCommentDto.content,
-      userId,
-      userLogin,
+    return this.commandBus.execute(
+      new CreateCommentCommand(
+        postId,
+        updateCommentDto.content,
+        userId,
+        userLogin,
+      ),
     );
   }
 
