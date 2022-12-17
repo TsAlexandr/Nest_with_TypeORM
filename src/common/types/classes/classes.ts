@@ -155,3 +155,11 @@ export class BlogOwnerInfo {
   userId: string;
   userLogin: string;
 }
+
+export class BannedUserForBlog {
+  id: string;
+  login: string;
+  isBanned: boolean;
+  banReason: string;
+  banDate: string;
+}
