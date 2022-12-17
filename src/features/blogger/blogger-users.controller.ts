@@ -25,7 +25,7 @@ export class BloggerUsersController {
   @Get('blog/:id')
   async getAllBannedUsers(
     @Query() query,
-    @Param('id') id: string,
+    @Param('id') blogId: string,
     @CurrentUserId() ownerId: string,
   ) {
     const { page, pageSize, sortBy, sortDirection, searchLoginTerm } =
@@ -37,7 +37,7 @@ export class BloggerUsersController {
         sortBy,
         sortDirection,
         searchLoginTerm,
-        id,
+        blogId,
         ownerId,
       ),
     );

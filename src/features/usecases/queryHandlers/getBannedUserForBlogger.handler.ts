@@ -14,7 +14,7 @@ export class GetBannedUserForBloggerHandler
       sortBy,
       sortDirection,
       searchLoginTerm,
-      id,
+      blogId,
       ownerId,
     } = query;
     const users = await this.blogsRepository.getBannedUsers(
@@ -23,7 +23,7 @@ export class GetBannedUserForBloggerHandler
       sortBy,
       sortDirection,
       searchLoginTerm,
-      id,
+      blogId,
       ownerId,
     );
     const mappedBanUsers = users.bannedUsers.map((obj) => {

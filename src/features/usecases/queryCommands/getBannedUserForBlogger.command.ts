@@ -8,7 +8,7 @@ export class GetBannedUserForBloggerCommand {
     public readonly sortDirection: SortOrder,
 
     public readonly searchLoginTerm: string,
-    public readonly id: string,
+    public readonly blogId: string,
     public readonly ownerId: string,
   ) {}
 }
