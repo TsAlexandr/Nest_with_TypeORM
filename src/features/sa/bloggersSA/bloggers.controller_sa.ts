@@ -13,11 +13,16 @@ import {
 import { BlogsService } from '../../public/blogs/blogs.service';
 import { BasicGuards } from '../../public/auth/guards/basic.guards';
 import { BloggersMongo } from '../../../common/types/schemas/schemas.model';
+import { CommandBus } from '@nestjs/cqrs';
+import { BanBlogByIdCommand } from '../../usecases/commands/banBlogById.command';
 
 @UseGuards(BasicGuards)
 @Controller('sa/blogs')
 export class SuperBlogsController {
-  constructor(private bloggersService: BlogsService) {}
+  constructor(
+    private bloggersService: BlogsService,
+    private commandBus: CommandBus,
+  ) {}
 
   @Get()
   async getAllBloggers(@Query() query): Promise<Paginator<BloggersMongo[]>> {
@@ -46,6 +51,6 @@ export class SuperBlogsController {
 
   @Put(':id/ban')
   async banBlog(@Param('id') id: string, @Body('isBanned') isBanned: boolean) {
-    return;
+    return this.commandBus.execute(new BanBlogByIdCommand(id, isBanned));
   }
 }

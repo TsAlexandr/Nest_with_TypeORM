@@ -235,4 +235,13 @@ export class BlogsRepository {
   async getBlogsWithOwnerId(ownerId: string) {
     return;
   }
+
+  async banBlogById(id: string, isBanned: boolean) {
+    await this.bloggersModel.updateOne(
+      { id },
+      {
+        $set: { isBanned: isBanned },
+      },
+    );
+  }
 }
