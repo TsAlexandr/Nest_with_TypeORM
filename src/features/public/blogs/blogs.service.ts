@@ -8,22 +8,6 @@ import { SortOrder } from 'mongoose';
 export class BlogsService {
   constructor(private bloggersRepository: BlogsRepository) {}
 
-  async getBloggers(
-    page: number,
-    pageSize: number,
-    searchNameTerm: string,
-    sortBy: string,
-    sortDirection: number,
-  ) {
-    return await this.bloggersRepository.getBloggers(
-      page,
-      pageSize,
-      searchNameTerm,
-      sortBy,
-      sortDirection,
-    );
-  }
-
   async getBloggerById(id: string) {
     return await this.bloggersRepository.getBloggersById(id);
   }
@@ -53,14 +37,14 @@ export class BlogsService {
     return this.bloggersRepository.bindWithUser(blogId, userId);
   }
 
-  async getBlogsWithOwner(
+  async getBlogsWithOwnerInfo(
     page: number,
     pageSize: number,
     searchNameTerm: string,
     sortBy: string,
     sortDirection: SortOrder,
   ) {
-    return this.bloggersRepository.getBlogsWithOwner(
+    return this.bloggersRepository.getBlogsWithOwnerInfo(
       page,
       pageSize,
       searchNameTerm,
@@ -87,9 +71,5 @@ export class BlogsService {
       userId,
       login,
     );
-  }
-
-  async getBlogsById(id: string) {
-    return await this.bloggersRepository.getBlogsById(id);
   }
 }
