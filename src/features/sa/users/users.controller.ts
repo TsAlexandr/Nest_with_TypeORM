@@ -18,7 +18,7 @@ import { BasicGuards } from '../../public/auth/guards/basic.guards';
 import { Pagination } from '../../../common/types/classes/pagination';
 import { BanUserDto } from './dto/banUser.dto';
 import { CommandBus } from '@nestjs/cqrs';
-import { BanUserCommand } from '../../usecase/commands/banUser.command';
+import { BanUserCommand } from '../../usecases/commands/banUser.command';
 
 @UseGuards(BasicGuards)
 @Controller('sa/users')

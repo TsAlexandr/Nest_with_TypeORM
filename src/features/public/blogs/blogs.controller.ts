@@ -14,8 +14,8 @@ import {
   Req,
 } from '@nestjs/common';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetAllBlogsCommand } from '../../usecase/queryCommands/getAllBlogs.command';
-import { GetBlogsByIdCommand } from '../../usecase/queryCommands/getBlogsById.command';
+import { GetAllBlogsCommand } from '../../usecases/queryCommands/getAllBlogs.command';
+import { GetBlogsByIdCommand } from '../../usecases/queryCommands/getBlogsById.command';
 
 @Controller('blogs')
 export class BlogsController {

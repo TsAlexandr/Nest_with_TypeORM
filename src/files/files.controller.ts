@@ -9,7 +9,7 @@ import {
 import { fileReader } from '../common/utils/fileReader';
 import path from 'path';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { SaveFilesHandler } from '../features/usecase/handlers/save-files.handler';
+import { SaveFilesHandler } from '../features/usecases/handlers/save-files.handler';
 
 @Injectable()
 @Controller('files')

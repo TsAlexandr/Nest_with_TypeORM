@@ -11,7 +11,6 @@ import {
   Post,
   Put,
   Query,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuards } from '../public/auth/guards/jwt-auth.guards';
@@ -28,7 +27,7 @@ import { Pagination } from '../../common/types/classes/pagination';
 import { UsersService } from '../sa/users/users.service';
 import { CurrentUserId } from '../../common/custom-decorator/current.user.decorator';
 import { QueryBus } from '@nestjs/cqrs';
-import { GetAllBloggerCommentsCommand } from '../usecase/queryCommands/getAllBloggerComments.command';
+import { GetAllBloggerCommentsCommand } from '../usecases/queryCommands/getAllBloggerComments.command';
 
 @UseGuards(JwtAuthGuards)
 @Controller('blogger/blogs')

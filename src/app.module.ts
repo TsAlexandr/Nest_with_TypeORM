@@ -52,23 +52,24 @@ import { DeviceService } from './features/public/devices/device.service';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { DeviceRepository } from './features/public/devices/device.repository';
 import { CqrsModule } from '@nestjs/cqrs';
-import { GetCommentsHandler } from './features/usecase/queryHandlers/getComments.handler';
-import { CreateCommentHandler } from './features/usecase/handlers/createComment.handler';
+import { GetCommentsHandler } from './features/usecases/queryHandlers/getComments.handler';
+import { CreateCommentHandler } from './features/usecases/handlers/createComment.handler';
 import { BloggersRepositoryORM } from './library/typeORM/bloggers.typeORM';
 import { BlogIdValidation } from './common/exceptions/validationBlog';
 import { TelegramController } from './telegram/telegram.controller';
 import { TelegramAdapter } from './adapters/telegram.adapter';
 import { FilesController } from './files/files.controller';
-import { SaveFilesHandler } from './features/usecase/handlers/save-files.handler';
+import { SaveFilesHandler } from './features/usecases/handlers/save-files.handler';
 import { SuperBlogsController } from './features/sa/bloggersSA/bloggers.controller_sa';
 import { BloggerController } from './features/blogger/blogger.controller';
-import { GetCommentByIdHandler } from './features/usecase/queryHandlers/getCommentById.handler';
-import { GetPostByIdHandler } from './features/usecase/queryHandlers/getPostById.handler';
-import { BanUserHandler } from './features/usecase/handlers/banUser.handler';
-import { GetAllBlogsHandler } from './features/usecase/queryHandlers/getAllBlogs.handler';
-import { GetBannedUserForBloggerHandler } from './features/usecase/queryHandlers/getBannedUserForBlogger.handler';
-import { GetBlogsByIdHandler } from './features/usecase/queryHandlers/getBlogsById.handler';
-import { BanUserForBlogHandler } from './features/usecase/handlers/banUserForBlog.handler';
+import { GetCommentByIdHandler } from './features/usecases/queryHandlers/getCommentById.handler';
+import { GetPostByIdHandler } from './features/usecases/queryHandlers/getPostById.handler';
+import { BanUserHandler } from './features/usecases/handlers/banUser.handler';
+import { GetAllBlogsHandler } from './features/usecases/queryHandlers/getAllBlogs.handler';
+import { GetBannedUserForBloggerHandler } from './features/usecases/queryHandlers/getBannedUserForBlogger.handler';
+import { GetBlogsByIdHandler } from './features/usecases/queryHandlers/getBlogsById.handler';
+import { BanUserForBlogHandler } from './features/usecases/handlers/banUserForBlog.handler';
+import { BanBlogByIdHandler } from './features/usecases/handlers/banBlogById.handler';
 
 export const CommandHandlers = [
   GetAllBlogsHandler,
@@ -81,6 +82,7 @@ export const CommandHandlers = [
   SaveFilesHandler,
   BanUserHandler,
   BanUserForBlogHandler,
+  BanBlogByIdHandler,
 ];
 
 @Module({

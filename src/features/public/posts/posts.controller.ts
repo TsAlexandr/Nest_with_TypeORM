@@ -21,10 +21,10 @@ import { UsersService } from '../../sa/users/users.service';
 import { Pagination } from '../../../common/types/classes/pagination';
 import { UpdateCommentDto } from '../comments/dto/update-comment.dto';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetPostByIdCommand } from '../../usecase/queryCommands/getPostById.command';
+import { GetPostByIdCommand } from '../../usecases/queryCommands/getPostById.command';
 import { JwtExtract } from '../auth/guards/jwt.extract';
-import { GetCommentsCommand } from '../../usecase/queryCommands/getComments.command';
-import { CreateCommentCommand } from '../../usecase/commands/createComment.command';
+import { GetCommentsCommand } from '../../usecases/queryCommands/getComments.command';
+import { CreateCommentCommand } from '../../usecases/commands/createComment.command';
 
 @Controller('posts')
 export class PostsController {

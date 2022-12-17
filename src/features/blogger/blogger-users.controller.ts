@@ -11,8 +11,8 @@ import { JwtAuthGuards } from '../public/auth/guards/jwt-auth.guards';
 import { BanBlogDto } from './dto/banBlog.dto';
 import { Pagination } from '../../common/types/classes/pagination';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
-import { GetBannedUserForBloggerCommand } from '../usecase/queryCommands/getBannedUserForBlogger.command';
-import { BanUserForBlogCommand } from '../usecase/commands/banUserForBlog.command';
+import { GetBannedUserForBloggerCommand } from '../usecases/queryCommands/getBannedUserForBlogger.command';
+import { BanUserForBlogCommand } from '../usecases/commands/banUserForBlog.command';
 import { CurrentUserId } from '../../common/custom-decorator/current.user.decorator';
 
 @UseGuards(JwtAuthGuards)
