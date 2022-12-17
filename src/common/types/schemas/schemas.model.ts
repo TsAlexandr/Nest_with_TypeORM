@@ -31,14 +31,17 @@ export class BloggersMongo {
 
   @Prop({ type: String, required: true })
   createdAt: string;
-  @Prop({ type: Boolean, default: false })
-  isBanned?: boolean;
+  @Prop({ type: BanInfoType })
+  banInfo?: {
+    banDate: string;
+    isBanned: boolean;
+  };
 
   @Prop({ type: BlogOwnerInfo, required: false })
   blogOwnerInfo: BlogOwnerInfo;
 
   @Prop({ type: BannedUserForBlog, required: false })
-  banInfo?: BannedUserForBlog;
+  blackList?: BannedUserForBlog;
 }
 
 export const BloggerSchema = SchemaFactory.createForClass(BloggersMongo);

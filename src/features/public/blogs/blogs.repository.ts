@@ -71,7 +71,7 @@ export class BlogsRepository {
       {
         $set: {
           name: update.name,
-          youtubeUrl: update.websiteUrl,
+          websiteUrl: update.websiteUrl,
           description: update.description,
         },
       },
@@ -185,8 +185,8 @@ export class BlogsRepository {
       .find({
         $and: [
           { 'blogOwnerInfo.userId': ownerId },
-          { 'banInfo.$.login': { $regex: searchLoginTerm, $options: 'i' } },
-          { 'banInfo.$.id': { $regex: id, $options: 'i' } },
+          { 'blackList.$.login': { $regex: searchLoginTerm, $options: 'i' } },
+          { 'blackList.$.id': { $regex: id, $options: 'i' } },
         ],
       })
       .skip((page - 1) * pageSize)
@@ -196,8 +196,8 @@ export class BlogsRepository {
     const count = await this.bloggersModel.countDocuments({
       $and: [
         { 'blogOwnerInfo.userId': ownerId },
-        { 'banInfo.$.login': { $regex: searchLoginTerm, $options: 'i' } },
-        { 'banInfo.$.id': { $regex: id, $options: 'i' } },
+        { 'blackList.$.login': { $regex: searchLoginTerm, $options: 'i' } },
+        { 'blackList.$.id': { $regex: id, $options: 'i' } },
       ],
     });
 
@@ -213,7 +213,7 @@ export class BlogsRepository {
         { id: banBlogDto.blogId },
         {
           $pull: {
-            banInfo: { id: id },
+            blackList: { id: id },
           },
         },
       );
@@ -222,11 +222,11 @@ export class BlogsRepository {
         { id: banBlogDto.blogId },
         {
           $set: {
-            'banInfo.id': id,
-            'banInfo.login': login,
-            'banInfo.isBanned': banBlogDto.isBanned,
-            'banInfo.banDate': new Date().toISOString(),
-            'banInfo.banReason': banBlogDto.banReason,
+            'blackList.id': id,
+            'blackList.login': login,
+            'blackList.isBanned': banBlogDto.isBanned,
+            'blackList.banDate': new Date().toISOString(),
+            'blackList.banReason': banBlogDto.banReason,
           },
         },
       );
@@ -241,7 +241,10 @@ export class BlogsRepository {
     await this.bloggersModel.updateOne(
       { id },
       {
-        $set: { isBanned: isBanned },
+        $set: {
+          'banInfo.isBanned': isBanned,
+          'banInfo.banDate': new Date().toISOString(),
+        },
       },
     );
   }

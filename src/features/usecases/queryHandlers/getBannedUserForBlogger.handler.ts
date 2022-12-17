@@ -28,12 +28,12 @@ export class GetBannedUserForBloggerHandler
     );
     const mappedBanUsers = users.bannedUsers.map((obj) => {
       return {
-        id: obj.banInfo.id,
-        login: obj.banInfo.login,
+        id: obj.blackList.id,
+        login: obj.blackList.login,
         banInfo: {
-          isBanned: obj.banInfo.isBanned,
-          banDate: obj.banInfo.banDate,
-          banReason: obj.banInfo.banReason,
+          isBanned: obj.blackList.isBanned,
+          banDate: obj.blackList.banDate,
+          banReason: obj.blackList.banReason,
         },
       };
     });
