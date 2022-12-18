@@ -27,22 +27,23 @@ export class GetBannedUserForBloggerHandler
       blogId,
       ownerId,
     );
-    const mappedBanUsers = users.bannedUsers.blackList.map((obj) => {
+    if (!users.bannedUsers.length) throw new NotFoundException();
+    const mappedBanUsers = users.bannedUsers.map((obj) => {
       return {
-        id: obj.id,
-        login: obj.login,
+        id: obj.blackList.id,
+        login: obj.blackList.login,
         banInfo: {
-          isBanned: obj.isBanned,
-          banDate: obj.banDate,
-          banReason: obj.banReason,
+          isBanned: obj.blackList.isBanned,
+          banDate: obj.blackList.banDate,
+          banReason: obj.blackList.banReason,
         },
       };
     });
     return {
-      pagesCount: Math.ceil(users.count / pageSize),
+      pagesCount: Math.ceil(users.count[0].blackList / pageSize),
       page: page,
       pageSize: pageSize,
-      totalCount: users.count,
+      totalCount: users.count[0].blackList,
       items: mappedBanUsers,
     };
   }

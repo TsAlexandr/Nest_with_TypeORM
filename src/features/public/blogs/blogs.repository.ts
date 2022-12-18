@@ -185,29 +185,57 @@ export class BlogsRepository {
     page: number,
     pageSize: number,
     sortBy: string,
-    sortDirection: SortOrder,
+    sortDirection: any,
     searchLoginTerm: string,
     id: string,
     ownerId: string,
   ) {
-    const bannedUsers = await this.bloggersModel
-      .findOne({
-        id,
-        'blackList.login': { $regex: searchLoginTerm, $options: 'i' },
-      })
-      .skip((page - 1) * pageSize)
-      .limit(pageSize)
-      .sort({ [sortBy]: sortDirection })
-      .lean();
-    const count = await this.bloggersModel.countDocuments({
-      id,
-      'blackList.login': { $regex: searchLoginTerm, $options: 'i' },
-    });
+    const newSortBy = 'blackList' + '.' + sortBy;
+    const bannedUsers = await this.bloggersModel.aggregate([
+      {
+        $match: {
+          id,
+        },
+      },
+      { $unwind: '$blackList' },
+      {
+        $match: {
+          'blackList.login': { $regex: searchLoginTerm, $options: 'i' },
+        },
+      },
+      { $sort: { [newSortBy]: sortDirection } },
+      { $skip: (page - 1) * pageSize },
+      { $limit: pageSize },
+      {
+        $project: {
+          _id: 0,
+          id: 0,
+          name: 0,
+          websiteUrl: 0,
+          description: 0,
+          createdAt: 0,
+          banInfo: 0,
+          blogOwnerInfo: 0,
+        },
+      },
+    ]);
 
-    return {
-      bannedUsers,
-      count,
-    };
+    const count = await this.bloggersModel.aggregate([
+      {
+        $match: {
+          id,
+        },
+      },
+      { $unwind: '$blackList' },
+      {
+        $match: {
+          'blackList.login': { $regex: searchLoginTerm, $options: 'i' },
+        },
+      },
+      { $count: 'blackList' },
+    ]);
+
+    return { bannedUsers, count };
   }
 
   async banUserForBlog(banBlogDto: BanBlogDto, id: string, login: string) {
