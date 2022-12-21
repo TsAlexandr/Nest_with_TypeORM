@@ -101,6 +101,7 @@ export class PostsController {
         updateCommentDto.content,
         userId,
         userLogin,
+        isPost.blogId,
       ),
     );
   }
