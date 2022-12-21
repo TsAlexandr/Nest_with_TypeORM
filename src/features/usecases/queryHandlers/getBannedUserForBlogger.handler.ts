@@ -31,8 +31,9 @@ export class GetBannedUserForBloggerHandler
       blogId,
       ownerId,
     );
-    if (!users.bannedUsers.length) throw new NotFoundException();
     if (!owner) throw new ForbiddenException();
+    if (!users.bannedUsers.length) throw new NotFoundException();
+
     const mappedBanUsers = users.bannedUsers.map((obj) => {
       return {
         id: obj.blackList.id,
