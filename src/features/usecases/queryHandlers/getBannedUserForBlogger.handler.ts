@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetBannedUserForBloggerCommand } from '../queryCommands/getBannedUserForBlogger.command';
 import { BlogsRepository } from '../../public/blogs/blogs.repository';
-import { NotFoundException } from '@nestjs/common';
+import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
 @QueryHandler(GetBannedUserForBloggerCommand)
 export class GetBannedUserForBloggerHandler
@@ -18,6 +18,11 @@ export class GetBannedUserForBloggerHandler
       blogId,
       ownerId,
     } = query;
+    const owner = await this.blogsRepository.getBlogsWithOwnerId(
+      ownerId,
+      blogId,
+    );
+    if (!owner) throw new ForbiddenException();
     const users = await this.blogsRepository.getBannedUsers(
       page,
       pageSize,
