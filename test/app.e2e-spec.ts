@@ -93,7 +93,7 @@ describe('App (e2e)', () => {
       expect(getBloggerAfterUpdate.body).toEqual({
         id: id,
         name: updateTestBlogger.name,
-        websiteUrl: updateTestBlogger.youtubeUrl,
+        websiteUrl: updateTestBlogger.websiteUrl,
       });
 
       const getAll = await request(app.getHttpServer())

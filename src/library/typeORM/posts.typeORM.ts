@@ -1,8 +1,8 @@
 import { InjectDataSource } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
-import { NewPost } from '../../common/types/classes/classes';
 import { Posts } from '../../common/types/schemas/schemas.model';
 import { PostEntity } from '../../features/public/posts/entities/post.entity';
+import { NewPost } from '../../features/public/posts/dto/create-post.dto';
 
 export class PostsTypeORM {
   constructor(@InjectDataSource() private dataSource: DataSource) {}

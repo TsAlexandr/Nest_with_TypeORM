@@ -16,7 +16,6 @@ import {
 import { JwtAuthGuards } from '../public/auth/guards/jwt-auth.guards';
 import {
   Blogger,
-  NewPost,
   Paginator,
   PostsCon,
 } from '../../common/types/classes/classes';
@@ -28,6 +27,7 @@ import { UsersService } from '../sa/users/users.service';
 import { CurrentUserId } from '../../common/custom-decorator/current.user.decorator';
 import { QueryBus } from '@nestjs/cqrs';
 import { GetAllBloggerCommentsCommand } from '../usecases/queryCommands/getAllBloggerComments.command';
+import { NewPost } from '../public/posts/dto/create-post.dto';
 
 @UseGuards(JwtAuthGuards)
 @Controller('blogger/blogs')

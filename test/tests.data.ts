@@ -1,5 +1,5 @@
 import { BloggersDto } from '../src/features/public/blogs/dto/bloggers.dto';
-import { NewPost } from '../src/common/types/classes/classes';
+import { NewPost } from '../src/features/public/posts/dto/create-post.dto';
 
 export const bloggerCreate: BloggersDto = {
   name: 'hello blogger',
