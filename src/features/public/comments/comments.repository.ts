@@ -139,4 +139,59 @@ export class CommentsRepository {
       },
     );
   }
+
+  async getBlogsWithPostsAndComments(
+    page: number,
+    pageSize: number,
+    sortBy: string,
+    sortDirection: any,
+    ownerId: string,
+  ) {
+    const comments = await this.commentsModel.aggregate([
+      {
+        $lookup: {
+          from: 'posts',
+          localField: 'postId',
+          foreignField: 'id',
+          as: 'posts',
+        },
+      },
+      { $unwind: '$posts' },
+
+      { $match: { userId: ownerId } },
+      { $sort: { [sortBy]: sortDirection } },
+      { $skip: (page - 1) * pageSize },
+      { $limit: pageSize },
+      {
+        $project: {
+          _id: 0,
+          id: 1,
+          content: 1,
+          createdAt: 1,
+          likesInfo: 1,
+          postId: 1,
+          commentatorInfo: {
+            userId: '$userId',
+            userLogin: '$userLogin',
+          },
+          postInfo: {
+            id: '$postId',
+            title: '$posts.title',
+            blogId: '$posts.blogId',
+            blogName: '$posts.blogName',
+          },
+        },
+      },
+    ]);
+
+    const count = await this.commentsModel.countDocuments({ userId: ownerId });
+
+    return {
+      pagesCount: Math.ceil(count / pageSize),
+      page: page,
+      pageSize: pageSize,
+      totalCount: count,
+      items: comments,
+    };
+  }
 }
