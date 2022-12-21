@@ -157,8 +157,6 @@ export class CommentsRepository {
         },
       },
       { $unwind: '$posts' },
-
-      { $match: { userId: ownerId } },
       { $sort: { [sortBy]: sortDirection } },
       { $skip: (page - 1) * pageSize },
       { $limit: pageSize },
@@ -184,8 +182,7 @@ export class CommentsRepository {
       },
     ]);
 
-    const count = await this.commentsModel.countDocuments({ userId: ownerId });
-
+    const count = await this.commentsModel.countDocuments();
     return {
       pagesCount: Math.ceil(count / pageSize),
       page: page,
