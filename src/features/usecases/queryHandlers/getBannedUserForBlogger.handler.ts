@@ -22,7 +22,6 @@ export class GetBannedUserForBloggerHandler
       ownerId,
       blogId,
     );
-    if (!owner) throw new ForbiddenException();
     const users = await this.blogsRepository.getBannedUsers(
       page,
       pageSize,
@@ -33,6 +32,7 @@ export class GetBannedUserForBloggerHandler
       ownerId,
     );
     if (!users.bannedUsers.length) throw new NotFoundException();
+    if (!owner) throw new ForbiddenException();
     const mappedBanUsers = users.bannedUsers.map((obj) => {
       return {
         id: obj.blackList.id,
