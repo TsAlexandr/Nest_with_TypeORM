@@ -266,7 +266,7 @@ export class BlogsRepository {
     }
   }
 
-  async getBlogsWithOwnerId(ownerId: string, blogId: string) {
+  async getOwnerBlogId(ownerId: string, blogId: string) {
     return this.bloggersModel.findOne({
       'blogOwnerInfo.userId': ownerId,
       id: blogId,
