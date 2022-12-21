@@ -13,8 +13,8 @@ export class Pagination {
   }
 
   static getData(query) {
-    const page = typeof query.pageNumber === 'string' ? +query.PageNumber : 1;
-    const pageSize = typeof query.pageSize === 'string' ? +query.PageSize : 10;
+    const page = typeof query.pageNumber === 'string' ? +query.pageNumber : 1;
+    const pageSize = typeof query.pageSize === 'string' ? +query.pageSize : 10;
     const sortBy =
       typeof query.sortBy === 'string' ? query.sortBy : 'createdAt';
     const sortDirection: SortOrder = query.sortDirection === 'asc' ? 1 : -1;
