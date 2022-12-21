@@ -1,119 +1,61 @@
-import {
-  IsNotEmpty,
-  IsString,
-  Length,
-  Matches,
-  MaxLength,
-} from 'class-validator';
-import { Transform } from 'class-transformer';
-
 export class Blogger {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(15)
-  name: string;
-  @Matches(/^https:\/\/([a-zA-Z0-9_-]+\.)+[a-zA-Z0-9_-]+$/)
-  @IsNotEmpty()
-  @MaxLength(100)
-  websiteUrl: string;
-  @IsString()
-  description: string;
-  @IsString()
-  createdAt: string;
-
-  blogOwnerInfo: any;
+  public readonly id: string;
+  public readonly name: string;
+  public readonly websiteUrl: string;
+  public readonly description: string;
+  public readonly createdAt: string;
+  public readonly blogOwnerInfo: any;
 }
 
 export class PostsCon {
-  @IsString()
-  id?: string;
+  public readonly id: string;
 
-  @IsString()
-  @IsNotEmpty()
-  blogId: Blogger['id'];
+  public readonly title: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(30)
-  title: string;
+  public readonly shortDescription: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(100)
-  shortDescription: string;
+  public readonly content: string;
 
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(1000)
-  content: string;
+  public readonly blogId: Blogger['id'];
 
-  blogName: Blogger['name'];
+  public readonly blogName: Blogger['name'];
+  public readonly createdAt: Date;
 }
-
-export class NewPost {
-  @IsString()
-  @Length(1, 30)
-  @IsNotEmpty()
-  @Transform(({ value }) => value?.trim())
-  title: string;
-  @IsString()
-  @Length(1, 100)
-  @IsNotEmpty()
-  @Transform(({ value }) => value?.trim())
-  shortDescription: string;
-  @IsString()
-  @Length(1, 1000)
-  @IsNotEmpty()
-  @Transform(({ value }) => value?.trim())
-  content: string;
-}
-
 export class BanInfoType {
-  banDate: Date;
-  banReason: string;
-  isBanned: boolean;
+  public readonly banDate: Date;
+  public readonly banReason: string;
+  public readonly isBanned: boolean;
 }
 
 export class User {
-  constructor(
-    public id: string,
-    public login: string,
-    public email: string,
-    public createdAt: any,
-    public passwordHash: string,
-    public emailConfirmation: EmailConfirmType,
-    public recoveryData: RecoveryDataType,
-    public banInfo: BanInfoType,
-  ) {}
+  public readonly id: string;
+  public readonly login: string;
+  public readonly email: string;
+  public readonly createdAt: any;
+  public readonly passwordHash: string;
+  public readonly emailConfirmation: EmailConfirmType;
+  public readonly recoveryData: RecoveryDataType;
+  public readonly banInfo: BanInfoType;
 }
 
 export class UserAccount {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
-  @Matches(/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/)
-  @IsNotEmpty()
-  email: string;
-  @IsString()
-  @IsNotEmpty()
-  login: string;
-  passwordHash: string;
-  createdAt: Date;
-  unused?: string;
+  public readonly id: string;
+  public readonly email: string;
+  public readonly login: string;
+  public readonly passwordHash: string;
+  public readonly createdAt: Date;
+  public readonly unused?: string;
 }
 
 export class EmailConfirmType {
-  isConfirmed: boolean;
-  confirmationCode: string;
+  public readonly isConfirmed: boolean;
+  public readonly confirmationCode: string;
 }
 
 export class RecoveryDataType {
-  recoveryCode: string;
-  isConfirmed: boolean;
-  expirationDate: any;
+  public readonly recoveryCode: string;
+  public readonly isConfirmed: boolean;
+  public readonly expirationDate: any;
 }
 
 export type Paginator<T> = {
@@ -125,24 +67,24 @@ export type Paginator<T> = {
 };
 
 export class Action {
-  dislikesCount: number;
-  likesCount: number;
-  myStatus: string;
-  newestLikes: any[];
+  public readonly dislikesCount: number;
+  public readonly likesCount: number;
+  public readonly myStatus: string;
+  public readonly newestLikes: any[];
 }
 
 export class LikesInfo {
-  dislikesCount: number;
-  likesCount: number;
-  myStatus: string;
+  public readonly dislikesCount: number;
+  public readonly likesCount: number;
+  public readonly myStatus: string;
 }
 
 export class TotalActions {
-  addedAt: Date;
-  action: string;
-  userId: string;
-  login: string;
-  isBanned: boolean;
+  public readonly addedAt: Date;
+  public readonly action: string;
+  public readonly userId: string;
+  public readonly login: string;
+  public readonly isBanned: boolean;
 }
 
 export enum Actions {
@@ -152,14 +94,14 @@ export enum Actions {
 }
 
 export class BlogOwnerInfo {
-  userId: string;
-  userLogin: string;
+  public readonly userId: string;
+  public readonly userLogin: string;
 }
 
 export class BannedUserForBlog {
-  id: string;
-  login: string;
-  isBanned: boolean;
-  banReason: string;
-  banDate: string;
+  public readonly id: string;
+  public readonly login: string;
+  public readonly isBanned: boolean;
+  public readonly banReason: string;
+  public readonly banDate: string;
 }
