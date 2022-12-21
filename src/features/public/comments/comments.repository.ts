@@ -167,13 +167,12 @@ export class CommentsRepository {
           content: 1,
           createdAt: 1,
           likesInfo: 1,
-          postId: 1,
           commentatorInfo: {
             userId: '$userId',
             userLogin: '$userLogin',
           },
           postInfo: {
-            id: '$postId',
+            id: '$posts.id',
             title: '$posts.title',
             blogId: '$posts.blogId',
             blogName: '$posts.blogName',
