@@ -40,13 +40,13 @@ export class PostsRepository {
       ).length;
       const actions = obj.totalActions;
       return {
-        createdAt: obj.createdAt,
         id: obj.id,
         title: obj.title,
         shortDescription: obj.shortDescription,
         content: obj.content,
         blogId: obj.blogId,
         blogName: obj.blogName,
+        createdAt: obj.createdAt,
         extendedLikesInfo: {
           likesCount: likesCount,
           dislikesCount: dislikesCount,
