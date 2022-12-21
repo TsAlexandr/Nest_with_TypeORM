@@ -162,7 +162,6 @@ export class CommentsRepository {
       { $limit: pageSize },
       {
         $project: {
-          _id: 0,
           id: 1,
           content: 1,
           createdAt: 1,
