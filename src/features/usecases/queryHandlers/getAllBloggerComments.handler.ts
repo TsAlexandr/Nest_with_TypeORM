@@ -9,6 +9,6 @@ export class GetAllBloggerCommentsHandler
   constructor(private blogsRepository: BlogsRepository) {}
   async execute(query: GetAllBloggerCommentsCommand) {
     const { page, pageSize, sortBy, sortDirection, ownerId } = query;
-    const currentBlog = await this.blogsRepository.getBlogsWithOwnerId(ownerId);
+    //const currentBlog = await this.blogsRepository.getBlogsWithOwnerId(ownerId);
   }
 }
