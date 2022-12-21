@@ -1,7 +1,7 @@
 import { IQueryHandler, QueryHandler } from '@nestjs/cqrs';
 import { GetBannedUserForBloggerCommand } from '../queryCommands/getBannedUserForBlogger.command';
 import { BlogsRepository } from '../../public/blogs/blogs.repository';
-import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 
 @QueryHandler(GetBannedUserForBloggerCommand)
 export class GetBannedUserForBloggerHandler
@@ -18,6 +18,8 @@ export class GetBannedUserForBloggerHandler
       blogId,
       ownerId,
     } = query;
+    let mappedBanUsers = [];
+    let superMegaTotalCount = 0;
     const owner = await this.blogsRepository.getOwnerBlogId(ownerId, blogId);
     const users = await this.blogsRepository.getBannedUsers(
       page,
@@ -29,24 +31,25 @@ export class GetBannedUserForBloggerHandler
       ownerId,
     );
     if (!owner) throw new ForbiddenException();
-    if (!users.bannedUsers.length) throw new NotFoundException();
-
-    const mappedBanUsers = users.bannedUsers.map((obj) => {
-      return {
-        id: obj.blackList.id,
-        login: obj.blackList.login,
-        banInfo: {
-          isBanned: obj.blackList.isBanned,
-          banDate: obj.blackList.banDate,
-          banReason: obj.blackList.banReason,
-        },
-      };
-    });
+    if (users.bannedUsers.length) {
+      superMegaTotalCount = users.count[0].blackList;
+      mappedBanUsers = users.bannedUsers.map((obj) => {
+        return {
+          id: obj.blackList.id,
+          login: obj.blackList.login,
+          banInfo: {
+            isBanned: obj.blackList.isBanned,
+            banDate: obj.blackList.banDate,
+            banReason: obj.blackList.banReason,
+          },
+        };
+      });
+    }
     return {
-      pagesCount: Math.ceil(users.count[0].blackList / pageSize),
+      pagesCount: Math.ceil(superMegaTotalCount / pageSize),
       page: page,
       pageSize: pageSize,
-      totalCount: users.count[0].blackList,
+      totalCount: superMegaTotalCount,
       items: mappedBanUsers,
     };
   }
