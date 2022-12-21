@@ -266,8 +266,11 @@ export class BlogsRepository {
     }
   }
 
-  async getBlogsWithOwnerId(ownerId: string) {
-    return;
+  async getBlogsWithOwnerId(ownerId: string, blogId: string) {
+    return this.bloggersModel.findOne({
+      'blogOwnerInfo.userId': ownerId,
+      id: blogId,
+    });
   }
 
   async banBlogById(id: string, isBanned: boolean) {
@@ -280,5 +283,9 @@ export class BlogsRepository {
         },
       },
     );
+  }
+
+  findBannedUser(blogId: string, userId: string) {
+    return this.bloggersModel.findOne({ id: blogId, 'blackList.id': userId });
   }
 }
