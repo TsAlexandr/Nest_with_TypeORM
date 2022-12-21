@@ -184,14 +184,6 @@ export class UserMongo {
 
 export const UserSchema = SchemaFactory.createForClass(UserMongo);
 
-// export const LikesSchema = new mongoose.Schema<TotalActions>({
-//   action: String,
-//   userId: String,
-//   addedAt: Date,
-//   login: String,
-//   postId: String,
-// });
-
 export type DeviceDocument = Device & Document;
 
 @Schema({ versionKey: false })
