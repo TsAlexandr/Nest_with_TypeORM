@@ -16,12 +16,14 @@ import { CommandBus, QueryBus } from '@nestjs/cqrs';
 import { GetBannedUserForBloggerCommand } from '../usecases/queryCommands/getBannedUserForBlogger.command';
 import { BanUserForBlogCommand } from '../usecases/commands/banUserForBlog.command';
 import { CurrentUserId } from '../../common/custom-decorator/current.user.decorator';
+import { ExistingBlogGuard } from '../public/auth/guards/existingBlog.guard';
 
 @UseGuards(JwtAuthGuards)
 @Controller('/blogger/users')
 export class BloggerUsersController {
   constructor(private queryBus: QueryBus, private commandBus: CommandBus) {}
 
+  @UseGuards(ExistingBlogGuard)
   @Get('blog/:id')
   async getAllBannedUsers(
     @Query() query,
